@@ -114,7 +114,7 @@ async function verifyBehavior(page) {
 try {
   const rules = await client.callTool({name:'get-review-rules',arguments:{category:'all',context:'Review Open Design website redesign using its own MCP'}});
   await save('rules',rules);
-  const paths = ['App.tsx','main.tsx','styles.css','catalog-previews.json','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx'];
+  const paths = ['App.tsx','main.tsx','theme.ts','styles.css','catalog-previews.json','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx'];
   const files = await Promise.all(paths.map(async p => ({path:p,content:await readFile(path.join(website,'src',p),'utf8')})));
   const source = await client.callTool({name:'review-ui-code',arguments:{files}}); await save('source',source);
   assert.ok(!source.isError);
