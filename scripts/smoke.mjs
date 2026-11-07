@@ -15,6 +15,7 @@ const calls=[
   ['get-review-rules',{category:'all'}],
   ['check-comprehension',{screen:'Open Design landing page',headline:'Good interfaces start with good tools.',body:['Give your coding agent a real design system, practical guidance, and checks it can run before shipping.'],actions:['Copy MCP URL','Browse design systems'],knownTerms:['MCP','UI','React','HTTP','JSON','MIT','Geist']}],
   ['inspect-spacing',{}],
+  ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://open-design-website.vercel.app'}],
   ['find-icons',{libraryId:'lucide',query:'home'}],
   ['install-icons',{libraryId:'lucide',names:['house'],format:'svg'}],
   ['get-design-system-kit',{designSystemId:'minimal-light',target:'react',components:['button','input','card'],maxTokens:1000}],

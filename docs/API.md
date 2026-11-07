@@ -18,6 +18,8 @@ Origin: `https://open-design-mcp-liard.vercel.app`.
 | `/api/fragments/{id}/config` | GET | Current theme configuration |
 | `/api/fragments/{id}/config` | PATCH, owner bearer key | Configuration update: `{ "config": { ... } }` |
 | `/api/v1/brand-extract/from-url?url=...` | GET | Limited CSS-only token extraction from public URL |
+| `/api/v1/project-rules/{id}?screen=...&parts=...` | GET, owner bearer key | Private project guidelines, selected part rules and exact screen specifications |
+| `/api/v1/project-rules/{id}` | PUT, owner bearer key | Save a rule slot; conflicting text returns 409 unless `replaceExisting: true`; another owner receives 404 |
 
 List the exact supported MCP schema with `tools/list`, and use
 `get-capabilities` for scope. Anonymous tool discovery omits private mutation

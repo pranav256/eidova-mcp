@@ -1,5 +1,13 @@
 # Release verification — 2026-11-07
 
+The later compatibility pass raises the passing suite to **66 tests**, restores
+private project rule slots and implements the first-visit brief/rank/recheck
+workflow. See [the evidence and scope](COMPATIBILITY-PASS.md). The website now
+defaults to dark mode and preserves a visitor's explicit light/dark preference.
+Both schemes were reviewed at 390, 1440 and 1728 pixels; all **41 copy panels**
+pass, with no critical or serious source/spacing findings. The original release
+results below are retained as the initial baseline.
+
 The independent Open Design service and website are deployed publicly:
 
 - MCP: https://open-design-mcp-liard.vercel.app/mcp

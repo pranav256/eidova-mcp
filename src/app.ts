@@ -9,6 +9,7 @@ import { createStore } from './store.js';
 import { createServer } from './mcp.js';
 import { Projects } from './projects.js';
 import { apiDispatcher } from './local-api.js';
+import { ProjectRulesStore } from './project-rules-store.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -18,7 +19,7 @@ app.use((req,res,next)=> {
   if (req.path.startsWith('/mcp') || req.path.startsWith('/api/') || req.path.startsWith('/registry/')) {
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization, MCP-Protocol-Version, Mcp-Session-Id');
-    res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, PUT, OPTIONS');
     if (req.method === 'OPTIONS') {res.status(204).end();return;}
   }
   next();
@@ -59,7 +60,7 @@ app.all(['/mcp','/api/mcp'],async (req,res)=> {
 app.all(/^\/api\/(?:projects|fragments|v1)\//,async (req,res)=> {
   let owner:string|undefined;
   try {owner=identity(req);} catch {res.status(401).json({error:'Invalid workspace key format'});return;}
-  const response=await apiDispatcher(new Projects(store,owner))(baseUrl()+req.originalUrl,{method:req.method,body:['GET','HEAD'].includes(req.method)?undefined:JSON.stringify(req.body)});
+  const response=await apiDispatcher(new Projects(store,owner),new ProjectRulesStore(store,owner))(baseUrl()+req.originalUrl,{method:req.method,body:['GET','HEAD'].includes(req.method)?undefined:JSON.stringify(req.body)});
   res.status(response.status).type('application/json').send(await response.text());
 });
 app.get('/',(_req,res)=>res.json({name:'Open Design MCP',transport:'Streamable HTTP',endpoint:`${baseUrl()}/mcp`,website:'https://open-design-website.vercel.app',repository:'https://github.com/pranav256/open-design-mcp'}));
