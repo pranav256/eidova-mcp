@@ -24,6 +24,7 @@ try {
   const script=capture.structuredContent.captureScript;
   const context=await browser.newContext({viewport:{width:390,height:1000}});
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+  page.setDefaultTimeout(15000);
   // Opening from the catalog must carry the current appearance in the real link.
   await page.goto(origin);await page.getByRole('button',{name:'Show all 31 themes'}).click();
   for(const mode of ['dark','light']){
@@ -46,6 +47,7 @@ try {
   await page.getByRole('link',{name:'All themes',exact:true}).click();
   await page.locator('.theme-card').first().waitFor();
   assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+  console.log('Verified catalog links, mode inheritance, refresh and navigation.');
   // Live pages work independently of catalog availability.
   await page.route('**/api/catalog',route=>route.abort());
   for(const width of [390,1440,1728]) {
@@ -82,6 +84,7 @@ try {
       await page.mouse.move(0,0);
       const state=await page.evaluate(script);state.name=`${id} ${mode} ${width}px`;states.push(state);
       checks.push({id,mode,width,...result});
+      if(checks.length%10===0)console.log(`Checked ${checks.length} live preview layouts.`);
       if(['minimal-light','linear','tactile-minimal'].includes(id))await page.screenshot({path:path.join(dir,`${id}-${mode}-${width}.png`),fullPage:true});
       if(width===390){
         const heading=await page.locator('.preview-page-heading').evaluate(e=>({headline:e.querySelector('h1').textContent,body:[e.querySelector('p').textContent],actions:[...e.querySelectorAll('a')].map(n=>n.textContent)}));
