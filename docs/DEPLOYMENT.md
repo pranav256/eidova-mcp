@@ -51,7 +51,18 @@ platforms with `npx playwright install chromium`. `WEBSITE_REVIEW_URL` and
 check expects the public Open Design endpoint in the site's connection example.
 It records screenshots and DOM measurements, exercises search, keyboard and
 clipboard actions and catalog recovery, and fails on blocking spacing or copy
-findings. See [the release report](RELEASE-VERIFICATION.md) for exact coverage.
+findings. It covers the six featured themes and expanded 31-theme catalog,
+appearance and URL persistence, live preview save/edit, all setup tabs,
+clipboard denial, invalid catalog responses and timeout recovery. Set
+`MCP_PRIVATE_ARCHIVE` to an absolute saved archive path to review through the
+private local Open Design MCP, or leave it unset for the public review service.
+`WEBSITE_SOURCE_DIR` and `WEBSITE_EXPECTED_MCP_URL` support other checkouts and
+service endpoints. See [the release report](RELEASE-VERIFICATION.md) for exact coverage.
+
+The website's compact palette data is reproducible from the public registry:
+`node scripts/sync-website-previews.mjs ./website`. This reads no private captures.
+It retains the source colors used by the preview and selects readable action
+label/surface pairs using the browser's color conversion.
 
 ## Docker
 

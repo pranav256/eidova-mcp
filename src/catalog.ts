@@ -71,7 +71,7 @@ export async function catalog(): Promise<CatalogSystem[]> {
 export async function searchCatalog(query: string, limit = 5) {
   const words = query.toLowerCase().match(/[a-z0-9]+/g) ?? [];
   return (await catalog()).map(system => {
-    const text = `${system.id} ${system.title} ${system.description} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
+    const text = `${system.id} ${system.title} ${system.description} ${system.font} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
     const matchScore = words.reduce((score, word) => score + (text.includes(word) ? 1 : 0), 0) / Math.max(words.length, 1);
     return { ...system, matchScore };
   }).sort((a, b) => b.matchScore - a.matchScore || a.id.localeCompare(b.id)).slice(0, Math.min(limit, 20));

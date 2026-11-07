@@ -8,6 +8,14 @@ test('all checked-in systems can be searched and produce real component source',
   const system=await systemWithComponents('minimal-light',{componentNames:['button']});
   assert.match(system!.components[0].code,/React/);
 });
+test('font searches rank systems using that font ahead of unrelated themes',async()=> {
+  const result=await searchCatalog('geist',20);
+  const matches=result.filter(system=>system.matchScore>0);
+  assert.ok(matches.some(system=>system.id==='minimal-light'));
+  assert.ok(matches.some(system=>system.id==='linear'));
+  assert.ok(matches.every(system=>/geist/i.test(system.font)));
+  assert.ok(!matches.some(system=>system.id==='airbnb'));
+});
 test('registry aggregates and dependencies resolve locally instead of to vendor',async()=> {
   const all=await registryItem('airbnb','all');assert.ok(all.registryDependencies!.length>90);
   const dialog=await registryItem('airbnb','alert-dialog');
