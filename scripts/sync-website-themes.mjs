@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const website = path.resolve(process.argv[2] || path.join(root, 'website'));
 const registry = path.join(root, 'assets/registry');
 const entries = (await readdir(registry, { withFileTypes: true })).filter(e => e.isDirectory()).sort((a,b)=>a.name.localeCompare(b.name));
-const previews = {};
+const palettes = {};
 const usedTokens = new Set(['--background','--foreground','--card','--card-foreground','--primary','--primary-foreground','--secondary','--secondary-foreground','--muted','--muted-foreground','--accent','--accent-foreground','--border','--input','--ring','--radius']);
 for (const entry of entries) {
   const globals = JSON.parse(await readFile(path.join(registry, entry.name, 'globals.json'), 'utf8'));
@@ -18,12 +18,12 @@ for (const entry of entries) {
   const tokens = Object.fromEntries(Object.entries(values).map(([name,value])=>[name.startsWith('--')?name:'--'+name,value]).filter(([name])=>usedTokens.has(name)));
   const alternate = globals.cssVars?.dark;
   const darkTokens = alternate ? {...tokens,...Object.fromEntries(Object.entries(alternate).map(([name,value])=>[name.startsWith('--')?name:'--'+name,value]).filter(([name])=>usedTokens.has(name)))} : undefined;
-  previews[entry.name] = { title: entry.name.split('-').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '), tokens, darkTokens };
+  palettes[entry.name] = { title: entry.name.split('-').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '), tokens, darkTokens };
 }
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined), headless:true });
 try {
   const page = await browser.newPage();
-  const metadata = await page.evaluate(previews => {
+  const metadata = await page.evaluate(palettes => {
     const canvas = document.createElement('canvas'); canvas.width=canvas.height=1;
     const paint=canvas.getContext('2d',{willReadFrequently:true});
     const rgb = (...colors) => {paint.clearRect(0,0,1,1);for(const color of colors){if(!CSS.supports('color',color))throw new Error('Unsupported color: '+color);paint.fillStyle=color;paint.fillRect(0,0,1,1);}return [...paint.getImageData(0,0,1,1).data].slice(0,3);};
@@ -39,7 +39,25 @@ try {
       let selected=choose('--primary','--primary-foreground');
       if(selected.contrast<4.5){actionBackgroundToken='--secondary';selected=choose('--secondary','--secondary-foreground');}
       if(selected.contrast<4.5)throw new Error(id+' has no readable action token pair');
-      return {actionBackgroundToken,actionTextToken:selected.token,tokens};
+      const backgrounds=['--background','--card','--input'].map(key=>rgb(tokens['--background'],tokens[key]));
+      const mutedCandidates=['--muted-foreground','--foreground','--card-foreground','--background'];
+      const muted=mutedCandidates.find(key=>backgrounds.every(background=>ratio(rgb(tokens[key]),background)>=4.5));
+      if(!muted)throw new Error(id+' needs readable supporting text across its surfaces');
+      const textFor=(key,surface)=>{
+        const background=rgb(tokens['--background'],tokens[surface]);
+        const candidate=[key,'--foreground','--card-foreground','--background'].find(name=>ratio(rgb(tokens[name]),background)>=4.5);
+        if(!candidate)throw new Error(id+' needs readable text on '+surface);
+        return tokens[candidate];
+      };
+      const siteOverrides={
+        '--muted-foreground':tokens[muted],
+        '--secondary-foreground':textFor('--secondary-foreground','--secondary'),
+        '--accent-foreground':textFor('--accent-foreground','--accent'),
+        '--ring':tokens['--foreground'],
+        '--action':tokens[actionBackgroundToken],
+        '--action-foreground':tokens[selected.token],
+      };
+      return {tokens,siteOverrides};
     };
     const oklch = color => {
       const channels=rgb(color).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});
@@ -71,7 +89,7 @@ try {
       result['--ring']=result['--foreground'];
       return result;
     };
-    return Object.fromEntries(Object.entries(previews).map(([id,{title,tokens,darkTokens}])=>{
+    return Object.fromEntries(Object.entries(palettes).map(([id,{title,tokens,darkTokens}])=>{
       const scheme=lum(rgb(tokens['--background']))<.35?'dark':'light';
       const modes={};
       for(const mode of ['light','dark']){
@@ -80,7 +98,7 @@ try {
       }
       return [id,{title,scheme,modes}];
     }));
-  },previews);
-  await writeFile(path.join(website,'src/catalog-previews.json'),JSON.stringify(metadata,null,2)+'\n');
-  console.log(`Synced ${entries.length} themes in both appearances with readable action labels.`);
+  },palettes);
+  await writeFile(path.join(website,'src/catalog-themes.json'),JSON.stringify(metadata,null,2)+'\n');
+  console.log(`Synced ${entries.length} site themes in both appearances with readable text and actions.`);
 } finally {await browser.close();}

@@ -42,7 +42,7 @@ supplied path, run the source and rendered checks:
 ```sh
 npm run review:website -- https://open-design-mcp-liard.vercel.app/mcp ./website
 node scripts/verify-website.mjs
-node scripts/verify-theme-previews.mjs
+node scripts/verify-website-themes.mjs
 ```
 
 The browser check uses Microsoft Edge on Windows. Set `PLAYWRIGHT_CHANNEL` to
@@ -53,7 +53,7 @@ check expects the public Open Design endpoint in the site's connection example.
 It records screenshots and DOM measurements, exercises search, keyboard and
 clipboard actions and catalog recovery, and fails on blocking spacing or copy
 findings. It covers the six featured themes and expanded 31-theme catalog,
-appearance and URL persistence, live preview save/edit, all setup tabs,
+appearance and URL persistence, whole-site theme changes and reset, all setup tabs,
 clipboard denial, invalid catalog responses and timeout recovery. Set
 `MCP_PRIVATE_ARCHIVE` to an absolute saved archive path to review through the
 private local Open Design MCP, or leave it unset for the public review service.
@@ -61,13 +61,14 @@ private local Open Design MCP, or leave it unset for the public review service.
 service endpoints. See [the release report](RELEASE-VERIFICATION.md) for exact coverage.
 
 The website's compact palette data is reproducible from the public registry:
-`node scripts/sync-website-previews.mjs ./website`. This reads no private captures.
-It retains the source colors used by the preview and selects readable action
-label/surface pairs using the browser's color conversion.
-Both preview appearances are exported. Existing source variants are preferred;
+`node scripts/sync-website-themes.mjs ./website`. This reads no private captures.
+It retains original public tokens and exports readable site-specific text and
+action overrides using browser color conversion. Both appearances are exported;
 missing variants adapt surfaces and text while keeping the accent and radius.
-The preview check opens all 31 themes in both modes, verifies mode inheritance,
-refresh and navigation, and reviews rendered surfaces, text contrast and spacing.
+The theme check applies all 31 systems in both modes to the whole website and
+checks saved choices, deep links, reset, keyboard focus, scroll/search/setup
+preservation, unavailable storage, catalog outages, contrast and rendered spacing.
+Legacy preview links migrate to `?theme=<id>&mode=<appearance>`.
 
 ## Docker
 
