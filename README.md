@@ -88,6 +88,17 @@ vendor accounts, mobile/Shopify install kits and trusted dashboard browser recei
 are not implemented. Custom themes reuse a catalog base and supplied tokens.
 Review tools report only the evidence they actually receive.
 
+Local stdio also supports an opt-in [private capture archive](docs/PRIVATE-ARCHIVE.md)
+for an owner's saved inspiration and native/Shopify kit responses. Captured
+assets are not included in this repository or the public service. This mode
+serves saved file contents and references offline; it does not generate or
+install missing kits.
+
+To start a saved private archive, run
+`npm run stdio:private -- /absolute/path/to/private/archive`. For Codex, register
+the committed `scripts/start-private.mjs` launcher with your absolute Node,
+checkout and archive paths; the private setup guide includes the command.
+
 There is no project-imposed monthly call quota. The public service remains subject
 to Vercel capacity and hosting limits; self-hosting lets you choose that capacity.
 

@@ -1937,7 +1937,7 @@ The frame command samples at 3fps. Also check the first and last frame of every 
 
 The product shots come from the Open Design video components: agent and prompt screens, phone and laptop mockups, cropped screen recordings, terminal sessions, charts and counters, title reveals, captions, logo stings, social proof, transitions and backgrounds. List them with get-motion-guide({}) and load one with get-motion-guide({ component: "phone-mockup" }), or install it:
 
-    npx shadcn@latest add https://open-design-mcp.vercel.app/registry/video/phone-mockup.json
+    npx shadcn@latest add https://open-design-mcp-liard.vercel.app/registry/video/phone-mockup.json
 
 The CLI writes the file into src/components/bd-video/ and the video kit into src/lib/bd-video/. Pass videoComponentTheme from src/video-component-theme.ts through the theme prop so the shot paints from the product's tokens.
 
@@ -1961,7 +1961,7 @@ var MOTION_SCAFFOLD_STEPS = [
   "Install and follow the official Remotion skills from https://www.remotion.dev/docs/ai/skills for current APIs and package versions.",
   "Replace the semantic tokens in src/design-system.ts with the product's existing design-system values.",
   "Replace every placeholder in src/brief.ts. When proof is present, keep its source URL and never invent a claim.",
-  'Pick the product shots from the video components: get-motion-guide({}) lists them, get-motion-guide({ component: "answer-reply" }) returns one, and `npx shadcn@latest add https://open-design-mcp.vercel.app/registry/video/<name>.json` installs it into src/components/bd-video/. Pass videoComponentTheme from src/video-component-theme.ts through each component\'s theme prop.',
+  'Pick the product shots from the video components: get-motion-guide({}) lists them, get-motion-guide({ component: "answer-reply" }) returns one, and `npx shadcn@latest add https://open-design-mcp-liard.vercel.app/registry/video/<name>.json` installs it into src/components/bd-video/. Pass videoComponentTheme from src/video-component-theme.ts through each component\'s theme prop.',
   "Run bun install, bun run check, bun run dev, bun run captions, bun run render, bun run render:vertical and bun run package.",
   "Install FFmpeg before bun run review:frames. Inspect every scene boundary and ask the user to watch both final renders. A successful render is not visual approval."
 ].join("\n");
@@ -5100,7 +5100,7 @@ export interface SoundCue {
 }
 
 /** Where the files are served. A project can copy them into public/ and pass its own base. */
-export const SFX_BASE_URL = "https://open-design-mcp.vercel.app/video/sfx/v1";
+export const SFX_BASE_URL = "https://open-design-mcp-liard.vercel.app/video/sfx/v1";
 
 /** The address of one file. */
 export const sfxSrc = (name: SfxName, base: string = SFX_BASE_URL): string => \`\${base}/\${name}.wav\`;
@@ -5326,7 +5326,7 @@ export function pickFont(font: string | undefined, theme: VideoTheme, fallback: 
 };
 
 // vendor/upstream/src/mcp/scaffold/video-components.ts
-var VIDEO_REGISTRY_BASE_URL = "https://open-design-mcp.vercel.app/registry/video";
+var VIDEO_REGISTRY_BASE_URL = "https://open-design-mcp-liard.vercel.app/registry/video";
 var GROUP_ORDER = [
   ["ai-input", "AI chat input"],
   ["screens", "Screens and devices"],
@@ -28238,7 +28238,7 @@ The script reads the file and prints numbers. It writes nothing and sends nothin
           "| --- | --- | --- | --- | --- |",
           ...cut.beats.map((beat) => `| ${beat.index + 1} | ${beat.sourceStart}s to ${beat.sourceEnd}s | ${beat.durationInFrames} | ${beat.zoom > 1 ? `${beat.zoom}x on (${beat.focus.x}, ${beat.focus.y})` : "locked off"} | ${beat.reason} |`),
           "",
-          "Install the component: npx shadcn@latest add https://open-design-mcp.vercel.app/registry/video/recording-shot.json",
+          "Install the component: npx shadcn@latest add https://open-design-mcp-liard.vercel.app/registry/video/recording-shot.json",
           "",
           "```tsx",
           formatRecordingCode(cut, src ?? "/recordings/take.mp4"),
@@ -28455,11 +28455,11 @@ function registerStoreListingTools({ server, tracked }) {
 // vendor/upstream/src/mcp/tools/design-maker-tools.ts
 import { z as z42 } from "zod";
 var errorResult = (text5) => ({ content: [{ type: "text", text: text5 }], isError: true });
-var NEEDS_API_KEY = "Making a sales page or a social image needs a Open Design API key. Create one at https://open-design-mcp.vercel.app/mcp/install and connect with it, or call POST https://open-design-mcp.vercel.app/api/v1/assets with the key.";
-var CREDENTIAL_REFUSED = "Open Design refused this connection's credential. Reconnect Open Design, or create an API key at https://open-design-mcp.vercel.app/mcp/install and connect with it.";
+var NEEDS_API_KEY = "Making a sales page or a social image needs a Open Design API key. Create one at https://open-design-mcp-liard.vercel.app/mcp/install and connect with it, or call POST https://open-design-mcp-liard.vercel.app/api/v1/assets with the key.";
+var CREDENTIAL_REFUSED = "Open Design refused this connection's credential. Reconnect Open Design, or create an API key at https://open-design-mcp-liard.vercel.app/mcp/install and connect with it.";
 var OUT_OF_CREDITS = /run out of credits|free Open Design queries|free trial/i;
 var CREDITS_TEXT = "A sales page spends 3 credits, its PDF included, and a social image spends 2.";
-var UPGRADE_TEXT = "Upgrade at https://open-design-mcp.vercel.app/pricing.";
+var UPGRADE_TEXT = "Upgrade at https://open-design-mcp-liard.vercel.app/pricing.";
 function designErrorText(status, message) {
   const detail = message?.trim();
   if (status === 401) return CREDENTIAL_REFUSED;
@@ -28470,7 +28470,7 @@ function designErrorText(status, message) {
   }
   if (status === 429) return `Open Design is rate limiting this key. ${detail ?? "Try again in a minute."}`;
   if (status === 403) {
-    return detail || "Public designs need an account with a verified email. Claim your key at https://open-design-mcp.vercel.app.";
+    return detail || "Public designs need an account with a verified email. Claim your key at https://open-design-mcp-liard.vercel.app.";
   }
   return `Open Design could not make this design (HTTP ${status}).${detail ? ` ${detail}` : ""}`;
 }

@@ -843,5 +843,31 @@
       "path": "vendor/upstream/src/mcp-debug-log.ts",
       "sha256": "619dd7b43e5e592b80f7e13c15a3feb768609d31457e9880f07f35d05e9ecd65"
     }
-  ]
+  ],
+  "retainedSourceFiles": 146,
+  "omittedUnusedFiles": [
+    "vendor/upstream/src/mcp/clients.ts",
+    "vendor/upstream/src/mcp/figma-draw.ts",
+    "vendor/upstream/src/mcp/figma-kit-gaps.ts",
+    "vendor/upstream/src/mcp/figma-kit-tokens.ts",
+    "vendor/upstream/src/mcp/figma-kit.ts",
+    "vendor/upstream/src/mcp/figma-model-blocks.ts",
+    "vendor/upstream/src/mcp/figma-model-drawings.ts",
+    "vendor/upstream/src/mcp/figma-model-handoff.ts",
+    "vendor/upstream/src/mcp/figma-model-prompt.ts",
+    "vendor/upstream/src/mcp/figma-model-providers.ts",
+    "vendor/upstream/src/mcp/figma-model.ts",
+    "vendor/upstream/src/mcp/figma-prototype-motion.ts",
+    "vendor/upstream/src/mcp/figma-prototype-runtime.ts",
+    "vendor/upstream/src/mcp/figma-prototype-style.ts",
+    "vendor/upstream/src/mcp/figma-prototype-tool.ts",
+    "vendor/upstream/src/mcp/figma-prototype.ts",
+    "vendor/upstream/src/mcp/figma-relay-server.ts",
+    "vendor/upstream/src/mcp/figma-relay.ts",
+    "vendor/upstream/src/mcp/video/index.ts",
+    "vendor/upstream/src/mcp-attribution.ts",
+    "vendor/upstream/src/mcp-debug-log.ts",
+    "vendor/upstream/src/terms.ts"
+  ],
+  "retentionNote": "Original files records describe the complete source-map recovery. Only the 146 modules reached by the build entry or retained tests remain in the active checkout; unused modules are preserved in Git history and the original source map."
 }
