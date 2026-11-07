@@ -1,0 +1,52 @@
+{
+  "name": "open-design-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent open-source design tools with a local component registry",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "start": "node dist/main.js",
+    "stdio": "tsx src/stdio.ts",
+    "build": "tsup src/main.ts src/stdio.ts --format esm --platform node --target node22 --clean",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "tsc --noEmit",
+    "content:import": "tsx scripts/import-content.ts",
+    "build:upstream": "node scripts/build-upstream.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:private": "node scripts/smoke-private.mjs",
+    "smoke:stdio": "node scripts/smoke-stdio.mjs",
+    "review:website": "node scripts/review-site.mjs"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.151",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "@vercel/blob": "^2.8.2",
+    "drizzle-orm": "0.45.4",
+    "drizzle-zod": "^0.8.3",
+    "express": "5.1.0",
+    "typescript": "5.9.3",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "@types/node": "22.19.0",
+    "esbuild": "^0.25.12",
+    "playwright": "1.56.1",
+    "tsup": "8.5.0",
+    "tsx": "4.20.6"
+  },
+  "overrides": {
+    "@hono/node-server": "2.1.6",
+    "@vercel/cli-config": "0.3.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pranav256/open-design-mcp.git"
+  },
+  "homepage": "https://open-design-website.vercel.app"
+}

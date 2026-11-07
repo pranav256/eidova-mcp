@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/marvkr/better-design",
+  "commit": "175e7ba49bcf83857abc32933686b5aa3abb197e",
+  "license": "MIT",
+  "note": "Registry items include component source. Dependency URLs are rewritten at runtime."
+}

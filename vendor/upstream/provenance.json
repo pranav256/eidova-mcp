@@ -1,0 +1,847 @@
+{
+  "package": "better-design@0.49.1",
+  "sourceMapSha256": "0ed332448cb3f1d9744153b041e88b30255de43523402cb7b5df7f922a77a333",
+  "license": "MIT",
+  "files": [
+    {
+      "source": "../../shared/src/mcp/clients.ts",
+      "path": "vendor/upstream/src/mcp/clients.ts",
+      "sha256": "0f6c4b4e2233f6e3de709572f90dbe7c264245f12fcc15b761a56f40c8be9d69"
+    },
+    {
+      "source": "../../shared/src/guards.ts",
+      "path": "vendor/upstream/src/guards.ts",
+      "sha256": "86eece15623c1b9761e6eb18354caa2bb045cb425a8b8ab53e14a0aabfe21eec"
+    },
+    {
+      "source": "../../shared/src/mcp-attribution.ts",
+      "path": "vendor/upstream/src/mcp-attribution.ts",
+      "sha256": "c20e00a3d68db9a90f2af1b1a6355743096e020e2ea41e69ad7878f023022718"
+    },
+    {
+      "source": "../../shared/src/terms.ts",
+      "path": "vendor/upstream/src/terms.ts",
+      "sha256": "30aa9e3fe438cc5ce1c069dd57f13730b8b30404c8c9bc61233a9fb5550f5e9b"
+    },
+    {
+      "source": "../../shared/src/mcp/version.ts",
+      "path": "vendor/upstream/src/mcp/version.ts",
+      "sha256": "43b857f881f9184af5d2ec87bc16b4b79debce669bef391d2e999791f16eeb52"
+    },
+    {
+      "source": "../../shared/src/mcp/advertised-schema.ts",
+      "path": "vendor/upstream/src/mcp/advertised-schema.ts",
+      "sha256": "97cc771a9643953b90bdf18baae6e8c41627781b01c2797ff3aebb2fbd6a4121"
+    },
+    {
+      "source": "../../shared/src/mcp/tool-names.ts",
+      "path": "vendor/upstream/src/mcp/tool-names.ts",
+      "sha256": "c25d27915c2895f40cfe385b86760f3dacad226c774a98e7cb7faf72bbdcac3e"
+    },
+    {
+      "source": "../../shared/src/mcp/directory-listing.ts",
+      "path": "vendor/upstream/src/mcp/directory-listing.ts",
+      "sha256": "73979ab1e9765ffd18834488374f15c843767e6c25498a185b6b87cca4195d8c"
+    },
+    {
+      "source": "../../shared/src/mcp/presentation-runtime.ts",
+      "path": "vendor/upstream/src/mcp/presentation-runtime.ts",
+      "sha256": "a6491315d48a8d83957c9da040c1c962b73e6331a07543d1e3444a54408a7a42"
+    },
+    {
+      "source": "../../shared/src/mcp/dev-tools.ts",
+      "path": "vendor/upstream/src/mcp/dev-tools.ts",
+      "sha256": "22f68ad6d504d3272abad23a63d13817df046c9e5299f91be15a6291a75bca1d"
+    },
+    {
+      "source": "../../shared/src/mcp/redesign-contract.ts",
+      "path": "vendor/upstream/src/mcp/redesign-contract.ts",
+      "sha256": "ff52256754d925b4aa19a7c8921c7fb5176bee80fd938978805b7c5f4a5fa6de"
+    },
+    {
+      "source": "../../shared/src/mcp/instructions.ts",
+      "path": "vendor/upstream/src/mcp/instructions.ts",
+      "sha256": "1df257ab39e3d6aa82805dbf7f5a3d0c5d77c7e347232226348da81d000ed72a"
+    },
+    {
+      "source": "../../shared/src/design-systems/presentation.ts",
+      "path": "vendor/upstream/src/design-systems/presentation.ts",
+      "sha256": "a225563736c2f1c3786fe5fa4d003885e7074f4be4c45886fc0484f1f71f5d5c"
+    },
+    {
+      "source": "../../shared/src/mcp/selected-icon-handoff.ts",
+      "path": "vendor/upstream/src/mcp/selected-icon-handoff.ts",
+      "sha256": "928f32a4eeea390d7791b74f10158b51935bfe13ffd851955aed651e65b15055"
+    },
+    {
+      "source": "../../shared/src/mcp/session-guidance.ts",
+      "path": "vendor/upstream/src/mcp/session-guidance.ts",
+      "sha256": "954b479476221e62316ce611753a174cf92ad16753a4c678c6d11903e1f6b600"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/shared.ts",
+      "path": "vendor/upstream/src/mcp/tools/shared.ts",
+      "sha256": "36089ec4ff846886fbd9ab817fc3bba24c526dcc34a7641aa3f4449c5a764c82"
+    },
+    {
+      "source": "../../shared/src/mcp/native-verify.ts",
+      "path": "vendor/upstream/src/mcp/native-verify.ts",
+      "sha256": "c21a97b0c12b0aff7bac6dc6c828b2acad995286c29c1ce2d4f99240a5bd501d"
+    },
+    {
+      "source": "../../shared/src/mcp/scaffold/motion-scaffold.ts",
+      "path": "vendor/upstream/src/mcp/scaffold/motion-scaffold.ts",
+      "sha256": "0fe98308b6e8fb1d1f2a4551d7706aeb29a01f074c4cca1516a844fdd91f9062"
+    },
+    {
+      "source": "../../shared/src/mcp/scaffold/video-components.generated.ts",
+      "path": "vendor/upstream/src/mcp/scaffold/video-components.generated.ts",
+      "sha256": "0158b9aaafb1cda5cae39247b35d1822174641455d82b587e54acb40100d6e46"
+    },
+    {
+      "source": "../../shared/src/mcp/scaffold/video-components.ts",
+      "path": "vendor/upstream/src/mcp/scaffold/video-components.ts",
+      "sha256": "559d5115d697d34c7c15bfe682f7668307cd8e748837ca35bb87b1efa41978ad"
+    },
+    {
+      "source": "../../shared/src/foundational-docs/topic-utils.ts",
+      "path": "vendor/upstream/src/foundational-docs/topic-utils.ts",
+      "sha256": "1dc9c3fc8e2985c6cdecd66ae6e19ec4200c1e91ada3256ee1d5a451e526baf5"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/review-rules-description.ts",
+      "path": "vendor/upstream/src/mcp/tools/review-rules-description.ts",
+      "sha256": "172b4dadc5966af881c3b890e5e8aedc92a1c8e8b242dc4ee2548f2381af1096"
+    },
+    {
+      "source": "../../shared/src/agent-feedback.ts",
+      "path": "vendor/upstream/src/agent-feedback.ts",
+      "sha256": "589eff801131b672aa758e8fd3433e1041aeae2429f2c9460931d2e3009b58fd"
+    },
+    {
+      "source": "../../shared/src/inspection/density.ts",
+      "path": "vendor/upstream/src/inspection/density.ts",
+      "sha256": "2197335ae525f3984c5ce59e725859c8d6089b52b83884abe4a018332bf63074"
+    },
+    {
+      "source": "../../shared/src/schema.ts",
+      "path": "vendor/upstream/src/schema.ts",
+      "sha256": "840f13d6ae2e8fe2c112331b5d82e97e0ba1677cd20e452f421b609587176c09"
+    },
+    {
+      "source": "../../shared/src/project-rules.ts",
+      "path": "vendor/upstream/src/project-rules.ts",
+      "sha256": "5c9162cbd6a015224760230b3fd23bb60a12a1ba5d1065e27089860467924d7b"
+    },
+    {
+      "source": "../../shared/src/mcp/component-rules.ts",
+      "path": "vendor/upstream/src/mcp/component-rules.ts",
+      "sha256": "13e4f20026b86c473b808208baa1a00eb9bc383522d8d0de81c22ea6a3aab43d"
+    },
+    {
+      "source": "../../shared/src/mcp/project-rules-answer.ts",
+      "path": "vendor/upstream/src/mcp/project-rules-answer.ts",
+      "sha256": "595532332170500f3b63e22f0c9ad698f9be0613a1e4ad82047674d57c5829bc"
+    },
+    {
+      "source": "../../shared/src/mcp/team-rule-proposal.ts",
+      "path": "vendor/upstream/src/mcp/team-rule-proposal.ts",
+      "sha256": "22b537d1635acd7537cc137905aec6070ecc72fb4e6c772e006f3219c4c777fc"
+    },
+    {
+      "source": "../../shared/src/mcp/team-rules-outline.ts",
+      "path": "vendor/upstream/src/mcp/team-rules-outline.ts",
+      "sha256": "514953da34cc0a42542a4a83870d6edaee0c259987b5c871e3973d5c3195f4e9"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/team-rules-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/team-rules-tools.ts",
+      "sha256": "1dd952437c1a1a6a0f9f9fff722eb8bfec981b2c48ba7431a5fc21f8e4d630b2"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/principle-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/principle-tools.ts",
+      "sha256": "885041774f257b7cf1a7ea40c0f008216ccb9f949b05fc7ede83f40bf7436848"
+    },
+    {
+      "source": "../../shared/src/redact.ts",
+      "path": "vendor/upstream/src/redact.ts",
+      "sha256": "b8b64b1f45c120c93feef1fe90244745b088c4064452875fe8f10edb6109a4fa"
+    },
+    {
+      "source": "../../shared/src/review-capture.ts",
+      "path": "vendor/upstream/src/review-capture.ts",
+      "sha256": "ed817bdd8fb2dd7bdc5b998282a238586f7430661b42908a125259c7884f13ce"
+    },
+    {
+      "source": "../../shared/src/mcp/comprehension/extract.ts",
+      "path": "vendor/upstream/src/mcp/comprehension/extract.ts",
+      "sha256": "1fde8974072170c6bf7ae361b86147cf72accf218e050706977b5764ac32fdfd"
+    },
+    {
+      "source": "../../shared/src/mcp/comprehension/lexicon.ts",
+      "path": "vendor/upstream/src/mcp/comprehension/lexicon.ts",
+      "sha256": "27d931fb8500d50846af5306c7480b9d6e0243f4de2e09e9ddbdbd4087294800"
+    },
+    {
+      "source": "../../shared/src/mcp/comprehension/analyze.ts",
+      "path": "vendor/upstream/src/mcp/comprehension/analyze.ts",
+      "sha256": "7ccebdcef94eb42caf3d4c5bed2de724f4c79c83e751d19bc1d4f47864a4c372"
+    },
+    {
+      "source": "../../shared/src/mcp/comprehension/format.ts",
+      "path": "vendor/upstream/src/mcp/comprehension/format.ts",
+      "sha256": "8a855caa3bf3ade8a1a2b51c069e71bc0f66d15ac8fcf45f2ad9dee7ac0f326b"
+    },
+    {
+      "source": "../../shared/src/mcp/comprehension/index.ts",
+      "path": "vendor/upstream/src/mcp/comprehension/index.ts",
+      "sha256": "56688a9819318b6b58fec1d1a7910a57d3f15f6910c4c7f23e213cc89362f88a"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/comprehension-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/comprehension-tools.ts",
+      "sha256": "1bec11b15d24bd812cb5bb5ad47bbcdb130e869f7f87e97e5c39c7edc4b3d29c"
+    },
+    {
+      "source": "../../shared/src/mcp/icon-installer.ts",
+      "path": "vendor/upstream/src/mcp/icon-installer.ts",
+      "sha256": "53272ff11a0df9903adae5bd12e6917cccbff51bacc47c46d76b4f4d1a6aff2e"
+    },
+    {
+      "source": "../../shared/src/mcp/icon-files.ts",
+      "path": "vendor/upstream/src/mcp/icon-files.ts",
+      "sha256": "93dfaff3116760ac00723b062291253c306d50846dfad5b969679ed93baa8448"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/icon-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/icon-tools.ts",
+      "sha256": "e141ad502349ccf224572a448f38a67fdbdffa7f28bb9dda8fce43734344894e"
+    },
+    {
+      "source": "../../shared/src/mcp/project-id-line.ts",
+      "path": "vendor/upstream/src/mcp/project-id-line.ts",
+      "sha256": "50631abfee1da4c8ed44f33b52bd9d93399b63e1a639c3067e834ced75bd1c4d"
+    },
+    {
+      "source": "../../shared/src/mcp/guardrails.ts",
+      "path": "vendor/upstream/src/mcp/guardrails.ts",
+      "sha256": "b3b3d889e2368887812c0fea0b0451acb6544c69a6bed54b7b1fc2b00897780e"
+    },
+    {
+      "source": "../../shared/src/motion-tokens.ts",
+      "path": "vendor/upstream/src/motion-tokens.ts",
+      "sha256": "d9d1fff9df9cfbf822e041f5c003843e8905998105b34c5d84005a90cbe3ec3c"
+    },
+    {
+      "source": "../../shared/src/mcp/html-kit.ts",
+      "path": "vendor/upstream/src/mcp/html-kit.ts",
+      "sha256": "73c7dcd9ed0f8657baf3938625bd1e43c50621a6491272bd645d2ade75a7beeb"
+    },
+    {
+      "source": "../../shared/src/mcp/color-to-oklch.ts",
+      "path": "vendor/upstream/src/mcp/color-to-oklch.ts",
+      "sha256": "62808feaa3cf4de4d8f7e349e93849db623f0d9712ea65d1d6daae0fc5bac304"
+    },
+    {
+      "source": "../../shared/src/mcp/dtcg.ts",
+      "path": "vendor/upstream/src/mcp/dtcg.ts",
+      "sha256": "34af0e66b9f8d5cc2816e8cda742e7d7efe6a59828a9823a772e6f481c12b2d7"
+    },
+    {
+      "source": "../../shared/src/mcp/mobile-primitives.ts",
+      "path": "vendor/upstream/src/mcp/mobile-primitives.ts",
+      "sha256": "e1ca6dc860530d09f58d06b213f376a79480baa8f7149811a7b0dc6257b4ee00"
+    },
+    {
+      "source": "../../shared/src/mcp/shopify-icons.generated.ts",
+      "path": "vendor/upstream/src/mcp/shopify-icons.generated.ts",
+      "sha256": "d74e3836e67f8d662061caaac8efb82d000187003c362f2ed50c3e3b7ae24315"
+    },
+    {
+      "source": "../../shared/src/mcp/shopify-icons.ts",
+      "path": "vendor/upstream/src/mcp/shopify-icons.ts",
+      "sha256": "be0c2f99a2d61b1f178e451a8f9e7e98a5df7f7faa41e83a8413ffd914ae4165"
+    },
+    {
+      "source": "../../shared/src/mcp/shopify-kit.ts",
+      "path": "vendor/upstream/src/mcp/shopify-kit.ts",
+      "sha256": "775cb5c956764949d5779dc4249f2da8127adcacc38cb4ff704f8ba17b9a1b3b"
+    },
+    {
+      "source": "../../shared/src/mcp/store-screenshots.ts",
+      "path": "vendor/upstream/src/mcp/store-screenshots.ts",
+      "sha256": "5f3c0585dbc2d35a0b71929ddecc6c3b811d0b38ceb5aaf489ceac945437ac21"
+    },
+    {
+      "source": "../../shared/src/registry-css.ts",
+      "path": "vendor/upstream/src/registry-css.ts",
+      "sha256": "3fcea708fc92f1ba417a26b74d204f36289602f35526d5f55a612e062969a184"
+    },
+    {
+      "source": "../../shared/src/mcp/preview-widget-sdk.generated.ts",
+      "path": "vendor/upstream/src/mcp/preview-widget-sdk.generated.ts",
+      "sha256": "47ca1e8c35856795efa6f7d1913588dbd820e2bffa436c27ed19379d3957f617"
+    },
+    {
+      "source": "../../shared/src/mcp/tw-extracted.generated.ts",
+      "path": "vendor/upstream/src/mcp/tw-extracted.generated.ts",
+      "sha256": "37442d83610c7aa875adf2fda83ebe93769faff083dc0411b13b1dd615c1d125"
+    },
+    {
+      "source": "../../shared/src/mcp/tw-translate.ts",
+      "path": "vendor/upstream/src/mcp/tw-translate.ts",
+      "sha256": "84e72858f837c1a93d17fee735c1e9344ebe2ca8f1bf9663e969b4b71ae95e77"
+    },
+    {
+      "source": "../../shared/src/mcp/preview-html.ts",
+      "path": "vendor/upstream/src/mcp/preview-html.ts",
+      "sha256": "0f983ac57072866971eb97dd8a3be6ed69e88098d935f08e73acaa20b70c1ee7"
+    },
+    {
+      "source": "../../shared/src/mcp/shopify-accordion.ts",
+      "path": "vendor/upstream/src/mcp/shopify-accordion.ts",
+      "sha256": "8554fccfa43224cc625022f53b85365f37fadb348dbea192dea84e6f11faad18"
+    },
+    {
+      "source": "../../shared/src/mcp/shopify-primitives.ts",
+      "path": "vendor/upstream/src/mcp/shopify-primitives.ts",
+      "sha256": "085a4612cf9e4873bf5cc3332917aefb26b00211db81904e7aac37d9f983b92f"
+    },
+    {
+      "source": "../../shared/src/mcp/build-loop.ts",
+      "path": "vendor/upstream/src/mcp/build-loop.ts",
+      "sha256": "1a61c0dbd10835bf22fd6613f328e8177f360dd3a79733b28d02f86e07c2734d"
+    },
+    {
+      "source": "../../shared/src/mcp/page-skeleton.ts",
+      "path": "vendor/upstream/src/mcp/page-skeleton.ts",
+      "sha256": "2e0ec61ba31daf207aac861faddebba6d1339654caf3dfe558491192037fa5b8"
+    },
+    {
+      "source": "../../shared/src/mcp/flow-scaffold.ts",
+      "path": "vendor/upstream/src/mcp/flow-scaffold.ts",
+      "sha256": "125c0189f310a7aa27204b587e5b63ea782cf659baf4ea81f744ec9a1ebc6bd6"
+    },
+    {
+      "source": "../../shared/src/mcp/kit-api-index.ts",
+      "path": "vendor/upstream/src/mcp/kit-api-index.ts",
+      "sha256": "e145d04a9da589c0f87f41fa3466dda1606a9e66199e91da64bfd57caec9f15f"
+    },
+    {
+      "source": "../../shared/src/mcp/kit-icons.ts",
+      "path": "vendor/upstream/src/mcp/kit-icons.ts",
+      "sha256": "dfbd8af4699767e7fe1f91f763fd07c418779c446ec961212d3bf57d8171f88d"
+    },
+    {
+      "source": "../../shared/src/mcp/inspiration.ts",
+      "path": "vendor/upstream/src/mcp/inspiration.ts",
+      "sha256": "30647ebc8e739403881b84368f0c3f56b5d4f684d5b49e210a7962921eb5758a"
+    },
+    {
+      "source": "../../shared/src/mcp/mobile-kit-references.ts",
+      "path": "vendor/upstream/src/mcp/mobile-kit-references.ts",
+      "sha256": "9aba7717ead313d7740fee09647edbb469e1a16c7bea59b53cc97c9847dcae27"
+    },
+    {
+      "source": "../../shared/src/mcp/swiftui-starter.ts",
+      "path": "vendor/upstream/src/mcp/swiftui-starter.ts",
+      "sha256": "b67758a89a25c2c6847c66d052c01cb4a5d97e036f222dc7533c0ce67e48c883"
+    },
+    {
+      "source": "../../shared/src/mcp/catalog-tokens.ts",
+      "path": "vendor/upstream/src/mcp/catalog-tokens.ts",
+      "sha256": "eec3b5d5b58baf3ef04c778de6be131c65ad291f25d96e990ed80a1efb50fde6"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/design-system-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/design-system-tools.ts",
+      "sha256": "94f8e9e551968234f56c25836d952adca8e2923b2cd5508b982c9318d51532df"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/design-config-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/design-config-tools.ts",
+      "sha256": "84d1f5c4908032a5e37f0926c1874624014dfdadabab5e81b2fca3e8d9988fd3"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/variant-canvas-scaffold.ts",
+      "path": "vendor/upstream/src/mcp/tools/variant-canvas-scaffold.ts",
+      "sha256": "649544f21a2d23af00733017c42b43a574c66147431d01ff68d48b4b41ac9f87"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/jig-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/jig-tools.ts",
+      "sha256": "8b49e40dd8700e2aa7fba41b50ae1c4094bc1ee8dee1a69a1ef35ed3925a4df1"
+    },
+    {
+      "source": "../../shared/src/mcp/extract-design-system.ts",
+      "path": "vendor/upstream/src/mcp/extract-design-system.ts",
+      "sha256": "84cc646eb2bd29503bcbef573f0c0965068b3fe5e116aab7e359b5e9bb77279a"
+    },
+    {
+      "source": "../../shared/src/mcp/brand-sources.ts",
+      "path": "vendor/upstream/src/mcp/brand-sources.ts",
+      "sha256": "7b73009711bc64f558440211065c8218de67fe8ba0028eaf778aa5d7b91416f3"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/extract-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/extract-tools.ts",
+      "sha256": "e33078856e759abc058495dbf318b9204c18a460f0582aedf508eb0b3515ce0e"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/illustration-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/illustration-tools.ts",
+      "sha256": "986ae726d7ad90a82e911e81eea26bc7fa32c78ee7958127369c2912b88b62ec"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/preview-resource.ts",
+      "path": "vendor/upstream/src/mcp/tools/preview-resource.ts",
+      "sha256": "270c4fa190906671f2c0639bb4a450cfa03350d9be62175b3d07321f1bb2ab02"
+    },
+    {
+      "source": "../../shared/src/inspection/element-names.ts",
+      "path": "vendor/upstream/src/inspection/element-names.ts",
+      "sha256": "402072160d1d6b9196c85da2a1893f9072c9de33670a745039311ee9cb4e8b49"
+    },
+    {
+      "source": "../../shared/src/inspection/density-roles.ts",
+      "path": "vendor/upstream/src/inspection/density-roles.ts",
+      "sha256": "6826e34d17bcf87ecb29bda1732383b35be5f40a58db5576180190032d126ce8"
+    },
+    {
+      "source": "../../shared/src/inspection/native-text.ts",
+      "path": "vendor/upstream/src/inspection/native-text.ts",
+      "sha256": "73dd0ed1bc948c5594d9c09a99e5eeb358f1de96345e48bf343c9b4db84aea82"
+    },
+    {
+      "source": "../../shared/src/inspection/spacing.ts",
+      "path": "vendor/upstream/src/inspection/spacing.ts",
+      "sha256": "91f6f799b8a1e2d6a503ea443ba3d797cfa4de6b0b487f9581dcec0e56666601"
+    },
+    {
+      "source": "../../shared/src/inspection/capture-script.ts",
+      "path": "vendor/upstream/src/inspection/capture-script.ts",
+      "sha256": "c10de97cec58d1cdb88ac412761d01e8fc9a83485c7bbe576d1c65b8d9fe88fe"
+    },
+    {
+      "source": "../../shared/src/inspection/native-tree.ts",
+      "path": "vendor/upstream/src/inspection/native-tree.ts",
+      "sha256": "33aa8fed06f0ec7062990bd740d39226e99e8f53019bcae2fe5cb3aaeb1096d3"
+    },
+    {
+      "source": "../../shared/src/inspection/index.ts",
+      "path": "vendor/upstream/src/inspection/index.ts",
+      "sha256": "a7abdc2a110803b03d0111497ec6f37c51820530ae95b672a628cbe54b25089f"
+    },
+    {
+      "source": "../../shared/src/inspection/finding-copy.ts",
+      "path": "vendor/upstream/src/inspection/finding-copy.ts",
+      "sha256": "484f5eeec3f3d503942e02fc5d7d7914291dba63c0a191360d62732d0b73f17b"
+    },
+    {
+      "source": "../../shared/src/mcp/spacing-inspection-html.ts",
+      "path": "vendor/upstream/src/mcp/spacing-inspection-html.ts",
+      "sha256": "e89b61bd637b230f698a392ac39ee595c60dfdd73f7c337509ad5c74f126588a"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/inspection-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/inspection-tools.ts",
+      "sha256": "3e76e80ef77d55c27d52a0d421029769787b36bb098909d21a499b89908e7744"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/inspection-resource.ts",
+      "path": "vendor/upstream/src/mcp/tools/inspection-resource.ts",
+      "sha256": "91909c6bec25d7c94d5344c695589143c88e3c0739613f9d2360933f10ce994c"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/dashboard-review-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/dashboard-review-tools.ts",
+      "sha256": "a4e02cb4627ca5a589d0d55ee2cd011db77aa8736612da593d935c8e967970d0"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/final-ui-review-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/final-ui-review-tools.ts",
+      "sha256": "7510b77c54916e9914c432d994f4f168c22a5dbe2ed37053295afab2eea980ba"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/widget-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/widget-tools.ts",
+      "sha256": "f1b1e993a367ed6e6a9cb9bb7be5597dab082131e81a599edfa35f47c6c9d932"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/schema.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/schema.ts",
+      "sha256": "4858eb57e802f386bb543225c9b7ce0d014519c360790bb941589e73f92ba8ee"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/build.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/build.ts",
+      "sha256": "0459475bbb68d9333352180b5821ada9f98c697338fc25e44ef82d5b5b438612"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/capability-match.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/capability-match.ts",
+      "sha256": "4e1fe46aded4fe20a23dc6275e3734b81a715cf242529c00e922fe3e23aeb653"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/main-quest.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/main-quest.ts",
+      "sha256": "4fe363971d25b671ec295bfd6c2d36d1272cbbda6ba7866205463f2e80ccd2b9"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/read.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/read.ts",
+      "sha256": "5b5c5fc0a5057a9ee655ffe13db072cca5cc61d3272f3718f783655f934524fd"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/update.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/update.ts",
+      "sha256": "12966472dd2155bf00093d9d4170e5c241ec36c8a525beb0075b62b578f673d5"
+    },
+    {
+      "source": "../../shared/src/mcp/feature-map/index.ts",
+      "path": "vendor/upstream/src/mcp/feature-map/index.ts",
+      "sha256": "2ee79b7505c94ae273bb24c57efbba9dbd3993f404ade936cb0cb6c4eeb212b0"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/feature-map-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/feature-map-tools.ts",
+      "sha256": "acc69ed7add1dd1aae8bc68329972b5a4cd3d08ad7d21285dfb84d34704d3040"
+    },
+    {
+      "source": "../../shared/src/mcp/html-flows.ts",
+      "path": "vendor/upstream/src/mcp/html-flows.ts",
+      "sha256": "227e28699e87aea6fff098ba53e7a8474e8ad38472b893be516042b1480a30fa"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/inspiration-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/inspiration-tools.ts",
+      "sha256": "d650b037e29afe0fd75787239435812273358b6a15d7948e7d2a4c4203ed2095"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/feedback-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/feedback-tools.ts",
+      "sha256": "b900865b8e73f1d0da2a2269fb7ad22863d54b92b9ba363f2f1721d3c200f6a8"
+    },
+    {
+      "source": "../../shared/src/design-panel-cards.ts",
+      "path": "vendor/upstream/src/design-panel-cards.ts",
+      "sha256": "4d4470ffde38c8c5952ca5f471c13e47a9bf545b6360f5a64e3e1d5375457486"
+    },
+    {
+      "source": "../../shared/src/mcp/design-panel-fonts.generated.ts",
+      "path": "vendor/upstream/src/mcp/design-panel-fonts.generated.ts",
+      "sha256": "360d6e377ecf604430f61c4675e27f39b67bce912986a02fc8f88f8b13b10566"
+    },
+    {
+      "source": "../../shared/src/mcp/design-panel-css.ts",
+      "path": "vendor/upstream/src/mcp/design-panel-css.ts",
+      "sha256": "7b149d1bfa850d7e79bfb110c5e1798a90598b87b4a3637df4792eee89bfdce3"
+    },
+    {
+      "source": "../../shared/src/design-config-options.ts",
+      "path": "vendor/upstream/src/design-config-options.ts",
+      "sha256": "296327fb26d3134209c256a4bb770da7ace3b2a5311ebbb285f63fd4ed3b76bb"
+    },
+    {
+      "source": "../../shared/src/mcp/design-panel-workspace.ts",
+      "path": "vendor/upstream/src/mcp/design-panel-workspace.ts",
+      "sha256": "5e0819a65277d9f569f09667129ad13e99780f43f628f33ba708b534fe559059"
+    },
+    {
+      "source": "../../shared/src/mcp/design-panel-html.ts",
+      "path": "vendor/upstream/src/mcp/design-panel-html.ts",
+      "sha256": "a6332ebffa87dbc87901ea5943f5e78e6d3fd6f58a75a5582d889263a62006d6"
+    },
+    {
+      "source": "../../shared/src/mcp/panel-data.ts",
+      "path": "vendor/upstream/src/mcp/panel-data.ts",
+      "sha256": "03bda33ec2c065b2d4595fe9017160f3663b35bcbc7098e8e1b8e07be6fa5eac"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/design-panel-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/design-panel-tools.ts",
+      "sha256": "6b14a0c4faeee6b6e001b0455f07acde9200bfe44a80d21840a0b0717503b843"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/project-change-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/project-change-tools.ts",
+      "sha256": "bcd319aed9779b6a621ede248084551158237d133c5f0653997f7c6a60c2e815"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/claim-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/claim-tools.ts",
+      "sha256": "9b1bbb76d47cb3da3af4771e5579e186802d07bf463c04e9dee662afef7c0178"
+    },
+    {
+      "source": "../../shared/src/mcp/video/recording-beats.ts",
+      "path": "vendor/upstream/src/mcp/video/recording-beats.ts",
+      "sha256": "373593a896ea56aaed3fb2b1bf05892211a74be05a5ee5989f2db11356f565a0"
+    },
+    {
+      "source": "../../shared/src/mcp/video/recording-probe-script.ts",
+      "path": "vendor/upstream/src/mcp/video/recording-probe-script.ts",
+      "sha256": "ef318e6c7ad2f00ee1014a4dd7ec316dd955c18cbbd2af36ff0be0c222022e68"
+    },
+    {
+      "source": "../../shared/src/mcp/video/plan-video.ts",
+      "path": "vendor/upstream/src/mcp/video/plan-video.ts",
+      "sha256": "a6c8e7121cce464a94b9d3e7489d4e3f645eeaf657e39ff2966918b7bc342a8e"
+    },
+    {
+      "source": "../../shared/src/mcp/video/render-frames.ts",
+      "path": "vendor/upstream/src/mcp/video/render-frames.ts",
+      "sha256": "a0cb739110965f651894f4eb09d4c0494d9b67e22b4f10c5139577a86bade8db"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/video-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/video-tools.ts",
+      "sha256": "cd533065162c159f2e83a1170e79f2a708a93d559b650851ae852db5d0baad4c"
+    },
+    {
+      "source": "../../shared/src/mcp/store-listing.ts",
+      "path": "vendor/upstream/src/mcp/store-listing.ts",
+      "sha256": "0d61d239c2cf6f3abfcd2aa83495b23d5c3c64fafb3627cc91c0777daf45cb04"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/store-listing-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/store-listing-tools.ts",
+      "sha256": "4e01811d6324aa517a6a643baa0b190938ecc9989cfa250533eee941a62f5828"
+    },
+    {
+      "source": "../../shared/src/mcp/tools/design-maker-tools.ts",
+      "path": "vendor/upstream/src/mcp/tools/design-maker-tools.ts",
+      "sha256": "542b7399d6d1c726922f56725929649c17ade05eb2672a04993e5e62d0d9bd83"
+    },
+    {
+      "source": "../../shared/src/mcp/tools.ts",
+      "path": "vendor/upstream/src/mcp/tools.ts",
+      "sha256": "e7f8c4494338d2d61c0c5d512e015f02771b0882e754f5900be94e191ca479b0"
+    },
+    {
+      "source": "../../shared/src/mcp/index.ts",
+      "path": "vendor/upstream/src/mcp/index.ts",
+      "sha256": "2f917e8cab27983d60f1030d0441682449252704165b82f9acfb8f783eade762"
+    },
+    {
+      "source": "../../shared/src/lint/hero-copy-rules.ts",
+      "path": "vendor/upstream/src/lint/hero-copy-rules.ts",
+      "sha256": "44139ed8acd0890cc6d0253801e379d471e186efb755eb782adc039af075f41e"
+    },
+    {
+      "source": "../../shared/src/lint/class-rules.ts",
+      "path": "vendor/upstream/src/lint/class-rules.ts",
+      "sha256": "1606dd78533cc2994c1a3c6b000f5525f45e7b0e14463e5614c88edd2d8ce137"
+    },
+    {
+      "source": "../../shared/src/lint/behaviour-rules.ts",
+      "path": "vendor/upstream/src/lint/behaviour-rules.ts",
+      "sha256": "08ac3a3be46b5ba10a96261884b68fb170fb7ed899528d3a14a2780850678cbd"
+    },
+    {
+      "source": "../../shared/src/lint/ai-part-rules.ts",
+      "path": "vendor/upstream/src/lint/ai-part-rules.ts",
+      "sha256": "2044955c9c55712cedaab4e50dccfe4aa5ef6a173b23f776ec4231fd6611a862"
+    },
+    {
+      "source": "../../shared/src/lint/component-choice-rules.ts",
+      "path": "vendor/upstream/src/lint/component-choice-rules.ts",
+      "sha256": "0891522c68db3d11b5a3c1242ecfb7013a080decd01fde9df19d61e893cfcbea"
+    },
+    {
+      "source": "../../shared/src/lint/release-speed-rules.ts",
+      "path": "vendor/upstream/src/lint/release-speed-rules.ts",
+      "sha256": "0f45d59478bc57f894a3f227cb4f526b33e0c4ab92f2bb5ec88304be85125b29"
+    },
+    {
+      "source": "../../shared/src/lint/code-rules.ts",
+      "path": "vendor/upstream/src/lint/code-rules.ts",
+      "sha256": "1b432c72d1f76d0b184d90f5a2d6e06dabf80480161fa2bd2ce720fe1d880cf7"
+    },
+    {
+      "source": "../../shared/src/lint/svg-bounds.ts",
+      "path": "vendor/upstream/src/lint/svg-bounds.ts",
+      "sha256": "59c99676f20c7618c2e445de42ed994d74f7fd9342cb8ee013e118baa541914e"
+    },
+    {
+      "source": "../../shared/src/lint/icon-rules.ts",
+      "path": "vendor/upstream/src/lint/icon-rules.ts",
+      "sha256": "4353c390310de1127f01ad0db401a9ba3b0ca7d9e2f432580a64e29e823d5314"
+    },
+    {
+      "source": "../../shared/src/lint/length-rules.ts",
+      "path": "vendor/upstream/src/lint/length-rules.ts",
+      "sha256": "7c1153467d2ab058e71a026f78ed6c38f7e2306435bf8fdb1b8869e87b048db3"
+    },
+    {
+      "source": "../../shared/src/lint/template-masks.ts",
+      "path": "vendor/upstream/src/lint/template-masks.ts",
+      "sha256": "8614dcd1be1e3ccc053f87e5bf4b1512158f04f965f1d0affeea9a306708517f"
+    },
+    {
+      "source": "../../shared/src/lint/motion-rules.ts",
+      "path": "vendor/upstream/src/lint/motion-rules.ts",
+      "sha256": "08ac435a5041729246c1c74cb072a96e1191ac84a4b27a36bb5fd3708d31017d"
+    },
+    {
+      "source": "../../shared/src/lint/stripe-rules.ts",
+      "path": "vendor/upstream/src/lint/stripe-rules.ts",
+      "sha256": "203ea23544d807e9be5af7131fec65f98d856585e3526a02e4cea0c6ebf0f481"
+    },
+    {
+      "source": "../../shared/src/lint/template-rules.ts",
+      "path": "vendor/upstream/src/lint/template-rules.ts",
+      "sha256": "146e49008cd6d4f0127017c48e00ce4a4383b0ed1c25f823b42e0bb1b7b156f7"
+    },
+    {
+      "source": "../../shared/src/lint/path-glob.ts",
+      "path": "vendor/upstream/src/lint/path-glob.ts",
+      "sha256": "bdc3ecd0e960d03e3ba99a850dcda124931429b4efc016b5dff52067d061641e"
+    },
+    {
+      "source": "../../shared/src/lint/project-context.ts",
+      "path": "vendor/upstream/src/lint/project-context.ts",
+      "sha256": "01582fec4c6d05f14eac30cbf871bf16037d8bdc8fdd3e097f9ddd4a817b7316"
+    },
+    {
+      "source": "../../shared/src/lint/class-contract-rules.ts",
+      "path": "vendor/upstream/src/lint/class-contract-rules.ts",
+      "sha256": "902426f9e99f8a79f26b0cac60111ac8a63bdbab075fa17708ae7a662e217177"
+    },
+    {
+      "source": "../../shared/src/lint/engine.ts",
+      "path": "vendor/upstream/src/lint/engine.ts",
+      "sha256": "0cc784b24eab28d61e92db73497cc75ba1df4d08177ae7ef9b540ba573e39982"
+    },
+    {
+      "source": "../../shared/src/lint/config.ts",
+      "path": "vendor/upstream/src/lint/config.ts",
+      "sha256": "363044a0bfbd0644e90940bac1e626cf83669bdb50544103b28167839f993a68"
+    },
+    {
+      "source": "../../shared/src/lint/report.ts",
+      "path": "vendor/upstream/src/lint/report.ts",
+      "sha256": "afacde2937c00b8b53eb99d5404b3f40c6ec70dfcf452b432ff83cfaf611167b"
+    },
+    {
+      "source": "../../shared/src/lint/swift-rules.ts",
+      "path": "vendor/upstream/src/lint/swift-rules.ts",
+      "sha256": "dd552815a2cb5710ab1e909e1ed11c05dc149c04916632437455f1427646da60"
+    },
+    {
+      "source": "../../shared/src/lint/class-candidates.ts",
+      "path": "vendor/upstream/src/lint/class-candidates.ts",
+      "sha256": "27a13825d2fa35b5a385a943b82f67d7d3106db1b7cfb56ffbf20ca73eb609d4"
+    },
+    {
+      "source": "../../shared/src/lint/index.ts",
+      "path": "vendor/upstream/src/lint/index.ts",
+      "sha256": "459457f7bd77be9d4cfb304e3241e412a6a6924ade3fbc1f21dd5a7a3ba3b852"
+    },
+    {
+      "source": "../../shared/src/mcp/length-samples.ts",
+      "path": "vendor/upstream/src/mcp/length-samples.ts",
+      "sha256": "70352b8a355bab3cc510f80489539888a9fa9ebe3b769cd26e2008db6d4bb42b"
+    },
+    {
+      "source": "../../shared/src/mcp/review-tool.ts",
+      "path": "vendor/upstream/src/mcp/review-tool.ts",
+      "sha256": "425ea19e2c416fce6af6bd8b9477990535a945b3c4c0eeee3280811d4012c07b"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-draw.ts",
+      "path": "vendor/upstream/src/mcp/figma-draw.ts",
+      "sha256": "abd580436204b853867fbcdd76e3f8ac1fdba726bbee47f379cc4e91b5f2305a"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-kit.ts",
+      "path": "vendor/upstream/src/mcp/figma-kit.ts",
+      "sha256": "086f16f57d06f812140b2653bc864a16049bc3bd5bb81a0a9dbf59d514f7a0ca"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-kit-tokens.ts",
+      "path": "vendor/upstream/src/mcp/figma-kit-tokens.ts",
+      "sha256": "f4d4b0340e7c7c5af8b5bc33193ea3f5f8df681bdf4b79768a14c983021ea3df"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model-drawings.ts",
+      "path": "vendor/upstream/src/mcp/figma-model-drawings.ts",
+      "sha256": "61564f9daf1d03342204236b74c035c15260023605774addef9f94ff7f97b7f7"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-prototype-motion.ts",
+      "path": "vendor/upstream/src/mcp/figma-prototype-motion.ts",
+      "sha256": "abab956ed9f1597fb3fad5c307370a7eae0e5bfbd171b9e20d64260450315f18"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-prototype-runtime.ts",
+      "path": "vendor/upstream/src/mcp/figma-prototype-runtime.ts",
+      "sha256": "03dd762005023e8688eddc4141e892bd83531ce908b9f0d509735e4925e9fed2"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-prototype-style.ts",
+      "path": "vendor/upstream/src/mcp/figma-prototype-style.ts",
+      "sha256": "1274e2affd5dc0e51e92af440286da443bb3f7743414845af339e31a268cd189"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-prototype.ts",
+      "path": "vendor/upstream/src/mcp/figma-prototype.ts",
+      "sha256": "6e0ae14224e5065c3514f6467aec93a5db65be456a68b9a1e0b18b52bbce21b1"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model-prompt.ts",
+      "path": "vendor/upstream/src/mcp/figma-model-prompt.ts",
+      "sha256": "7a7c8fe93dbffba229109b098784ebb16d2beddfabb917c4d901d9c5e05bc3f1"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model-blocks.ts",
+      "path": "vendor/upstream/src/mcp/figma-model-blocks.ts",
+      "sha256": "93e7c9cded92d42b92e0f8cdcb3499ec78f9403e653a69114021bdca890e04a9"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model.ts",
+      "path": "vendor/upstream/src/mcp/figma-model.ts",
+      "sha256": "3b13febe8c3bf0c28bc9c3fae05f21e40aed995b8cfb4e031c7c9ec1de19b858"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model-handoff.ts",
+      "path": "vendor/upstream/src/mcp/figma-model-handoff.ts",
+      "sha256": "519eb00cc3addee0804dab3d4e4e7e5eec525f674faf5ca893da653fec2bf5d0"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-model-providers.ts",
+      "path": "vendor/upstream/src/mcp/figma-model-providers.ts",
+      "sha256": "e1572fb10277bf012a0f1493c26a6567fa0256d34f9ab72d2ad002d419cbe1d5"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-kit-gaps.ts",
+      "path": "vendor/upstream/src/mcp/figma-kit-gaps.ts",
+      "sha256": "cab84ae6bc9fd930ccb158b57d5844662dd029979913a91d7f9630ec39b396d6"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-relay.ts",
+      "path": "vendor/upstream/src/mcp/figma-relay.ts",
+      "sha256": "2487a245440686c6c687dfd0a6e9635caf1562ae7351ad821f7de32027d33895"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-relay-server.ts",
+      "path": "vendor/upstream/src/mcp/figma-relay-server.ts",
+      "sha256": "3125f4448e6dfceeb1c99c6e69db7aefe4650c48a333586d705aa1581c9d75e9"
+    },
+    {
+      "source": "../../shared/src/mcp/figma-prototype-tool.ts",
+      "path": "vendor/upstream/src/mcp/figma-prototype-tool.ts",
+      "sha256": "4644ccd44b31dec2c1448ed53c865c8ded533113be9775943c77eeec182954e4"
+    },
+    {
+      "source": "../../shared/src/mcp/video/index.ts",
+      "path": "vendor/upstream/src/mcp/video/index.ts",
+      "sha256": "d08ca621c8b23891e2e3e893bd53edd2d9eb526e6bf5a42a92250acdab476fc5"
+    },
+    {
+      "source": "../../shared/src/mcp-debug-log.ts",
+      "path": "vendor/upstream/src/mcp-debug-log.ts",
+      "sha256": "619dd7b43e5e592b80f7e13c15a3feb768609d31457e9880f07f35d05e9ecd65"
+    }
+  ]
+}
