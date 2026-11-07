@@ -5,14 +5,17 @@ search now includes font names. Private archive integration remains opt-in and
 excluded from public deployments. Compatibility behavior is documented in
 [the evidence and scope](COMPATIBILITY-PASS.md).
 
-The redesigned website keeps dark/light preferences and adds a three-palette
-live preview, six featured themes with expansion to 31, appearance and URL
-search persistence, and keyboard-accessible setup tabs. Both appearances were
-reviewed at 390, 1440 and 1728 pixels. All **43 copy panels** pass; source and
-spacing reviews have no critical or serious findings. Rendered specimen labels
-and titles have a minimum contrast of **4.52:1** after choosing readable token
-pairs. Recovery checks include clipboard denial, invalid catalog data, retry
-and timeout. Public website details are maintained in its separate repository's
+The website now applies any of its 31 themes to the entire site, with persistent
+light/dark mode, a sticky theme/reset control and shareable URLs. The playground
+and separate preview pages are removed. Search, filters, scroll, focus and
+connection setup survive theme changes. Original public registry assets remain
+unchanged; missing appearances and readable site text are adapted locally.
+
+Browser checks cover all 31 themes in both modes at 390px and three representative
+themes in both modes at 1440px and 1728px: **74 theme layouts**, plus the baseline
+website checks. Rendered text contrast is at least **4.52:1**, including input
+and hover checks. Source and spacing reviews have no critical or serious findings.
+The separate website repository maintains the final deployment results in its
 [release review](https://github.com/pranav256/open-design-website/blob/main/docs/REVIEW.md).
 
 The original release results below are retained as the initial baseline.
