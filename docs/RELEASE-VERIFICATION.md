@@ -1,12 +1,21 @@
 # Release verification — 2026-11-07
 
-The later compatibility pass raises the passing suite to **66 tests**, restores
-private project rule slots and implements the first-visit brief/rank/recheck
-workflow. See [the evidence and scope](COMPATIBILITY-PASS.md). The website now
-defaults to dark mode and preserves a visitor's explicit light/dark preference.
-Both schemes were reviewed at 390, 1440 and 1728 pixels; all **41 copy panels**
-pass, with no critical or serious source/spacing findings. The original release
-results below are retained as the initial baseline.
+The latest review passes **72 service tests**, TypeScript and builds. Theme
+search now includes font names. Private archive integration remains opt-in and
+excluded from public deployments. Compatibility behavior is documented in
+[the evidence and scope](COMPATIBILITY-PASS.md).
+
+The redesigned website keeps dark/light preferences and adds a three-palette
+live preview, six featured themes with expansion to 31, appearance and URL
+search persistence, and keyboard-accessible setup tabs. Both appearances were
+reviewed at 390, 1440 and 1728 pixels. All **43 copy panels** pass; source and
+spacing reviews have no critical or serious findings. Rendered specimen labels
+and titles have a minimum contrast of **4.52:1** after choosing readable token
+pairs. Recovery checks include clipboard denial, invalid catalog data, retry
+and timeout. Public website details are maintained in its separate repository's
+[release review](https://github.com/pranav256/open-design-website/blob/main/docs/REVIEW.md).
+
+The original release results below are retained as the initial baseline.
 
 The independent Open Design service and website are deployed publicly:
 
