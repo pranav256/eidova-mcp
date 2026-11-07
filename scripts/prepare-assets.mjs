@@ -1,0 +1,11 @@
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+const source = process.argv[2];
+if (!source) throw new Error('Usage: node scripts/prepare-assets.mjs <checkout-of-marvkr/better-design-at-pinned-commit>');
+const license = await readFile(path.join(source,'LICENSE'),'utf8');
+if (!license.includes('MIT License')) throw new Error('Expected upstream MIT license.');
+await mkdir('assets', { recursive: true });
+await cp(path.join(source,'registry'), 'assets/registry', { recursive: true });
+await cp(path.join(source,'LICENSE'), 'assets/LICENSE');
+await writeFile('assets/UPSTREAM.json', JSON.stringify({ repository: 'https://github.com/marvkr/better-design', commit: '175e7ba49bcf83857abc32933686b5aa3abb197e', license: 'MIT', note: 'Registry items include component source. Dependency URLs are rewritten at runtime.' }, null, 2));
+console.log('Prepared registry assets with upstream license and provenance.');

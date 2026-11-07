@@ -1,0 +1,50 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "static",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60,
+      "includeFiles": "{assets/registry/**,content/library.json,vendor/upstream/runtime.mjs,node_modules/@iconify-json/lucide/icons.json}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/mcp",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/registry/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/icons/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/design-systems/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/projects/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/preview/:path*",
+      "destination": "/api/index"
+    }
+  ]
+}
