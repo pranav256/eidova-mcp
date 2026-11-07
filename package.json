@@ -12,6 +12,7 @@
     "dev": "tsx src/main.ts",
     "start": "node dist/main.js",
     "stdio": "tsx src/stdio.ts",
+    "stdio:private": "node scripts/start-private.mjs",
     "build": "tsup src/main.ts src/stdio.ts --format esm --platform node --target node22 --clean",
     "test": "tsx --test tests/*.test.ts",
     "check": "tsc --noEmit",

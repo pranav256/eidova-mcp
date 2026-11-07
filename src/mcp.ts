@@ -8,18 +8,20 @@ import { apiDispatcher } from './local-api.js';
 import type { JsonStore } from './store.js';
 import { ProjectRulesStore } from './project-rules-store.js';
 import { firstVisitInputSchema, handleFirstVisit } from './first-visit.js';
+import type { PrivateArchive } from './private-archive.js';
 
 const unavailable = ['make-sales-page','make-social-image','review-illustration','get-inspiration'];
 type RuntimeCallback = (...args: unknown[]) => unknown;
-type RuntimeTool = {handler:RuntimeCallback;remove():void;update(changes:Record<string,unknown>):void};
+type RuntimeTool = {handler:RuntimeCallback;outputSchema?:z.ZodObject;remove():void;update(changes:Record<string,unknown>):void};
 const text = (value: string, structuredContent?: Record<string, unknown>) => ({content:[{type:'text' as const,text:value}],...(structuredContent ? {structuredContent} : {})});
-export function createServer(store: JsonStore, identity?: string) {
+export function createServer(store: JsonStore, identity?: string, privateArchive?: PrivateArchive) {
+  if (privateArchive && !identity) throw new Error('Private captures require a private local workspace.');
   const projects = new Projects(store,identity);
   const server = createMcpServer({
     provider:createProvider(store,identity), apiFetch:apiDispatcher(projects,new ProjectRulesStore(store,identity)),
     name:'OpenDesign',version:'0.1.0',userId:identity,
     authContext:identity ? {kind:'api-key',apiKey:'local-workspace'} : undefined,
-    enableDesignPanel:false, enableMobileKits:false, enableShopifyKit:false, enableReviewUiCode:true,
+    enableDesignPanel:false, enableMobileKits:Boolean(privateArchive), enableShopifyKit:Boolean(privateArchive), enableReviewUiCode:true,
   });
   registerReviewTool(server);
   // These pinned-SDK registration handles expose supported update/remove APIs.
@@ -38,16 +40,31 @@ export function createServer(store: JsonStore, identity?: string) {
     description:'Deterministically review supplied React, CSS, HTML, SVG and SwiftUI source. Every file requires inline content. This server never reads caller-selected files from its own filesystem and does not execute submitted code.',
     paramsSchema:{files:z.array(z.object({path:z.string().min(1).max(400),content:z.string().max(120000)})).min(1).max(24),context:z.string().max(280).optional()},
   });
-  for (const name of unavailable) handles[name]?.remove();
+  for (const name of unavailable) if (name!=='get-inspiration' || !privateArchive) handles[name]?.remove();
+  if (privateArchive) handles['get-inspiration']?.update({
+    description:'Search saved private reference sets by collection, platform, category and query. Returns original notes, inert reference HTML and images from local captures, with source hashes. Only saved samples are searchable; no vendor requests or scripts are executed.',
+    callback:(args: Parameters<PrivateArchive['inspiration']>[0]) => privateArchive.inspiration(args),
+  });
   for (const [name, tool] of Object.entries(handles)) {
     if (/^get-(?:ui-principle|ux-principle|react-native-guide|swiftui-guide|three-js-guide|sales-principle|motion-guide)$/.test(name)) {
-      tool.update({description:`Load original Open Design ${name.replace(/^get-/,'').replaceAll('-',' ')} guidance. Omit topic and query to list available topics, or provide a topic/alias or query. Search uses local lexical ranking. Content is independently authored; this is not the vendor’s hosted corpus.`});
+      tool.update({description:`Load ${privateArchive?'the configured private offline':'original Open Design'} ${name.replace(/^get-/,'').replaceAll('-',' ')} guidance. Omit topic and query to list available topics, or provide a topic/alias or query. Search uses local lexical ranking. ${privateArchive?'Saved captures preserve their provenance and may be incomplete.':'Content is independently authored; this is not the vendor’s hosted corpus.'}`});
     }
   }
   const kit = handles['get-design-system-kit'];
   if (kit) {
     const callback = kit.handler;
-    kit.update({callback:async (args: Record<string,unknown>, extra: unknown) => callback({...args,library:args.library ?? 'radix'},extra)});
+    kit.update({
+      ...(privateArchive ? {
+        description:'Return React/HTML/DTCG catalog kits, or saved private Linear react-native, swiftui and shopify file payloads. Archived files and tokens are verbatim captures, not newly generated, installed or rendered. Uncaptured mobile/Shopify systems and custom projects are unavailable. install:true is refused.',
+        paramsSchema:{target:z.enum(['react','html','dtcg','store-screenshots','react-native','swiftui','shopify']),designSystemId:z.string().min(1).optional(),projectId:z.string().min(1).optional(),component:z.union([z.string(),z.array(z.string())]).optional(),library:z.enum(['radix','base-ui']).optional(),screen:z.string().trim().min(1).max(80).optional(),install:z.boolean().optional(),context:z.string().max(280).optional()},
+        outputSchema:{...kit.outputSchema!.shape,archive:z.object({capture:z.string(),timestamp:z.string().datetime(),responseSha256:z.string().regex(/^[a-f0-9]{64}$/),designSystemId:z.string(),target:z.string(),fileCount:z.number().int(),installation:z.literal('not performed'),validation:z.literal('captured source only')}).optional()},
+      } : {}),
+      callback:async (args: Record<string,unknown>, extra: unknown) => {
+        if (privateArchive && ['react-native','swiftui','shopify'].includes(String(args.target))) return privateArchive.kit(args as Parameters<PrivateArchive['kit']>[0]);
+        if (privateArchive && args.install) return {...text('Automatic installation is unavailable. Call with install:false to retrieve a kit.'),isError:true};
+        return callback({...args,library:args.library ?? 'radix'},extra);
+      },
+    });
   }
   handles['extract-from-url']?.update({description:'Extract tokens from an explicitly supplied public page’s inline and linked CSS. Fetching is DNS-pinned and limited. This tool does not render the page. For computed styles, supply a rendered sample to extract-design-system.'});
   handles['create-design-system']?.update({
@@ -82,7 +99,7 @@ export function createServer(store: JsonStore, identity?: string) {
       return result;
     }) as typeof callback});
   }
-  server.registerTool('get-shopify-guide',{
+  if (!privateArchive) server.registerTool('get-shopify-guide',{
     description:'Load independently authored Shopify Liquid and theme guidance. This server ships React catalog components, not Shopify theme kits.',
     inputSchema:{topic:z.string().optional(),query:z.string().optional()},
   },async ({topic,query}) => {
@@ -91,12 +108,14 @@ export function createServer(store: JsonStore, identity?: string) {
     if (query) { const rules=await provider.searchPrinciples(query,5,'shopify'); return text(rules.map(r=>r.content).join('\n\n')); }
     return text(JSON.stringify(await provider.listPrinciples('shopify'),null,2));
   });
+  else handles['get-shopify-guide']?.update({description:'Load Shopify guidance from the configured private offline library. Omit topic and query for its index. Captured source provenance and coverage limits are preserved; no vendor request is performed.'});
+  if (privateArchive) handles['get-illustration-guide']?.update({description:'Load illustration guidance from the configured private offline library; omit topic and query for available topics. Captures preserve source provenance and coverage limits.'});
   server.registerTool('check-first-visit',{
     description:'Plan five first-visit walks with step brief, rank supplied walk reports with step rank, then verify reported fixes with step recheck. A fix requires every originally reporting walk to rerun under its stated conditions. Receipts bind supplied evidence; this tool never opens a browser or claims real visitor research. Legacy task/observations inputs remain supported.',
     inputSchema:firstVisitInputSchema,
   },handleFirstVisit);
   server.registerTool('get-capabilities',{
     description:'Report this server’s exact local features and remaining external-service gaps.',inputSchema:{},
-  },async()=>text(JSON.stringify({systems:(await catalog()).length,tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',omitted:unavailable,privateWorkspace:Boolean(identity)},null,2)));
+  },async()=>text(JSON.stringify({systems:(await catalog()).length,tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',omitted:unavailable.filter(name=>name!=='get-inspiration' || !privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})},null,2)));
   return server;
 }
