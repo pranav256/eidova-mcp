@@ -42,6 +42,7 @@ supplied path, run the source and rendered checks:
 ```sh
 npm run review:website -- https://open-design-mcp-liard.vercel.app/mcp ./website
 node scripts/verify-website.mjs
+node scripts/verify-theme-previews.mjs
 ```
 
 The browser check uses Microsoft Edge on Windows. Set `PLAYWRIGHT_CHANNEL` to
@@ -63,6 +64,10 @@ The website's compact palette data is reproducible from the public registry:
 `node scripts/sync-website-previews.mjs ./website`. This reads no private captures.
 It retains the source colors used by the preview and selects readable action
 label/surface pairs using the browser's color conversion.
+Both preview appearances are exported. Existing source variants are preferred;
+missing variants adapt surfaces and text while keeping the accent and radius.
+The preview check opens all 31 themes in both modes, verifies mode inheritance,
+refresh and navigation, and reviews rendered surfaces, text contrast and spacing.
 
 ## Docker
 
