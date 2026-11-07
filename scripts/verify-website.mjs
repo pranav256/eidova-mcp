@@ -15,6 +15,8 @@ await client.connect(new StreamableHTTPClientTransport(new URL(mcp)));
 const channel = process.env.PLAYWRIGHT_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined);
 const browser = await chromium.launch({ channel, headless: true });
 const states = [];
+const lightStates = [];
+const contrast = [];
 const panels = [];
 const knownTerms = ['MCP', 'UI', 'HTTP', 'JSON', 'MIT', 'React', 'Geist', 'mcpServers', 'registry', 'token', 'tokens', 'API', 'CSS', 'IBM', 'SF', 'FX', 'Sans', 'Mono', 'VF', 'DM'];
 try {
@@ -33,6 +35,7 @@ try {
     assert.equal(response?.status(), 200, 'Website is not publicly accessible');
     await page.waitForFunction(() => document.querySelectorAll('.theme-card').length === 31);
     await page.evaluate(() => document.fonts.ready);
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark', 'Fresh visits default to dark mode');
     assert.equal(await page.locator('h1').count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `Horizontal overflow at ${width}`);
     assert.equal(await page.locator('#mcp-endpoint').inputValue(), endpoint);
@@ -42,6 +45,32 @@ try {
     const snapshot = await page.evaluate(script);
     snapshot.name = `Website ${width}px default`;
     states.push(snapshot);
+    contrast.push(await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const paint = canvas.getContext('2d', { willReadFrequently:true });
+      const luminance = token => {
+        paint.clearRect(0,0,1,1); paint.fillStyle = style.getPropertyValue(token); paint.fillRect(0,0,1,1);
+        const rgb = [...paint.getImageData(0,0,1,1).data].slice(0,3).map(value => {
+          const channel = value / 255; return channel <= 0.04045 ? channel/12.92 : ((channel+0.055)/1.055)**2.4;
+        });
+        return rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;
+      };
+      const ratio = (a,b) => (Math.max(luminance(a),luminance(b))+0.05)/(Math.min(luminance(a),luminance(b))+0.05);
+      return { width:innerWidth, foreground:ratio('--foreground','--background'), muted:ratio('--muted-foreground','--card'), primary:ratio('--primary-foreground','--primary'), border:ratio('--border','--card') };
+    }));
+    await page.getByRole('button', { name:'Switch to light mode' }).click();
+    await page.reload({ waitUntil:'networkidle' });
+    await page.waitForFunction(() => document.querySelectorAll('.theme-card').length === 31);
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'light', 'Light preference persists after reload');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `Light mode overflows at ${width}`);
+    await page.screenshot({ path:`${directory}/${width}-light.png`, fullPage:true });
+    const lightSnapshot = await page.evaluate(script); lightSnapshot.name = `Website ${width}px light`;
+    lightStates.push(lightSnapshot);
+    await page.getByRole('button', { name:'Switch to dark mode' }).click();
+    await page.reload({ waitUntil:'networkidle' });
+    await page.waitForFunction(() => document.querySelectorAll('.theme-card').length === 31);
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark', 'Dark preference persists after reload');
     await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('skip-link')), true);
     await page.keyboard.press('Enter');
@@ -53,6 +82,7 @@ try {
         return { headline: title, body, actions };
       }, heading);
       panels.push({ screen: 'Open Design website hero', ...await read('.hero-copy', 'h1') });
+      panels.push({ screen:'Website appearance control', headline:'Light mode', body:[], actions:['Switch to light mode'] });
       const preview = await page.locator('.hero-preview').evaluate(element => ({
         headline: element.querySelector('.sample-heading').textContent.trim(),
         body: [...element.querySelectorAll('p, span, code, strong')].map(node => node.textContent.trim()).filter(Boolean),
@@ -111,8 +141,11 @@ try {
     await context.close();
   }
   await writeFile(`${directory}/states.json`, JSON.stringify(states, null, 2));
+  await writeFile(`${directory}/light-states.json`, JSON.stringify(lightStates, null, 2));
   const spacing = await client.callTool({ name: 'inspect-spacing', arguments: { states, spacingScale: [4,8,12,16,20,24,32,40,48,56,64,72,80,88,96,104,128], tolerance: 2, detail: 'full', context: 'Rendered geometry from standalone public HTTPS website at three widths' } });
   await writeFile(`${directory}/spacing.json`, JSON.stringify(spacing, null, 2));
+  const lightSpacing = await client.callTool({ name:'inspect-spacing', arguments:{ states:lightStates, spacingScale:[4,8,12,16,20,24,32,40,48,56,64,72,80,88,96,104,128],tolerance:2,detail:'full' } });
+  await writeFile(`${directory}/light-spacing.json`,JSON.stringify(lightSpacing,null,2));
   const comprehension = [];
   for (const panel of panels) {
     const result = await client.callTool({ name: 'check-comprehension', arguments: { ...panel, knownTerms } });
@@ -121,11 +154,15 @@ try {
   }
   await writeFile(`${directory}/comprehension.json`, JSON.stringify(comprehension, null, 2));
   const failed = comprehension.filter(item => item.result.structuredContent?.verdict === 'revise');
-  const summary = { origin, mcpReviewEndpoint: mcp, serviceEndpoint: endpoint, publicAccess: true, catalogCount: 31, widths: [390,1440,1728], noPageErrors: true, noPageOverflow: true, behavior: ['keyboard skip link','search','no-match recovery','clipboard URL','keyboard configuration copy','catalog error/retry','focus return','reduced motion'], spacing: spacing.structuredContent?.summary, comprehensionPanels: comprehension.length, comprehensionFailed: failed.map(item => ({ screen: item.input.screen, result: item.result.structuredContent })) };
+  const summary = { origin, mcpReviewEndpoint: mcp, serviceEndpoint: endpoint, publicAccess: origin.startsWith('https://'), catalogCount: 31, widths: [390,1440,1728], defaultTheme:'dark', savedLightAndDarkPreferences:true, darkTokenContrast:contrast, noPageErrors: true, noPageOverflow: true, behavior: ['keyboard skip link','search','no-match recovery','clipboard URL','keyboard configuration copy','catalog error/retry','focus return','reduced motion','theme switching and saved preference'], spacing: spacing.structuredContent?.summary, lightSpacing:lightSpacing.structuredContent?.summary, comprehensionPanels: comprehension.length, comprehensionFailed: failed.map(item => ({ screen: item.input.screen, result: item.result.structuredContent })) };
   await writeFile(`${directory}/summary.json`, JSON.stringify(summary, null, 2));
   console.log(JSON.stringify(summary, null, 2));
   assert.ok(!spacing.isError, 'Spacing review failed');
   assert.equal(summary.spacing?.critical, 0, 'Critical spacing issues remain');
   assert.equal(summary.spacing?.serious, 0, 'Serious spacing issues remain');
+  assert.ok(!lightSpacing.isError, 'Light spacing review failed');
+  assert.equal(summary.lightSpacing?.critical,0);
+  assert.equal(summary.lightSpacing?.serious,0);
+  assert.ok(contrast.every(item => item.foreground>=4.5 && item.muted>=4.5 && item.primary>=4.5 && item.border>=3),'Dark token contrast fails');
   assert.equal(failed.length, 0, 'Comprehension revisions remain');
 } finally { await browser.close(); await client.close(); }

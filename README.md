@@ -34,6 +34,12 @@ original review rules. Tools support theme search/kits, extraction from supplied
 CSS or public page stylesheets, custom catalog-based themes, comprehension,
 rendered spacing evidence, inline source review, feature maps and video planning.
 
+Private project rules support guidelines, part rules and exact screen specs with
+owner isolation and explicit replacement. First-visit tools support brief, ranking
+and recheck against supplied walk reports. See the
+[compatibility investigation](docs/COMPATIBILITY-PASS.md) for recovered contracts,
+independently implemented behavior and remaining gaps.
+
 Public catalog/guidance/review calls need no account. Persistent theme edits and
 team rules use a private workspace capability key. Generate one with
 `POST /api/workspace-key` and send it as `Authorization: Bearer <key>` on MCP

@@ -1,12 +1,30 @@
 import { Projects } from './projects.js';
 import { publicFetch, jsonResponse } from './public-fetch.js';
 import { safeFetchPublic } from './safe-fetch.js';
+import type { ProjectRulesStore } from './project-rules-store.js';
 import { extractFromSources, formatExtraction, summarizeExtraction } from '../vendor/upstream/runtime.mjs';
 
-export function apiDispatcher(projects: Projects): typeof fetch {
+export function apiDispatcher(projects: Projects, projectRules?: ProjectRulesStore): typeof fetch {
   return async (input, init) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input : input.url);
     const method = init?.method ?? (input instanceof Request ? input.method : 'GET');
+    const rulePath = url.pathname.match(/^\/api\/v1\/project-rules\/([a-f0-9-]{36})$/);
+    if (rulePath && projectRules) {
+      try {
+        if (method === 'GET') return jsonResponse(await projectRules.getContext(rulePath[1], {
+          screen:url.searchParams.get('screen') ?? undefined, parts:url.searchParams.getAll('parts'),
+        }));
+        if (method === 'PUT') {
+          const body = JSON.parse(String(init?.body ?? '{}'));
+          const outcome = await projectRules.save(rulePath[1],body,body.replaceExisting ?? false);
+          return jsonResponse({outcome},outcome === 'refused' ? 409 : 200);
+        }
+        return jsonResponse({message:'Use GET or PUT for project rules.'},405);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Project rule operation failed';
+        return jsonResponse({message},/not found|workspace key/i.test(message) ? 404 : 422);
+      }
+    }
     try {
       if (url.pathname.startsWith('/registry/') || url.pathname.startsWith('/icons/')) return publicFetch(url);
       if (url.pathname === '/api/projects/anonymous' && method === 'POST') {

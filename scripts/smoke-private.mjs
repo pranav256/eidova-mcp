@@ -27,6 +27,19 @@ try {
   assert.ok(!created.isError);
   const projectId = created.structuredContent?.projectId;
   assert.ok(projectId,'Creation returns a persistent project ID');
+  const projectRule = await alice.callTool({name:'set-team-rules',arguments:{projectId,screen:'billing',part:'Button',markdown:'Keep billing actions understandable.',personApproved:true}});
+  assert.ok(!projectRule.isError);
+  const projectRules = await fresh.callTool({name:'get-team-rules',arguments:{projectId,screen:'billing',parts:['Button']}});
+  assert.ok(!projectRules.isError);assert.match(asText(projectRules),/Keep billing actions understandable/);
+  const ruleUrl = `${origin}/api/v1/project-rules/${projectId}`;
+  const ownerRuleRead = await fetch(ruleUrl+'?screen=billing&parts=Button',{headers:{Authorization:`Bearer ${keyA}`}});
+  assert.equal(ownerRuleRead.status,200);
+  assert.equal((await ownerRuleRead.json()).specs[0].markdown,'Keep billing actions understandable.');
+  assert.equal((await fetch(ruleUrl,{headers:{Authorization:`Bearer ${keyB}`}})).status,404);
+  const refusedRule = await fetch(ruleUrl,{method:'PUT',headers:{Authorization:`Bearer ${keyA}`,'Content-Type':'application/json'},body:JSON.stringify({screen:'billing',part:'Button',markdown:'Changed without replacement approval.'})});
+  assert.equal(refusedRule.status,409,'A different project rule is not replaced implicitly');
+  const privateRuleDenial = await bob.callTool({name:'get-team-rules',arguments:{projectId,screen:'billing'}});
+  assert.equal(privateRuleDenial.isError,true);assert.doesNotMatch(asText(privateRuleDenial),/Keep billing actions understandable/);
   const configured = await alice.callTool({name:'set-design-config',arguments:{projectId,config:{colors:{primary:'#2457a6'},radius:'0.625rem'}}});
   assert.ok(!configured.isError);
   const denied = await bob.callTool({name:'set-design-config',arguments:{projectId,config:{colors:{primary:'#ffffff'}}}});
@@ -48,7 +61,7 @@ try {
   const item = await response.json();
   assert.equal(item.cssVars.light.primary,'#2457a6');
   assert.equal(item.cssVars.dark.primary,'#2457a6');
-  console.log(JSON.stringify({origin,privateRules:'durable and isolated',projectConfig:'durable and owner-isolated',customRegistry:'correct',credentials:'not recorded'}));
+  console.log(JSON.stringify({origin,privateRules:'durable and isolated',projectRules:'screen-scoped and owner-isolated',projectConfig:'durable and owner-isolated',customRegistry:'correct',credentials:'not recorded'}));
 } finally {
   await Promise.allSettled(clients.map(client => client.close()));
 }

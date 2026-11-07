@@ -6,6 +6,8 @@ import { createProvider } from './provider.js';
 import { Projects, configSchema } from './projects.js';
 import { apiDispatcher } from './local-api.js';
 import type { JsonStore } from './store.js';
+import { ProjectRulesStore } from './project-rules-store.js';
+import { firstVisitInputSchema, handleFirstVisit } from './first-visit.js';
 
 const unavailable = ['make-sales-page','make-social-image','review-illustration','get-inspiration'];
 type RuntimeCallback = (...args: unknown[]) => unknown;
@@ -14,7 +16,7 @@ const text = (value: string, structuredContent?: Record<string, unknown>) => ({c
 export function createServer(store: JsonStore, identity?: string) {
   const projects = new Projects(store,identity);
   const server = createMcpServer({
-    provider:createProvider(store,identity), apiFetch:apiDispatcher(projects),
+    provider:createProvider(store,identity), apiFetch:apiDispatcher(projects,new ProjectRulesStore(store,identity)),
     name:'OpenDesign',version:'0.1.0',userId:identity,
     authContext:identity ? {kind:'api-key',apiKey:'local-workspace'} : undefined,
     enableDesignPanel:false, enableMobileKits:false, enableShopifyKit:false, enableReviewUiCode:true,
@@ -23,12 +25,10 @@ export function createServer(store: JsonStore, identity?: string) {
   // These pinned-SDK registration handles expose supported update/remove APIs.
   const handles = (server as unknown as {_registeredTools:Record<string,RuntimeTool>})._registeredTools;
   handles['get-team-rules']?.update({
-    description:'Read private workspace team rules. Anonymous requests receive drafting guidance; project-specific rule slots are not implemented.',
-    paramsSchema:{context:z.string().max(280).optional()},
+    description:'Read private workspace rules or the owned project guidelines, rules for selected parts, brand bans and exact screen specifications. Anonymous requests receive drafting guidance. Project rules require the owning workspace key.',
   });
   handles['set-team-rules']?.update({
-    description:'Save an approved Markdown rules document in this private workspace. Review existing rules before replacing them. Requires a workspace key; project-specific rule slots are not implemented.',
-    paramsSchema:{markdown:z.string().min(1).max(32768),personApproved:z.literal(true),replaceExisting:z.boolean().optional(),context:z.string().max(280).optional()},
+    description:'Save an approved workspace rules document or one owned project guideline, part rule, brand ban or screen specification. Requires personApproved:true and a private workspace key. Read existing rules and obtain approval before replacing a different value with replaceExisting:true.',
   });
   handles['set-design-config']?.update({
     description:'Merge validated semantic colors, foreground pairs, radius, fonts and density into an owner-scoped custom theme. Requires its workspace key.',
@@ -92,13 +92,9 @@ export function createServer(store: JsonStore, identity?: string) {
     return text(JSON.stringify(await provider.listPrinciples('shopify'),null,2));
   });
   server.registerTool('check-first-visit',{
-    description:'Plan five first-visit task walkthroughs and rank supplied observations. This tool does not open a browser or invent test results.',
-    inputSchema:{task:z.string().min(1).max(500),observations:z.array(z.object({scenario:z.string(),problem:z.string(),severity:z.enum(['critical','serious','moderate']),evidence:z.string()})).max(100).optional()},
-  },async ({task,observations})=> {
-    if (!observations?.length) return text(`Walk the task “${task}” in five conditions: first visit with sample data; empty workspace; keyboard only; narrow screen with zoom; a failed request. Record the exact point of confusion, observed evidence and a recovery action. Supply those observations here to rank them.`,{status:'needs-observations',tested:false});
-    const ranked=[...observations].sort((a,b)=>['critical','serious','moderate'].indexOf(a.severity)-['critical','serious','moderate'].indexOf(b.severity));
-    return text(JSON.stringify(ranked,null,2),{status:'reviewed-observations',tested:false,findings:ranked});
-  });
+    description:'Plan five first-visit walks with step brief, rank supplied walk reports with step rank, then verify reported fixes with step recheck. A fix requires every originally reporting walk to rerun under its stated conditions. Receipts bind supplied evidence; this tool never opens a browser or claims real visitor research. Legacy task/observations inputs remain supported.',
+    inputSchema:firstVisitInputSchema,
+  },handleFirstVisit);
   server.registerTool('get-capabilities',{
     description:'Report this server’s exact local features and remaining external-service gaps.',inputSchema:{},
   },async()=>text(JSON.stringify({systems:(await catalog()).length,tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',omitted:unavailable,privateWorkspace:Boolean(identity)},null,2)));

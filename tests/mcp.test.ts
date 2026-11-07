@@ -35,9 +35,40 @@ test('MCP advertises working tools and refuses server filesystem reads',async()=
     assert.match(JSON.stringify(wrongExport),/element\/input/);
     const icons=await client.callTool({name:'find-icons',arguments:{libraryId:'lucide',query:'home'}});
     assert.match(JSON.stringify(icons),/house/);
+    const brief=await client.callTool({name:'check-first-visit',arguments:{step:'brief',task:'Find a theme',url:'http://localhost:3000'}});
+    assert.ok(!brief.isError);
+    assert.equal((brief.structuredContent as {walks:unknown[]}).walks.length,5);
   } finally {
     await client.close();await server.close();
     assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-mcp-')));
+    await rm(directory,{recursive:true,force:true});
+  }
+});
+
+test('MCP project rule schemas retain approval, screen selection and owner isolation',async()=> {
+  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-project-rules-mcp-'));
+  const store=new LocalFileStore(directory);
+  const project=await new Projects(store,'alice').create({value:'Rules protocol test',designSystemId:'minimal-light'});
+  async function connect(owner:string) {
+    const server=createServer(store,owner); const client=new Client({name:'project-rule-test',version:'1'});
+    const [a,b]=InMemoryTransport.createLinkedPair(); await server.connect(b); await client.connect(a);
+    return {server,client};
+  }
+  const alice=await connect('alice');const bob=await connect('bob');
+  try {
+    const args={projectId:project.id,screen:'Billing',part:'Button',markdown:'Show saved billing changes.',personApproved:true};
+    const rejected=await alice.client.callTool({name:'set-team-rules',arguments:{...args,personApproved:false}});
+    assert.equal(rejected.isError,true);
+    assert.ok(!(await alice.client.callTool({name:'set-team-rules',arguments:args})).isError);
+    const read=await alice.client.callTool({name:'get-team-rules',arguments:{projectId:project.id,screen:'billing',parts:['Button']}});
+    assert.ok(!read.isError);assert.match(JSON.stringify(read),/Show saved billing changes/);
+    const unrelated=await alice.client.callTool({name:'get-team-rules',arguments:{projectId:project.id,screen:'profile'}});
+    assert.doesNotMatch(JSON.stringify(unrelated),/Show saved billing changes/);
+    const denied=await bob.client.callTool({name:'get-team-rules',arguments:{projectId:project.id,screen:'billing'}});
+    assert.equal(denied.isError,true);assert.doesNotMatch(JSON.stringify(denied),/Show saved billing changes/);
+  } finally {
+    await alice.client.close();await alice.server.close();await bob.client.close();await bob.server.close();
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-project-rules-mcp-')));
     await rm(directory,{recursive:true,force:true});
   }
 });
