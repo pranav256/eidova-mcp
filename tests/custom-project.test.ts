@@ -72,7 +72,7 @@ test('globals inline the full base stylesheet and real font rules into the consu
   const css = globals.css as Record<string, Record<string, string | Record<string,string>>>;
   assert.equal(css['@theme inline'], undefined, 'theme declarations must use the supported cssVars.theme path');
   assert.equal(globals.cssVars!.theme['color-primary'], 'var(--primary)');
-  assert.equal(globals.cssVars!.theme['radius-xl'], 'calc(var(--radius) + 4px)');
+  assert.equal(globals.cssVars!.theme['radius-xl'], 'calc(var(--radius) + 0.25rem)');
   assert.ok(css['@layer base']['*']);
   assert.equal((css['@layer base'].html as Record<string,string>)['font-family'], 'var(--font-sans, system-ui, sans-serif)');
   assert.ok(css['@layer base'].body);

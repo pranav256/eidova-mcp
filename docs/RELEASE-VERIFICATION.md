@@ -1,5 +1,7 @@
 # Release verification — 2026-11-07
 
+Historical verification of the previous release. For the locally implemented 0.2.0 candidate, see [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md). The statements and deployment IDs below are not fresh candidate checks.
+
 The latest review passes **72 service tests**, TypeScript and builds. Theme
 search now includes font names. Private archive integration remains opt-in and
 excluded from public deployments. Compatibility behavior is documented in

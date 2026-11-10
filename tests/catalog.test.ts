@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { catalog, registryItem, searchCatalog, systemWithComponents } from '../src/catalog.js';
+import { catalog, designFamilies, registryItem, searchCatalog, systemWithComponents } from '../src/catalog.js';
 import { publicFetch } from '../src/public-fetch.js';
 test('all checked-in systems can be searched and produce real component source',async()=> {
   const systems=await catalog();assert.equal(systems.length,31);
@@ -33,4 +33,32 @@ test('registry identifiers cannot escape assets and responses are mutation-isola
   const first=await registryItem('minimal-light','button');first.files![0].content='changed';
   assert.notEqual((await registryItem('minimal-light','button')).files![0].content,'changed');
   assert.equal((await publicFetch('https://better-design.com/registry/linear/button.json')).status,403);
+});
+
+test('eight distinct families retain all variants and exact ID selection',async()=>{
+  const systems=await catalog();assert.equal(designFamilies.length,8);assert.equal(systems.filter(system=>!system.variant).length,8);
+  assert.equal((await searchCatalog('metal-fx-silver',1))[0].id,'metal-fx-silver');
+  const result=await searchCatalog('professional',5);assert.equal(new Set(result.map(system=>system.family.id)).size,result.length);
+});
+
+test('relative source helpers are included in registry dependency closure',async()=>{
+  const button=await registryItem('tactile-minimal','button');assert.ok(button.registryDependencies!.some(dependency=>dependency.endsWith('/sound-provider.json')));
+  const input=await registryItem('tactile-minimal','input');assert.ok(input.registryDependencies!.some(dependency=>dependency.endsWith('/_shared.json')));
+});
+
+test('Dialog close icons are embedded without an Iconify runtime or changed geometry',async()=>{
+  for(const system of await catalog()) {
+    const item=await registryItem(system.id,'dialog');const code=item.files![0].content;
+    assert.ok(!code.includes('@iconify/react'),system.id);
+    assert.ok(!item.dependencies?.includes('@iconify/react'),system.id);
+    assert.match(code,/min-h-11 min-w-11/,system.id);
+    if(code.includes('<svg'))assert.match(code,/d="M18 6L6 18M6 6l12 12"/,system.id);
+  }
+});
+
+test('Tactile keeps one field style and provides its promoted material recipe',async()=>{
+  const button=await registryItem('tactile-minimal','button'),card=await registryItem('tactile-minimal','card'),field=await registryItem('tactile-minimal','_shared');
+  assert.match(button.files![0].content,/default: "h-11/);assert.match(button.files![0].content,/rounded-\[12px\].*shadow-/);
+  assert.match(card.files![0].content,/rounded-\[20px\].*shadow-/);assert.match(field.files![0].content,/inset_0_2px_4px/);
+  for(const name of ['input','textarea'])assert.match((await registryItem('tactile-minimal',name)).files![0].content,/formFieldBase/);
 });

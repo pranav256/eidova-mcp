@@ -1,0 +1,257 @@
+{
+  "node": "v24.20.0",
+  "platform": "win32",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) 3 100U",
+  "measurement": "compact JSON UTF-8 wire bytes; not model tokens or client traces",
+  "tasks": [
+    {
+      "task": "choose-install",
+      "calls": [
+        {
+          "tool": "find-design-system",
+          "requestBytes": 76,
+          "responseBytes": 6983,
+          "isError": false,
+          "expectedError": false,
+          "ms": 9.78
+        },
+        {
+          "tool": "get-design-system-kit",
+          "requestBytes": 145,
+          "responseBytes": 21396,
+          "isError": false,
+          "expectedError": false,
+          "ms": 27.57
+        }
+      ],
+      "totalBytes": 80408
+    },
+    {
+      "task": "preserve-brand",
+      "calls": [
+        {
+          "tool": "extract-design-system",
+          "requestBytes": 178,
+          "responseBytes": 10549,
+          "isError": false,
+          "expectedError": false,
+          "ms": 3.66
+        }
+      ],
+      "totalBytes": 62535
+    },
+    {
+      "task": "review-form",
+      "calls": [
+        {
+          "tool": "get-ux-principle",
+          "requestBytes": 57,
+          "responseBytes": 721,
+          "isError": false,
+          "expectedError": false,
+          "ms": 0.75
+        },
+        {
+          "tool": "review-ui-code",
+          "requestBytes": 152,
+          "responseBytes": 842,
+          "isError": false,
+          "expectedError": false,
+          "ms": 11.12
+        },
+        {
+          "tool": "check-comprehension",
+          "requestBytes": 173,
+          "responseBytes": 1223,
+          "isError": false,
+          "expectedError": false,
+          "ms": 3.07
+        }
+      ],
+      "totalBytes": 54976
+    },
+    {
+      "task": "spacing",
+      "calls": [
+        {
+          "tool": "inspect-spacing",
+          "requestBytes": 235,
+          "responseBytes": 1345,
+          "isError": false,
+          "expectedError": false,
+          "ms": 3.98
+        }
+      ],
+      "totalBytes": 53388
+    },
+    {
+      "task": "recover-invalid-input",
+      "calls": [
+        {
+          "tool": "review-ui-code",
+          "requestBytes": 70,
+          "responseBytes": 209,
+          "isError": true,
+          "expectedError": true,
+          "ms": 0.63
+        },
+        {
+          "tool": "get-design-system-kit",
+          "requestBytes": 95,
+          "responseBytes": 138,
+          "isError": true,
+          "expectedError": true,
+          "ms": 0.42
+        }
+      ],
+      "totalBytes": 52320
+    },
+    {
+      "task": "owner-rules",
+      "calls": [
+        {
+          "tool": "set-team-rules",
+          "requestBytes": 94,
+          "responseBytes": 340,
+          "isError": false,
+          "expectedError": false,
+          "ms": 6.44
+        },
+        {
+          "tool": "get-team-rules",
+          "requestBytes": 40,
+          "responseBytes": 383,
+          "isError": false,
+          "expectedError": false,
+          "ms": 2.63
+        }
+      ],
+      "totalBytes": 53673
+    }
+  ],
+  "coreTasks": [
+    {
+      "task": "choose-install",
+      "calls": [
+        {
+          "tool": "find-design-system",
+          "requestBytes": 76,
+          "responseBytes": 6983,
+          "isError": false,
+          "expectedError": false,
+          "ms": 0.72
+        },
+        {
+          "tool": "get-design-system-kit",
+          "requestBytes": 145,
+          "responseBytes": 21396,
+          "isError": false,
+          "expectedError": false,
+          "ms": 9.67
+        }
+      ],
+      "totalBytes": 48142
+    },
+    {
+      "task": "preserve-brand",
+      "calls": [
+        {
+          "tool": "extract-design-system",
+          "requestBytes": 178,
+          "responseBytes": 10549,
+          "isError": false,
+          "expectedError": false,
+          "ms": 0.58
+        }
+      ],
+      "totalBytes": 30269
+    },
+    {
+      "task": "review-form",
+      "calls": [
+        {
+          "tool": "get-ux-principle",
+          "requestBytes": 57,
+          "responseBytes": 721,
+          "isError": false,
+          "expectedError": false,
+          "ms": 0.17
+        },
+        {
+          "tool": "review-ui-code",
+          "requestBytes": 152,
+          "responseBytes": 842,
+          "isError": false,
+          "expectedError": false,
+          "ms": 1.76
+        },
+        {
+          "tool": "check-comprehension",
+          "requestBytes": 173,
+          "responseBytes": 1223,
+          "isError": false,
+          "expectedError": false,
+          "ms": 1.02
+        }
+      ],
+      "totalBytes": 22710
+    },
+    {
+      "task": "spacing",
+      "calls": [
+        {
+          "tool": "inspect-spacing",
+          "requestBytes": 235,
+          "responseBytes": 1345,
+          "isError": false,
+          "expectedError": false,
+          "ms": 1.83
+        }
+      ],
+      "totalBytes": 21122
+    },
+    {
+      "task": "recover-invalid-input",
+      "calls": [
+        {
+          "tool": "review-ui-code",
+          "requestBytes": 70,
+          "responseBytes": 209,
+          "isError": true,
+          "expectedError": true,
+          "ms": 0.28
+        },
+        {
+          "tool": "get-design-system-kit",
+          "requestBytes": 95,
+          "responseBytes": 138,
+          "isError": true,
+          "expectedError": true,
+          "ms": 0.47
+        }
+      ],
+      "totalBytes": 20054
+    }
+  ],
+  "public": {
+    "tools": 40,
+    "manifestBytes": 51503,
+    "instructionsBytes": 305,
+    "connectMs": 61.72
+  },
+  "warmGuidanceP95Ms": 0.13,
+  "warmCatalogP95Ms": 0.75,
+  "owner": {
+    "tools": 41,
+    "manifestBytes": 52511,
+    "instructionsBytes": 305,
+    "connectMs": 30.37
+  },
+  "core": {
+    "tools": 11,
+    "manifestBytes": 19237,
+    "instructionsBytes": 305,
+    "connectMs": 14.9
+  }
+}

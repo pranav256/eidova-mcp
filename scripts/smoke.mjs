@@ -18,7 +18,7 @@ const calls=[
   ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://open-design-website.vercel.app'}],
   ['find-icons',{libraryId:'lucide',query:'home'}],
   ['install-icons',{libraryId:'lucide',names:['house'],format:'svg'}],
-  ['get-design-system-kit',{designSystemId:'minimal-light',target:'react',components:['button','input','card'],maxTokens:1000}],
+  ['get-design-system-kit',{designSystemId:'minimal-light',target:'react',component:['button','input','card']}],
 ];
 for (const [name,args] of calls) {
   const result=await client.callTool({name,arguments:args});

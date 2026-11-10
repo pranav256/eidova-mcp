@@ -1,9 +1,12 @@
 {
   "name": "open-design-mcp",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "mcpName": "io.github.pranav256/open-design",
+  "bin": { "open-design-mcp": "dist/stdio.js" },
+  "files": ["dist", "assets/registry", "assets/LICENSE", "assets/TABLER-LICENSE", "assets/UPSTREAM.json", "content", "README.md", "LICENSE", "NOTICE", "server.json", "vendor/upstream/LICENSE", "docs", "CHANGELOG.md", "SECURITY.md"],
   "type": "module",
   "description": "Independent open-source design tools with a local component registry",
+  "keywords": ["mcp", "design-systems", "react", "shadcn", "accessibility"],
   "license": "MIT",
   "engines": {
     "node": ">=22"
@@ -16,11 +19,17 @@
     "build": "tsup src/main.ts src/stdio.ts --format esm --platform node --target node22 --clean",
     "test": "tsx --test tests/*.test.ts",
     "check": "tsc --noEmit",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "audit:themes": "tsx scripts/audit-themes.ts",
+    "sync:previews": "tsx scripts/sync-website-previews.ts ../open-design-website",
+    "prepack": "npm run check && npm run build",
     "content:import": "tsx scripts/import-content.ts",
     "build:upstream": "node scripts/build-upstream.mjs",
     "smoke": "node scripts/smoke.mjs",
     "smoke:private": "node scripts/smoke-private.mjs",
     "smoke:stdio": "node scripts/smoke-stdio.mjs",
+    "smoke:package": "node scripts/smoke-package.mjs",
+    "verify:consumers": "node scripts/verify-consumers.mjs",
     "review:website": "node scripts/review-site.mjs"
   },
   "dependencies": {

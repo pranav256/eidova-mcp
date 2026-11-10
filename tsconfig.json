@@ -24,6 +24,9 @@
     "src",
     "api",
     "tests",
-    "scripts/import-content.ts"
+    "scripts/import-content.ts",
+    "scripts/benchmark.ts",
+    "scripts/audit-themes.ts",
+    "scripts/sync-website-previews.ts"
   ]
 }

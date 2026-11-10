@@ -34,7 +34,7 @@ export async function safeFetchPublic(input: string, redirects = 0, deadline: Ab
     const request = (url.protocol === 'https:' ? httpsRequest : httpRequest)({
       hostname, port: url.port || undefined, path: url.pathname + url.search, method: 'GET',
       signal: AbortSignal.any([deadline, AbortSignal.timeout(10_000)]),
-      headers: {'Accept': 'text/html,text/css;q=0.9', 'Accept-Encoding': 'identity', 'User-Agent': 'OpenDesignMCP/0.1'},
+      headers: {'Accept': 'text/html,text/css;q=0.9', 'Accept-Encoding': 'identity', 'User-Agent': 'OpenDesignMCP/0.2'},
       lookup: (_name, _options, callback) => callback(null, selected.address, selected.family),
     }, incoming => {
       const chunks: Buffer[] = []; let bytes = 0;
@@ -54,5 +54,8 @@ export async function safeFetchPublic(input: string, redirects = 0, deadline: Ab
     return safeFetchPublic(new URL(response.headers.location, url).toString(), redirects + 1, deadline);
   }
   if (response.headers['content-encoding'] && response.headers['content-encoding'] !== 'identity') throw new Error('Compressed response was refused. Pass the CSS directly instead.');
-  return new Response(new Uint8Array(response.body), {status: response.status, headers: response.headers});
+  const result = new Response([204,205,304].includes(response.status) ? null : new Uint8Array(response.body), {status: response.status, headers: response.headers});
+  // Node's pinned transport needs to preserve the final URL for relative stylesheet links.
+  Object.defineProperties(result,{url:{value:url.href},redirected:{value:redirects>0}});
+  return result;
 }

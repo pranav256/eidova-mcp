@@ -1,74 +1,88 @@
-# Deploy and self-host
+# Self-host and release
 
-The API and marketing website are separate repositories and Vercel projects:
-`pranav256/open-design-mcp` and `pranav256/open-design-website`.
+Version 0.2.0 is a locally verified candidate; package/Registry publication remains separate work. The API and website are independent repositories/Vercel projects. A Git push can trigger their existing deployment integrations; verify the exact deployed commits and versions. Promote the API before the website: the new website defaults to core, which the previous hosted release does not provide.
 
-## Vercel API
+## Local service and website
 
-Import this repository or run `vercel deploy --prod` from its root. `vercel.json`
-builds the Node service and routes `/mcp`, `/api/*`, registry/icon requests and
-service metadata to `api/index.ts`. API functions have a 60-second maximum.
+Use Node 22+ for the MCP; the Vite website requires Node 22.12+. In separate terminals:
 
-Link a **private** Vercel Blob store to production and preview. Vercel supplies
-`BLOB_READ_WRITE_TOKEN`; never commit it. The API fails explicitly rather than
-storing persistent work on ephemeral function disk when this secret is absent.
-Documents use deterministic private paths, uncached reads and conditional ETag
-writes. Local storage instead supports a single Node writer process.
-
-Set `OPEN_DESIGN_BASE_URL` to a custom public origin if needed; otherwise the
-Vercel production project hostname is used. The anonymous catalog does not
-require workspace authentication. Private team rules and theme edits require a
-43–128 character base64url capability key on HTTP.
-
-Verify a deployment with `npm run smoke -- https://your-host/mcp` and
-`GET /health`. Smoke captures remain under ignored `.work/verification`.
-
-`npm run smoke:private -- https://your-host` creates disposable workspace rules
-and a theme, confirms persistence across clients, verifies that another workspace
-cannot overwrite them, and checks the public custom registry. It never prints
-or saves the temporary workspace keys. `npm run smoke:stdio` verifies the built
-stdio package from a different working directory.
-
-## Website
-
-Deploy the website repository independently. Its `VITE_MCP_URL` points to
-the full MCP endpoint, and its Vercel `/api/catalog` rewrite points to that same API.
-When changing the API hostname, update both values and redeploy. Browser clients
-can also fetch the catalog directly using the API's public CORS support.
-
-From this service checkout, with the website checked out at `website/` or a
-supplied path, run the source and rendered checks:
-
-```sh
-npm run review:website -- https://open-design-mcp-liard.vercel.app/mcp ./website
-node scripts/verify-website.mjs
-node scripts/verify-website-themes.mjs
+```powershell
+# open-design-mcp
+npm ci
+npm run build:upstream
+npm run check
+npm test
+npm run build
+$env:OPEN_DESIGN_BASE_URL='http://localhost:3000'
+$env:OPEN_DESIGN_WEBSITE_URL='http://127.0.0.1:5174'
+npm start
 ```
 
-The browser check uses Microsoft Edge on Windows. Set `PLAYWRIGHT_CHANNEL` to
-another installed browser channel, or install Playwright Chromium on other
-platforms with `npx playwright install chromium`. `WEBSITE_REVIEW_URL` and
-`MCP_REVIEW_URL` override the reviewed website and review service. The release
-check expects the public Open Design endpoint in the site's connection example.
-It records screenshots and DOM measurements, exercises search, keyboard and
-clipboard actions and catalog recovery, and fails on blocking spacing or copy
-findings. It covers the six featured themes and expanded 31-theme catalog,
-appearance and URL persistence, whole-site theme changes and reset, all setup tabs,
-clipboard denial, invalid catalog responses and timeout recovery. Set
-`MCP_PRIVATE_ARCHIVE` to an absolute saved archive path to review through the
-private local Open Design MCP, or leave it unset for the public review service.
-`WEBSITE_SOURCE_DIR` and `WEBSITE_EXPECTED_MCP_URL` support other checkouts and
-service endpoints. See [the release report](RELEASE-VERIFICATION.md) for exact coverage.
+Set `OPEN_DESIGN_STATE_DIR` to an absolute durable directory when local persistence is needed; otherwise state lives under the service working directory. Existing capability keys/state need no migration. Use stdio `--profile core` for public design work or the default full profile for owner features.
 
-The website's compact palette data is reproducible from the public registry:
-`node scripts/sync-website-themes.mjs ./website`. This reads no private captures.
-It retains original public tokens and exports readable site-specific text and
-action overrides using browser color conversion. Both appearances are exported;
-missing variants adapt surfaces and text while keeping the accent and radius.
-The theme check applies all 31 systems in both modes to the whole website and
-checks saved choices, deep links, reset, keyboard focus, scroll/search/setup
-preservation, unavailable storage, catalog outages, contrast and rendered spacing.
-Legacy preview links migrate to `?theme=<id>&mode=<appearance>`.
+```powershell
+# open-design-website
+npm ci
+$env:VITE_MCP_URL='http://localhost:3000/mcp'
+$env:VITE_REGISTRY_ORIGIN='http://localhost:3000'
+$env:MCP_PROXY_ORIGIN='http://localhost:3000'
+npm run build
+npm run preview -- --port 5174
+```
+
+Vite preview serves the built files. Use the explicit registry origin above and the local catalog proxy setting for local review; production proxy rewrites are a separate configuration. Never put private keys in `VITE_*` variables.
+
+## Vercel and coordinated URLs
+
+The Node API functions have a 60-second maximum. Link a **private** Vercel Blob store to each environment; `BLOB_READ_WRITE_TOKEN` is supplied as a secret. Missing Blob credentials fail explicitly on hosted persistence instead of writing to ephemeral function disk. Reads are uncached; writes use conditional ETags.
+
+| Setting | Required relationship |
+| --- | --- |
+| API `OPEN_DESIGN_BASE_URL` | Public API origin; otherwise uses the Vercel production project hostname |
+| API `OPEN_DESIGN_WEBSITE_URL` | Website origin used for family specimen links |
+| Website `VITE_MCP_URL` | The same API origin plus `/mcp`; UI derives `/mcp/core` |
+| Website `VITE_REGISTRY_ORIGIN` | The same API origin |
+| Website `vercel.json` rewrites | `/api/catalog` and `/registry/*` point to that API |
+| Local `MCP_PROXY_ORIGIN` | Development/local-preview API origin |
+| `server.json` remotes | Checked production core URL after it is live |
+
+Keep previous deployment IDs, URL settings and package version before promotion. Retain the same Blob store, capability scheme and state paths. Add host-wide rate/abuse controls separately: the 16-request process cap is local to an instance, not deployment-wide enforcement.
+
+## Release sequence
+
+1. Finish remote CI and named-client walkthroughs; record client versions, profile, first-task time and context traces. Resolve naming/package/namespace ownership before publishing metadata.
+2. Build the exact MCP commit; run tests, stdio/package smoke, benchmark and theme audit. Stage it with separate disposable state/Blob records.
+3. Verify staging `/health`, full and core initialize/discovery, recovery, registry source and owner isolation. `npm run smoke -- <staging-origin>/mcp` is read-only. `smoke:private` creates disposable records; use it only within the authorized environment.
+4. Point a website preview's build variables and proxy rewrites at that staged API. Sync catalog metadata/specimens when registry source changes and run the website, isolated-viewer and specimen checks below.
+5. With release authorization, promote the API and verify `/mcp/core` before promoting the matching website. Preserve old routes and all 31 registry IDs. Invalidate affected public caches or allow the 300-second TTL to expire.
+6. Publish the tested tarball and verified Registry metadata only after namespace/package ownership and the remote URL are confirmed. Never republish an npm version; use a new version for a repair.
+
+No trusted dashboard worker is included. The current previews are workspace settings forms and member lists, not dashboards. A future dashboard needs a genuine service-owned capture and VALID receipt.
+
+## Verification and reproducibility
+
+From MCP with the sibling website checkout:
+
+```powershell
+$env:WEBSITE_REVIEW_URL='http://127.0.0.1:5174'
+$env:WEBSITE_SOURCE_DIR='../open-design-website'
+$env:WEBSITE_EXPECTED_MCP_URL='http://localhost:3000/mcp'
+$env:MCP_REVIEW_URL='http://localhost:3000/mcp'
+node scripts/verify-website.mjs
+node scripts/verify-website-themes.mjs
+node scripts/verify-specimens.mjs
+npm run verify:consumers
+```
+
+The browser scripts use Edge on Windows or installed Playwright Chromium elsewhere. `PLAYWRIGHT_CHANNEL` can select another installed channel. On Linux, install Chromium with `npx playwright install --with-deps chromium`. Clean consumers use actual shadcn 4.23.0, React 19.2, Tailwind 4.3.5, Vite 7.3.7 and Next 16.4.6, and run only against a local registry.
+
+`npm run sync:previews` copies exact public source and required licensed fonts/notices into the sibling website. `node scripts/sync-website-themes.mjs ../open-design-website` regenerates catalog tokens and appearance metadata without rewriting the source registry. The website keeps its own appearance fixed; theme selection opens an isolated viewer. Restart the MCP after registry/content edits because source is cached per process.
+
+## Rollback
+
+Re-promote the recorded previous API and website deployments, restore their coordinated URL settings, and verify the previous full endpoint and registry links. Keep the same persistent store and capability keys; this candidate adds no destructive schema migration. Reconnect clients changed to core to full if rolling back to a release without core. Wait out/invalidate public caches and verify returned versions before declaring recovery.
+
+For npm, move the intended dist-tag back to the previous tested version; do not unpublish installed versions or replace a tarball. Forward fixes receive a new version. Preserve local state/Blob data and any authorized backups; package rollback is separate from user-data deletion.
 
 ## Docker
 
@@ -78,7 +92,4 @@ docker run --rm -p 3000:3000 -v open-design-state:/app/.open-design \
   -e OPEN_DESIGN_BASE_URL=http://localhost:3000 open-design-mcp
 ```
 
-No external language model is required. Protect any public deployment with the
-hosting controls appropriate to its capacity; this project does not promise
-unlimited third-party infrastructure. The public Vercel deployment runs stateless
-MCP HTTP and uses Blob only for intentional workspace persistence.
+Docker and Vercel staging were not exercised by the local candidate checks. Verify any production deployment triggered by the pushed commits separately. The local Node builds, clean consumers and package evidence are in [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).

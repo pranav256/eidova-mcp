@@ -1,0 +1,50 @@
+name: Service checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build:upstream
+      - run: git diff --exit-code vendor/upstream/runtime.mjs
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npm run smoke:stdio
+      - run: npm run smoke:package
+      - run: npm run benchmark -- --check
+      - run: npm run audit:themes
+      - run: npm audit --omit=dev
+  consumers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Install and review clean Vite and Next consumers
+        shell: bash
+        run: |
+          node dist/main.js > /tmp/open-design-consumer-service.log 2>&1 &
+          mcp_service_pid=$!
+          trap 'kill "$mcp_service_pid"' EXIT
+          for attempt in {1..40}; do
+            if curl --fail --silent http://localhost:3000/health > /dev/null; then break; fi
+            sleep 0.25
+          done
+          npm run verify:consumers

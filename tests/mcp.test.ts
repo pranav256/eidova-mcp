@@ -33,6 +33,12 @@ test('MCP advertises working tools and refuses server filesystem reads',async()=
     assert.match(JSON.stringify(misplaced),/element\/input/);
     const wrongExport=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'components/ui/input.tsx',content:'export const Other = (props: any) => <input {...props} />;'}]}});
     assert.match(JSON.stringify(wrongExport),/element\/input/);
+    const sidebarSource='const SidebarItem = (props: any) => <button {...props}><img /></button>; export { SidebarItem };';
+    const sidebar=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'src/previews/kits/linear/components/ui/sidebar.tsx',content:sidebarSource}]}});
+    assert.doesNotMatch(JSON.stringify(sidebar),/element\/button/);
+    assert.match(JSON.stringify(sidebar),/wcag\/img-alt.*missing/);
+    const sample=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'components/ui/sidebar.tsx',content:sidebarSource+' export const Example = () => <button>Save</button>;'}]}});
+    assert.match(JSON.stringify(sample),/element\/button/);
     const icons=await client.callTool({name:'find-icons',arguments:{libraryId:'lucide',query:'home'}});
     assert.match(JSON.stringify(icons),/house/);
     const brief=await client.callTool({name:'check-first-visit',arguments:{step:'brief',task:'Find a theme',url:'http://localhost:3000'}});

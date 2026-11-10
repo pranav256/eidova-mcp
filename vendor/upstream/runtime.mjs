@@ -444,173 +444,6 @@ import { z as z5 } from "zod";
 
 // vendor/upstream/src/mcp/selected-icon-handoff.ts
 import { z as z4 } from "zod";
-
-// vendor/upstream/src/design-systems/presentation.ts
-var ICON_LIBRARIES = {
-  carbon: { name: "Carbon Icons", prefix: "carbon", defaultVariant: "default" },
-  "ant-design": {
-    name: "Ant Design Icons",
-    prefix: "ant-design",
-    defaultVariant: "outlined"
-  },
-  feather: { name: "Feather", prefix: "feather", defaultVariant: "default" },
-  iconoir: { name: "Iconoir", prefix: "iconoir", defaultVariant: "default" },
-  mingcute: { name: "MingCute", prefix: "mingcute", defaultVariant: "line" },
-  ph: { name: "Phosphor", prefix: "ph", defaultVariant: "regular" },
-  pixelarticons: {
-    name: "Pixelarticons",
-    prefix: "pixelarticons",
-    defaultVariant: "default"
-  },
-  solar: { name: "Solar", prefix: "solar", defaultVariant: "linear" }
-};
-var CATALOG_ICON_LIBRARY_ASSIGNMENTS = {
-  airbnb: { id: "mingcute", variant: "line" },
-  "airy-docs": { id: "feather", variant: "default" },
-  apple: { id: "feather", variant: "default" },
-  atelier: { id: "iconoir", variant: "default" },
-  "beam-lib": { id: "feather", variant: "default" },
-  broadsheet: { id: "ph", variant: "regular" },
-  brutalism: { id: "pixelarticons", variant: "default" },
-  carbon: { id: "carbon", variant: "default" },
-  cashmere: { id: "iconoir", variant: "default" },
-  cerulean: { id: "feather", variant: "default" },
-  "chrome-azure": { id: "solar", variant: "bold-duotone" },
-  "chrome-bronze": { id: "solar", variant: "bold-duotone" },
-  "chrome-crimson": { id: "solar", variant: "bold-duotone" },
-  "chrome-emerald": { id: "solar", variant: "bold-duotone" },
-  "chrome-gold": { id: "solar", variant: "bold-duotone" },
-  "chrome-silver": { id: "solar", variant: "bold-duotone" },
-  "cinematic-dark": { id: "solar", variant: "bold-duotone" },
-  clicky: { id: "mingcute", variant: "line" },
-  cobalt: { id: "carbon", variant: "default" },
-  cornflower: { id: "mingcute", variant: "line" },
-  "corporate-fintech": { id: "ant-design", variant: "outlined" },
-  "cream-editorial": { id: "ph", variant: "regular" },
-  "dark-orange": { id: "ph", variant: "duotone" },
-  "editorial-dark": { id: "iconoir", variant: "default" },
-  "editorial-warm": { id: "iconoir", variant: "default" },
-  ember: { id: "ph", variant: "duotone" },
-  evergreen: { id: "ph", variant: "duotone" },
-  figma: { id: "iconoir", variant: "default" },
-  firefly: { id: "carbon", variant: "default" },
-  "ink-mail": { id: "ph", variant: "regular" },
-  folio: { id: "iconoir", variant: "default" },
-  "frosted-glass": { id: "solar", variant: "linear" },
-  "glassmorphic-dark": { id: "solar", variant: "bold-duotone" },
-  graphite: { id: "carbon", variant: "default" },
-  halo: { id: "solar", variant: "linear" },
-  haptic: { id: "mingcute", variant: "line" },
-  heyclicky: { id: "mingcute", variant: "line" },
-  hyperline: { id: "carbon", variant: "default" },
-  "inset-dark": { id: "carbon", variant: "default" },
-  instrument: { id: "carbon", variant: "default" },
-  interior: { id: "iconoir", variant: "default" },
-  lane: { id: "iconoir", variant: "default" },
-  "leather-luxe": { id: "iconoir", variant: "default" },
-  "light-marketplace": { id: "mingcute", variant: "line" },
-  linear: { id: "iconoir", variant: "default" },
-  "linear-quality": { id: "iconoir", variant: "default" },
-  loam: { id: "feather", variant: "default" },
-  "lumen-dark": { id: "solar", variant: "linear" },
-  marigold: { id: "ph", variant: "duotone" },
-  "metal-fx-chromatic": { id: "solar", variant: "bold-duotone" },
-  "metal-fx-gold": { id: "solar", variant: "bold-duotone" },
-  "metal-fx-silver": { id: "solar", variant: "bold-duotone" },
-  "midnight-glass": { id: "solar", variant: "bold-duotone" },
-  "minimal-light": { id: "iconoir", variant: "default" },
-  "monochrome-industrial": { id: "carbon", variant: "default" },
-  neon: { id: "solar", variant: "bold-duotone" },
-  "neon-vault": { id: "solar", variant: "bold-duotone" },
-  "neutral-monochrome": { id: "feather", variant: "default" },
-  notion: { id: "feather", variant: "default" },
-  pebble: { id: "mingcute", variant: "line" },
-  "pillow-light": { id: "ph", variant: "duotone" },
-  "playful-console": { id: "ph", variant: "duotone" },
-  platine: { id: "iconoir", variant: "default" },
-  playdesk: { id: "mingcute", variant: "line" },
-  "bevel": { id: "solar", variant: "linear" },
-  "bold-retail": { id: "mingcute", variant: "line" },
-  precision: { id: "iconoir", variant: "default" },
-  "precision-light": { id: "iconoir", variant: "default" },
-  pulse: { id: "mingcute", variant: "line" },
-  putty: { id: "ph", variant: "duotone" },
-  "retro-lcd": { id: "pixelarticons", variant: "default" },
-  riso: { id: "pixelarticons", variant: "default" },
-  romanesque: { id: "iconoir", variant: "default" },
-  sienna: { id: "ph", variant: "duotone" },
-  "skeuo-next": { id: "solar", variant: "bold-duotone" },
-  slate: { id: "feather", variant: "default" },
-  "sonic-airy": { id: "feather", variant: "default" },
-  "sonic-bright": { id: "mingcute", variant: "line" },
-  "sonic-glassy": { id: "solar", variant: "bold-duotone" },
-  "sonic-lofi": { id: "pixelarticons", variant: "default" },
-  "sonic-metallic": { id: "carbon", variant: "default" },
-  "sonic-organic": { id: "ph", variant: "duotone" },
-  "sonic-punchy": { id: "solar", variant: "bold-duotone" },
-  "sonic-retro": { id: "pixelarticons", variant: "default" },
-  "sonic-warm": { id: "ph", variant: "duotone" },
-  sorbet: { id: "mingcute", variant: "line" },
-  squircle: { id: "mingcute", variant: "line" },
-  stripe: { id: "solar", variant: "linear" },
-  supabase: { id: "carbon", variant: "default" },
-  telemetry: { id: "carbon", variant: "default" },
-  terminal: { id: "pixelarticons", variant: "default" },
-  "tv-style": { id: "pixelarticons", variant: "default" },
-  velour: { id: "iconoir", variant: "default" },
-  vercel: { id: "feather", variant: "default" },
-  voltage: { id: "solar", variant: "bold-duotone" }
-};
-function libraryDefinition(id) {
-  return ICON_LIBRARIES[id] ?? {
-    name: id.split(/[-_]/).filter(Boolean).map((part) => part[0]?.toUpperCase() + part.slice(1)).join(" "),
-    prefix: id,
-    defaultVariant: "default"
-  };
-}
-function detectSourceIconLibrary(sourceFiles) {
-  const counts = /* @__PURE__ */ new Map();
-  for (const source of sourceFiles) {
-    for (const match of source.matchAll(/["'`]([a-z][a-z0-9-]+):[a-z0-9][a-z0-9-]*/gi)) {
-      const prefix = match[1]?.toLowerCase();
-      if (!prefix || !ICON_LIBRARIES[prefix]) continue;
-      counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
-    }
-  }
-  const iconifyPrefix = [...counts.entries()].sort(
-    ([aPrefix, aCount], [bPrefix, bCount]) => bCount - aCount || aPrefix.localeCompare(bPrefix)
-  )[0]?.[0];
-  if (iconifyPrefix) {
-    return { id: iconifyPrefix, provenance: "iconify-source" };
-  }
-  return null;
-}
-function resolveDesignSystemIcons({
-  id,
-  iconLibraryId,
-  iconLibraryName,
-  iconPrefix,
-  iconVariant,
-  sourceFiles = []
-}) {
-  const catalogAssignment = CATALOG_ICON_LIBRARY_ASSIGNMENTS[id];
-  const validExplicitId = iconLibraryId && ICON_LIBRARIES[iconLibraryId] ? iconLibraryId : null;
-  const declaredId = catalogAssignment?.id ?? validExplicitId;
-  const detected = detectSourceIconLibrary(sourceFiles);
-  const resolvedId = declaredId ?? detected?.id ?? "iconoir";
-  const definition = libraryDefinition(resolvedId);
-  const provenance = declaredId ? "explicit" : detected?.provenance ?? "fallback";
-  return {
-    id: resolvedId,
-    name: catalogAssignment ? definition.name : iconLibraryName ?? definition.name,
-    prefix: catalogAssignment ? definition.prefix : iconPrefix ?? definition.prefix,
-    variant: catalogAssignment?.variant ?? iconVariant ?? definition.defaultVariant,
-    provenance,
-    ...declaredId && detected && declaredId !== detected.id && { conflict: { declared: declaredId, detected: detected.id } }
-  };
-}
-
-// vendor/upstream/src/mcp/selected-icon-handoff.ts
 var selectedIconSchema = z4.object({
   id: z4.string().min(1),
   name: z4.string().min(1).optional(),
@@ -618,7 +451,6 @@ var selectedIconSchema = z4.object({
   variant: z4.string().min(1)
 });
 async function catalogKitIcons(metadata, provider) {
-  if (CATALOG_ICON_LIBRARY_ASSIGNMENTS[metadata.id]) return resolveDesignSystemIcons({ id: metadata.id });
   if (!metadata.iconLibraryId) return void 0;
   const library = await provider.getIconLibraryById(metadata.iconLibraryId);
   if (!library) return void 0;
@@ -9102,7 +8934,7 @@ Use knownTerms for words your audience genuinely knows, so the check stops flagg
       const hasCopy = Boolean(report.copy.headline) || report.copy.body.length > 0 || report.copy.actions.length > 0;
       const body = hasCopy ? formatComprehensionReport(report) : NOTHING_TO_CHECK;
       const preamble = guidancePreamble(session2.topics, "this copy");
-      const nextStep = reviewDesignSystemStep(session2);
+      const nextStep = report.verdict === "pass" ? "Continue with the interface; this text check does not verify its rendering." : "Fix critical and serious copy findings, then run check-comprehension again.";
       const text5 = [preamble, body, nextStep].filter(Boolean).join("\n\n");
       track(
         "check-comprehension",
@@ -21993,7 +21825,7 @@ function clips(overflow) {
   return overflow === "hidden" || overflow === "clip";
 }
 function clipsBothAxes(element) {
-  return clips(element.style?.overflowX) && clips(element.style?.overflowY);
+  return [element.style?.overflowX, element.style?.overflowY].every((value) => value !== void 0 && ["hidden", "clip", "auto", "scroll"].includes(value));
 }
 var CURVE_REACH = 1 - Math.SQRT1_2;
 function inspectConcentricRadii(state, tolerance, findings) {
@@ -22494,6 +22326,7 @@ function captureSpacingSnapshot() {
     const style = getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
     if (hiddenByAncestor(element)) return false;
+    if (["absolute", "fixed"].includes(style.position) && (style.clip === "rect(0px, 0px, 0px, 0px)" || style.clipPath === "inset(50%)")) return false;
     if (element.parentElement?.closest("[inert]")) return false;
     const rect = element.getBoundingClientRect();
     return rect.width > 0 || rect.height > 0;
@@ -23537,7 +23370,7 @@ ${SPACING_CAPTURE_SCRIPT}
         const missing = native ? [] : missingRecommendedWidths(states);
         const coverageLine = missing.length ? `Add ${formatWidths(missing)} to cover every recommended width.` : "";
         const findingsText = formatFindings(result.findings, result.states, detail === "full");
-        const nextStep = reviewDesignSystemStep(await sessionLookup);
+        const nextStep = "Fix critical and serious spacing findings, then recapture the affected rendered states.";
         const text5 = [
           `${resultTitle(result.summary.total, detail === "full")}. Checked at ${formatWidths(captured)}.`,
           detail === "full" ? `Spacing score: ${result.score}/100.` : "",
@@ -28684,12 +28517,12 @@ function createMcpServer(options) {
   const server = new McpServer(
     { name, version },
     {
-      instructions: directoryListing ? DIRECTORY_INSTRUCTIONS : getMcpInstructions({
+      instructions: options.instructions ?? (directoryListing ? DIRECTORY_INSTRUCTIONS : getMcpInstructions({
         enableReactNativeGuide,
         enableThreeJsGuide,
         enableShopifyKit,
         enableReviewUiCode
-      })
+      }))
     }
   );
   declareAdvertisedSchemaDialect(server);
@@ -31606,20 +31439,23 @@ function lintReviewableFile(input, baseConfig, context) {
     }
     if (!ruleKey) return;
     const rule = elementRules[ruleKey];
-    const primitivePath = rule.from.replace(/^@\//, "");
     const reviewedPath = input.path.replaceAll("\\", "/");
-    const implementsPrimitive = ["tsx", "jsx"].some((ext) => reviewedPath === primitivePath + "." + ext || reviewedPath.endsWith("/" + primitivePath + "." + ext));
+    const moduleName = reviewedPath.match(/(?:^|\/)components\/ui\/([a-z0-9-]+)\.[jt]sx$/i)?.[1];
+    const primitiveName = moduleName?.replace(/(^|-)([a-z])/g, (_, prefix, letter) => letter.toUpperCase());
+    let declaration2 = node.parent;
+    while (declaration2 && !ts11.isVariableDeclaration(declaration2) && !ts11.isFunctionDeclaration(declaration2)) declaration2 = declaration2.parent;
+    const componentName = declaration2 && declaration2.name && ts11.isIdentifier(declaration2.name) ? declaration2.name.text : void 0;
     const exportsPrimitive = sourceFile.statements.some((statement) => {
       if (ts11.isExportDeclaration(statement) && statement.exportClause && ts11.isNamedExports(statement.exportClause)) {
-        return statement.exportClause.elements.some((element) => element.name.text === rule.use);
+        return statement.exportClause.elements.some((element) => (element.propertyName ?? element.name).text === componentName);
       }
       const exported = ts11.canHaveModifiers(statement) && ts11.getModifiers(statement)?.some((modifier) => modifier.kind === ts11.SyntaxKind.ExportKeyword);
       if (!exported) return false;
-      if (ts11.isFunctionDeclaration(statement)) return statement.name?.text === rule.use;
-      if (ts11.isVariableStatement(statement)) return statement.declarationList.declarations.some((declaration2) => ts11.isIdentifier(declaration2.name) && declaration2.name.text === rule.use);
+      if (ts11.isFunctionDeclaration(statement)) return statement.name?.text === componentName;
+      if (ts11.isVariableStatement(statement)) return statement.declarationList.declarations.some((item2) => ts11.isIdentifier(item2.name) && item2.name.text === componentName);
       return false;
     });
-    if (implementsPrimitive && exportsPrimitive) return;
+    if (primitiveName && componentName && exportsPrimitive && (componentName === primitiveName || componentName.startsWith(primitiveName) && /^[A-Z]/.test(componentName.slice(primitiveName.length)))) return;
     const p = pos(sourceFile, node);
     findings.push({
       file: input.path,
@@ -32701,6 +32537,7 @@ export {
   createMcpServer,
   extractFromSources,
   formatExtraction,
+  inspectSpacing,
   registerReviewTool,
   summarizeExtraction
 };

@@ -5,187 +5,134 @@ import { chromium } from 'playwright';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { measureTextContrast } from './browser-contrast.mjs';
 
 const origin = process.env.WEBSITE_REVIEW_URL || 'https://open-design-website.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website-themes');
-await mkdir(dir, { recursive: true });
-const themes = JSON.parse(await readFile(path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website', 'src/catalog-themes.json'), 'utf8'));
+const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website');
+const themes = JSON.parse(await readFile(path.join(website, 'src/catalog-themes.json'), 'utf8'));
+const families = JSON.parse(await readFile(path.join(website, 'src/design-families.json'), 'utf8'));
+const representative = ['linear', 'editorial-dark', 'tactile-minimal'];
+const familyFor = id => families.find(family => family.representative === id || family.variants.includes(id));
 const save = (name, value) => writeFile(path.join(dir, name + '.json'), JSON.stringify(value, null, 2));
-const client = new Client({ name: 'open-design-whole-site-themes', version: '1' });
+await mkdir(dir, { recursive: true });
+const client = new Client({ name: 'open-design-theme-viewer-review', version: '0.2.0' });
 await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({ command: process.execPath, args: [path.resolve('scripts/start-private.mjs'), path.resolve(process.env.MCP_PRIVATE_ARCHIVE)] })
   : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'https://open-design-mcp-liard.vercel.app/mcp')));
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined), headless: true });
-const checks = [], states = [], copyChecks = [], errors = [], behaviors = [];
-const representative = ['linear', 'stripe', 'airbnb'];
-
-// Measure actual text over composited ancestor surfaces, including transparent cards.
-function measure() {
-  const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
-  const paint = canvas.getContext('2d', { willReadFrequently: true });
-  const lum = () => {
-    const c = [...paint.getImageData(0, 0, 1, 1).data].slice(0, 3).map(v => {
-      v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
-    });
-    return c[0] * .2126 + c[1] * .7152 + c[2] * .0722;
-  };
-  const color = getComputedStyle(document.body).backgroundColor;
-  paint.fillStyle = color; paint.fillRect(0, 0, 1, 1);
-  const backgroundLuminance = lum();
-  const candidates = [...document.body.querySelectorAll('*')].filter(node =>
-    (node.matches('input, textarea') || [...node.childNodes].some(child => child.nodeType === 3 && child.textContent.trim())) &&
-    !node.closest('[aria-hidden="true"], button:disabled, .skip-link, script, style') && node.getBoundingClientRect().height > 0);
-  const contrast = candidates.flatMap(node => {
-    const colors = [{ text: (node.value || node.textContent).trim().slice(0, 80), color: getComputedStyle(node).color }];
-    if (node.matches('input[placeholder]') && !node.value) colors.push({ text: node.placeholder, color: getComputedStyle(node, '::placeholder').color });
-    return colors.map(({ text, color }) => {
-      paint.clearRect(0, 0, 1, 1);
-      const ancestors = []; for (let p = node; p; p = p.parentElement) ancestors.unshift(p);
-      for (const ancestor of ancestors) { paint.fillStyle = getComputedStyle(ancestor).backgroundColor; paint.fillRect(0, 0, 1, 1); }
-      const bg = lum(); paint.fillStyle = color; paint.fillRect(0, 0, 1, 1); const fg = lum();
-      return { text, ratio: (Math.max(bg, fg) + .05) / (Math.min(bg, fg) + .05) };
-    });
-  });
-  return { backgroundLuminance, contrast, background: color, radius: getComputedStyle(document.querySelector('.theme-card')).borderTopLeftRadius };
+const states = [], checks = [], errors = [], panels = [], spacing = [];
+let catalogRequests = 0;
+function siteSurface() {
+  const root = document.documentElement, css = getComputedStyle(root);
+  return { theme: root.dataset.theme, system: root.dataset.designSystem, inlineStyles: root.style.length,
+    background: css.getPropertyValue('--background'), primary: css.getPropertyValue('--primary'),
+    radius: css.getPropertyValue('--radius'), font: getComputedStyle(document.querySelector('h1')).fontFamily };
 }
-async function selection(page, id, mode) {
-  assert.equal(await page.locator('html').getAttribute('data-design-system'), id || 'default');
-  assert.equal(await page.locator('html').getAttribute('data-theme'), mode);
-  assert.equal(await page.locator('.theme-session strong').textContent(), id ? themes[id].title : 'Open Design');
-}
-async function expand(page) {
-  await page.locator('.theme-card').first().waitFor();
-  const button = page.getByRole('button', { name: 'Show all 31 themes' });
-  if (await button.isVisible()) await button.click();
+async function contrast(page, label) {
+  const readings = await page.evaluate(measureTextContrast);
+  assert.ok(readings.length > 0); assert.deepEqual(readings.filter(item => item.ratio < item.minimum), [], label);
+  return Math.min(...readings.map(item => item.ratio));
 }
 try {
-  await save('rules', await client.callTool({ name: 'get-review-rules', arguments: { category: 'all', context: 'Whole-site theme switching, persistent appearance, keyboard access and readable colors' } }));
+  await save('rules', await client.callTool({ name: 'get-review-rules', arguments: { category: 'all' } }));
   const capture = await client.callTool({ name: 'inspect-spacing', arguments: { detail: 'full' } });
-  const script = capture.structuredContent.captureScript;
-  const context = await browser.newContext({ viewport: { width: 390, height: 1000 }, reducedMotion: 'reduce', permissions: ['clipboard-read', 'clipboard-write'] });
-  const page = await context.newPage(); page.setDefaultTimeout(15000);
-  page.on('pageerror', e => errors.push(e.message));
-  let catalogRequests = 0;
-  page.on('request', request => { if (new URL(request.url()).pathname === '/api/catalog') catalogRequests++; });
-  await page.goto(origin); await expand(page);
-  assert.equal(await page.locator('.theme-card').count(), 31);
-  assert.equal(await page.locator('.playground, .specimen, .preview-page, .theme-live-link').count(), 0);
-  const requestsAtStart = catalogRequests;
+  const script = capture.structuredContent?.captureScript; assert.ok(script);
   for (const width of [390, 1440, 1728]) {
-    await page.setViewportSize({ width, height: 1000 });
-    for (const id of width === 390 ? Object.keys(themes) : representative) {
-      for (const mode of ['dark', 'light']) {
-        if (await page.locator('html').getAttribute('data-theme') !== mode) await page.getByRole('button', { name: `Switch to ${mode} mode` }).click();
-        const button = page.getByRole('button', { name: `Apply ${themes[id].title} theme`, exact: true });
-        await button.scrollIntoViewIfNeeded(); await button.focus();
-        const before = await page.evaluate(() => scrollY);
+    const context = await browser.newContext({ viewport: { width, height: 1000 }, permissions: ['clipboard-read', 'clipboard-write'], reducedMotion: 'reduce' });
+    const page = await context.newPage(); page.setDefaultTimeout(15000);
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('request', request => { if (new URL(request.url()).pathname === '/api/catalog') catalogRequests++; });
+    for (const mode of ['dark', 'light']) {
+      await page.goto(origin + '/?mode=' + mode, { waitUntil: 'networkidle' });
+      await page.locator('.theme-card').nth(7).waitFor(); await page.evaluate(() => document.fonts.ready);
+      assert.equal(await page.locator('.hero iframe, .apply-theme, .theme-session').count(), 0);
+      await page.getByRole('button', { name: 'Show all 31 themes', exact: true }).click();
+      await page.getByRole('tab', { name: 'Cursor', exact: true }).click();
+      const surface = await page.evaluate(siteSurface); assert.equal(surface.system, 'default'); assert.equal(surface.inlineStyles, 0); assert.match(surface.font, /Geist/);
+      for (const id of width === 390 ? Object.keys(themes) : representative) {
+        const family = familyFor(id); assert.ok(family);
+        const display = family.representative === id ? family.title : themes[id].title;
+        const trigger = page.getByRole('button', { name: 'Preview ' + display + ' theme', exact: true });
+        await trigger.scrollIntoViewIfNeeded(); await trigger.focus();
+        const beforeScroll = await page.evaluate(() => scrollY), beforeRequests = catalogRequests;
         await page.keyboard.press('Enter');
-        await selection(page, id, mode);
-        assert.equal(await button.getAttribute('aria-pressed'), 'true');
-        assert.equal(await page.locator('.apply-theme[aria-pressed="true"]').count(), 1);
-        assert.ok(Math.abs((await page.evaluate(() => scrollY)) - before) <= 1, `${id}: scroll changed`);
-        assert.equal(await button.evaluate(node => node === document.activeElement), true);
-        assert.equal(new URL(page.url()).searchParams.get('theme'), id);
-        assert.equal(new URL(page.url()).searchParams.get('mode'), mode);
-        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-        await page.getByRole('tab', { name: 'Server URL', exact: true }).click();
-        await page.mouse.move(0, 0);
-        const result = await page.evaluate(measure);
-        assert.equal(result.backgroundLuminance < .35, mode === 'dark', `${id}: visible surface must be ${mode}`);
-        const expected = await page.evaluate(tokens => {
-          const node = document.createElement('div'); node.style.backgroundColor = tokens['--background']; node.style.borderRadius = tokens['--radius']; document.body.append(node);
-          const result = { background: getComputedStyle(node).backgroundColor, radius: getComputedStyle(node).borderTopLeftRadius }; node.remove(); return result;
-        }, themes[id].modes[mode].tokens);
-        assert.equal(result.background, expected.background); assert.equal(result.radius, expected.radius);
-        const failed = result.contrast.filter(c => c.ratio < 4.5);
-        await save('latest-check', { id, mode, width, ...result });
-        assert.deepEqual(failed, [], JSON.stringify({ id, mode, width, failed }));
-        checks.push({ id, mode, width, minimumContrast: Math.min(...result.contrast.map(c => c.ratio)), measuredLabels: result.contrast.length });
-        // Exercise hover colors on the sticky controls, selected card, filter and primary action.
-        for (const locator of [button, page.getByRole('button', { name: 'Reset theme' }), page.getByRole('button', { name: 'Light base', exact: true }), page.getByRole('button', { name: 'Copy server URL' })]) {
-          await locator.hover();
-          assert.deepEqual((await page.evaluate(measure)).contrast.filter(c => c.ratio < 4.5), [], `${id} ${mode}: hover contrast`);
-        }
-        await page.mouse.move(0, 0); await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
-        const state = await page.evaluate(script); state.name = `${id} ${mode} ${width}px`; states.push(state);
-        if (representative.includes(id)) {
-          await page.screenshot({ path: path.join(dir, `${id}-${mode}-${width}.png`), fullPage: false });
-          await page.getByRole('link', { name: 'Themes', exact: true }).click();
-          assert.ok(await page.locator('#themes').evaluate(node => node.getBoundingClientRect().top >= document.querySelector('.theme-session').getBoundingClientRect().bottom));
-          await page.screenshot({ path: path.join(dir, `${id}-${mode}-${width}-catalog.png`), fullPage: false });
-        }
-        if (checks.length % 10 === 0) console.log(`Checked ${checks.length} site theme layouts.`);
+        const dialog = page.getByRole('dialog', { name: family.title + ' components', exact: true }); await dialog.waitFor();
+        assert.equal(await trigger.getAttribute('aria-expanded'), 'true');
+        assert.equal(await page.evaluate(() => document.activeElement.id), 'component-preview-title');
+        assert.equal(new URL(page.url()).searchParams.get('preview'), id);
+        assert.deepEqual(await page.evaluate(siteSurface), surface, id + ': preview must not recolor the website');
+        const iframe = page.frameLocator('.specimen-frame'); await iframe.getByRole('textbox', { name: 'Workspace name', exact: true }).waitFor();
+        const frame = await (await page.locator('.specimen-frame').elementHandle()).contentFrame();
+        await frame.evaluate(() => document.fonts.ready);
+        assert.equal(await page.locator('.specimen-frame').getAttribute('src'), '/?specimen=' + family.representative);
+        assert.equal(await page.getByRole('link', { name: 'Open full preview', exact: true }).getAttribute('href'), '/?specimen=' + family.representative);
+        assert.equal(await iframe.getByRole('textbox', { name: 'Workspace name', exact: true }).inputValue(), 'Acme Studio');
+        assert.equal(await frame.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, id + ': frame overflow');
+        assert.ok(await frame.locator('#workspace-name').evaluate(node => node.getBoundingClientRect().width >= 200), id + ': squeezed field');
+        const siteContrast = await contrast(page, id + ': viewer chrome contrast'), nativeContrast = await contrast(frame, id + ': native contrast');
+        checks.push({ id, family: family.id, mode, width, siteContrast, nativeContrast });
+        const state = await page.evaluate(script); state.name = id + ' ' + mode + ' ' + width + 'px viewer'; states.push(state);
+        const native = await frame.evaluate(script); native.name = id + ' ' + mode + ' ' + width + 'px embedded components'; states.push(native);
+        if (width === 390 && mode === 'dark') panels.push(await dialog.evaluate(node => ({ screen: node.querySelector('h2').textContent, headline: node.querySelector('h2').textContent, body: [node.querySelector('.section-heading p').textContent], actions: [...node.querySelectorAll('a,button')].map(item => item.textContent.trim()) })));
+        if (representative.includes(id)) await page.screenshot({ path: path.join(dir, id + '-' + mode + '-' + width + '-viewer.png') });
+        await page.getByRole('button', { name: 'Close preview', exact: true }).click(); await dialog.waitFor({ state: 'hidden' });
+        assert.equal(await trigger.evaluate(node => node === document.activeElement), true);
+        assert.ok(Math.abs(await page.evaluate(() => scrollY) - beforeScroll) < 2, id + ': close must preserve scroll');
+        assert.deepEqual(await page.evaluate(siteSurface), surface);
+        assert.equal(await page.getByRole('tab', { name: 'Cursor', exact: true }).getAttribute('aria-selected'), 'true');
+        assert.equal(catalogRequests, beforeRequests, 'Opening previews must not refetch the catalog');
+        assert.equal(new URL(page.url()).searchParams.has('preview'), false);
       }
     }
-    console.log(`Verified site themes at ${width}px.`);
+    await context.close(); console.log('Verified fixed-site theme viewers at ' + width + 'px.');
   }
-  assert.equal(catalogRequests, requestsAtStart, 'Switching must not refetch the catalog');
-  behaviors.push('all 31 Apply buttons in dark and light', 'selection label and pressed state', 'scroll and keyboard focus preserved', 'source background and radius applied', 'no page navigation or catalog refetch', 'text, input and hover contrast', 'visible anchor destinations below sticky controls');
-  // Preserve catalog and connection state, including clipboard feedback.
-  await page.getByRole('tab', { name: 'JSON', exact: true }).click();
-  await page.getByRole('button', { name: 'Copy configuration' }).click();
-  const search = page.getByRole('searchbox', { name: 'Search themes' });
-  await search.fill('linear');
-  await page.getByRole('button', { name: 'Dark base', exact: true }).click();
-  await page.getByRole('button', { name: 'Apply Linear theme', exact: true }).click();
-  assert.equal(await search.inputValue(), 'linear');
-  assert.equal(await page.getByRole('button', { name: 'Dark base', exact: true }).getAttribute('aria-pressed'), 'true');
-  assert.equal(await page.getByRole('tab', { name: 'JSON', exact: true }).getAttribute('aria-selected'), 'true');
-  assert.equal(await page.locator('.copy-feedback').textContent(), 'Copied to clipboard.');
-  await page.reload(); await page.locator('.theme-card').first().waitFor(); await selection(page, 'linear', 'light');
-  assert.equal(await search.inputValue(), 'linear');
-  await page.goto(origin); await page.locator('.theme-card').first().waitFor(); await selection(page, 'linear', 'light');
-  await search.fill('linear'); await page.getByRole('button', { name: 'Reset theme' }).click();
-  await selection(page, null, 'light'); assert.equal(await search.inputValue(), 'linear');
-  assert.equal(await page.locator('html').evaluate(node => node.style.length), 0);
-  assert.equal(await page.getByRole('button', { name: 'Reset theme' }).isDisabled(), true);
-  assert.equal(new URL(page.url()).searchParams.has('theme'), false);
-  await page.goto(origin); await selection(page, null, 'light');
-  behaviors.push('search, filter, setup tab and clipboard feedback preserved', 'reload and root revisit persistence', 'reset removes overrides and saves default while retaining mode and search');
+  const context = await browser.newContext({ viewport: { width: 390, height: 1000 } });
+  await context.addInitScript(() => { localStorage.setItem('open-design-system', 'stripe'); localStorage.setItem('open-design-theme', 'light'); });
+  const page = await context.newPage(); page.on('pageerror', error => errors.push(error.message));
+  await page.goto(origin, { waitUntil: 'networkidle' }); await page.locator('.theme-card').first().waitFor();
+  assert.equal((await page.evaluate(siteSurface)).system, 'default'); assert.equal((await page.evaluate(siteSurface)).theme, 'light');
   for (const query of ['theme=stripe', 'preview=stripe']) {
-    await page.goto(`${origin}/?${query}&mode=dark&q=stripe#themes`); await page.locator('.theme-card').first().waitFor();
-    await selection(page, 'stripe', 'dark'); assert.equal(await search.inputValue(), 'stripe');
-    assert.equal(new URL(page.url()).searchParams.get('theme'), 'stripe');
-    assert.equal(new URL(page.url()).searchParams.has('preview'), false);
+    await page.goto(origin + '/?' + query + '&mode=dark&q=stripe', { waitUntil: 'networkidle' });
+    await page.getByRole('dialog', { name: familyFor('stripe').title + ' components', exact: true }).waitFor();
+    assert.equal(await page.getByRole('searchbox', { name: 'Search themes' }).inputValue(), 'stripe');
+    assert.equal((await page.evaluate(siteSurface)).inlineStyles, 0);
+    assert.equal(new URL(page.url()).searchParams.has('theme'), false); assert.equal(new URL(page.url()).searchParams.get('preview'), 'stripe');
+    await page.keyboard.press('Escape'); await page.getByRole('dialog').waitFor({ state: 'hidden' });
   }
   for (const id of ['missing-theme', '__proto__']) {
-    await page.goto(`${origin}/?theme=${id}&mode=light`); await page.locator('.theme-card').first().waitFor();
-    await selection(page, null, 'light'); assert.equal(await page.locator('html').evaluate(node => node.style.length), 0);
+    await page.goto(origin + '/?preview=' + id + '&mode=light', { waitUntil: 'networkidle' });
+    assert.equal(await page.locator('dialog[open]').count(), 0); assert.equal((await page.evaluate(siteSurface)).inlineStyles, 0);
   }
-  await page.evaluate(() => { history.pushState(null, '', '?theme=airbnb&mode=dark&q=airbnb'); dispatchEvent(new PopStateEvent('popstate')); });
-  await selection(page, 'airbnb', 'dark'); assert.equal(await search.inputValue(), 'airbnb');
-  await page.goBack(); await selection(page, null, 'light'); assert.equal(await search.inputValue(), '');
-  await page.route('**/api/catalog', route => route.abort());
-  await page.goto(`${origin}/?theme=stripe&mode=dark`); await page.getByRole('alert').waitFor(); await selection(page, 'stripe', 'dark');
-  await page.getByRole('button', { name: 'Switch to light mode' }).click(); await selection(page, 'stripe', 'light');
-  await page.getByRole('button', { name: 'Reset theme' }).click(); await selection(page, null, 'light');
-  await page.unroute('**/api/catalog');
+  await page.evaluate(() => { history.pushState(null, '', '?preview=tactile-minimal&mode=light&q=tactile'); dispatchEvent(new PopStateEvent('popstate')); });
+  await page.getByRole('dialog', { name: 'Tactile components', exact: true }).waitFor();
+  await page.goBack(); await page.getByRole('dialog').waitFor({ state: 'hidden' });
+  assert.equal(await page.getByRole('searchbox', { name: 'Search themes' }).inputValue(), '');
+  await context.close();
   const noStorage = await browser.newContext({ viewport: { width: 390, height: 1000 } });
   await noStorage.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Disabled', 'SecurityError'); } }));
-  const isolated = await noStorage.newPage(); isolated.setDefaultTimeout(15000); isolated.on('pageerror', e => errors.push(e.message));
-  await isolated.goto(`${origin}/?theme=linear&mode=dark`); await isolated.locator('.theme-card').first().waitFor();
-  await isolated.getByRole('button', { name: 'Apply Stripe theme', exact: true }).click();
-  await isolated.getByRole('button', { name: 'Switch to light mode' }).click(); await isolated.reload(); await selection(isolated, 'stripe', 'light');
-  await isolated.getByRole('button', { name: 'Reset theme' }).click(); await selection(isolated, null, 'light');
+  const isolated = await noStorage.newPage(); isolated.on('pageerror', error => errors.push(error.message));
+  await isolated.goto(origin, { waitUntil: 'networkidle' }); await isolated.getByRole('button', { name: 'Preview Precision theme', exact: true }).click();
+  await isolated.getByRole('dialog', { name: 'Precision components', exact: true }).waitFor();
+  await isolated.getByRole('button', { name: 'Close preview', exact: true }).click(); await isolated.getByRole('dialog').waitFor({ state: 'hidden' });
+  await isolated.getByRole('button', { name: 'Switch to light mode', exact: true }).click();
+  assert.equal((await isolated.evaluate(siteSurface)).theme, 'light'); assert.equal((await isolated.evaluate(siteSurface)).inlineStyles, 0);
   await noStorage.close();
-  behaviors.push('theme deep links and legacy preview migration', 'invalid and prototype IDs recover safely', 'browser history restores theme and search', 'mode and reset work during catalog outages', 'storage-disabled selection, URL persistence and reset');
-  await page.goto(origin); await page.locator('.theme-card').first().waitFor();
-  const panels = await page.evaluate(() => [
-    { screen: 'Site theme controls', headline: document.querySelector('.theme-session p').textContent, body: [], actions: [...document.querySelectorAll('.theme-session button')].map(n => n.textContent) },
-    { screen: 'Theme catalog introduction', headline: document.querySelector('#themes h2').textContent, body: [document.querySelector('#themes .section-heading p').textContent], actions: [...document.querySelectorAll('#themes .section-heading a')].map(n => n.textContent) },
-    { screen: 'Theme attribution', headline: 'Themes', body: [document.querySelector('.catalog-note').textContent], actions: [] },
-  ]);
-  for (const panel of panels) {
-    const result = await client.callTool({ name: 'check-comprehension', arguments: { ...panel, knownTerms: ['MIT', 'React', 'registry', 'token', 'tokens'] } });
-    copyChecks.push({ panel, result });
+  await save('states', states); await save('checks', checks);
+  for (let index = 0; index < states.length; index += 2) {
+    const args = { states: states.slice(index, index + 2), spacingScale: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 88, 96, 104, 128], tolerance: 2, detail: 'full' };
+    assert.ok(Buffer.byteLength(JSON.stringify(args)) < 4 * 1024 * 1024 - 1024);
+    const result = await client.callTool({ name: 'inspect-spacing', arguments: args });
+    assert.ok(!result.isError); assert.equal(result.structuredContent?.status, 'completed');
+    await save('spacing-' + index, result); spacing.push(result.structuredContent.summary);
   }
-  await save('states', states); await save('checks', checks); await save('comprehension', copyChecks);
-  const spacing = [];
-  for (let i = 0; i < states.length; i += 6) {
-    const result = await client.callTool({ name: 'inspect-spacing', arguments: { states: states.slice(i, i + 6), spacingScale: [4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 128], tolerance: 2, detail: 'full' } });
-    await save('spacing-' + i, result); spacing.push(result.structuredContent.summary);
-  }
-  const summary = { origin, themeCount: Object.keys(themes).length, checkedLayouts: checks.length, modes: ['dark', 'light'], widths: [390, 1440, 1728], minimumContrast: Math.min(...checks.map(c => c.minimumContrast)), spacing, comprehensionChecks: copyChecks.length, comprehensionFailures: copyChecks.filter(c => c.result.structuredContent.verdict !== 'pass').length, pageErrors: errors, behavior: behaviors };
-  await save('summary', summary); console.log(JSON.stringify(summary, null, 2));
-  assert.deepEqual(errors, []); assert.equal(summary.comprehensionFailures, 0); assert.ok(spacing.every(s => s.critical === 0 && s.serious === 0));
+  const comprehension = [];
+  for (const panel of panels) comprehension.push({ panel, result: await client.callTool({ name: 'check-comprehension', arguments: { ...panel, knownTerms: ['MCP', 'workspace', 'FX', 'TV', 'IBM'] } }) });
+  await save('comprehension', comprehension);
+  const summary = { origin, themeCount: Object.keys(themes).length, nativeFamilies: families.length, checkedLayouts: checks.length, capturedStates: states.length, modes: ['dark', 'light'], widths: [390, 1440, 1728],
+    minimumSiteContrast: Math.min(...checks.map(item => item.siteContrast)), minimumNativeContrast: Math.min(...checks.map(item => item.nativeContrast)), spacing,
+    comprehensionChecks: comprehension.length, comprehensionFailures: comprehension.filter(item => item.result.structuredContent?.verdict !== 'pass').length, pageErrors: errors,
+    behavior: ['all 31 IDs open isolated family viewers', 'site colors, radius and Geist remain fixed', 'no initial hero iframe', 'keyboard opening and focus return', 'scroll and setup tab retained', 'no catalog refetch', 'preview URL and legacy theme migration', 'old saved palette ignored without deleting it', 'invalid and prototype IDs recover safely', 'browser history restores viewer and search', 'storage-disabled previews and light/dark mode'] };
+  await save('summary', summary); console.log(JSON.stringify({ checkedLayouts: checks.length, capturedStates: states.length, comprehensionFailures: summary.comprehensionFailures, pageErrors: errors, blockingSpacing: spacing.reduce((sum, item) => sum + item.critical + item.serious, 0) }));
+  assert.equal(checks.length, 74); assert.deepEqual(errors, []); assert.equal(summary.comprehensionFailures, 0); assert.ok(spacing.every(item => item.critical === 0 && item.serious === 0));
 } finally { await browser.close(); await client.close(); }

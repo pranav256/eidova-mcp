@@ -1,0 +1,3343 @@
+{
+  "scope": "Static registry audit; source hashes are not a visual quality score.",
+  "families": [
+    {
+      "id": "precision",
+      "title": "Precision",
+      "representative": "linear",
+      "description": "Compact controls, fine dividers and restrained type for working tools.",
+      "axes": [
+        "compact spacing",
+        "small corners",
+        "fine borders"
+      ],
+      "variants": [
+        "linear-quality",
+        "precision-light",
+        "figma",
+        "vercel",
+        "supabase",
+        "stripe",
+        "corporate-fintech"
+      ]
+    },
+    {
+      "id": "editorial",
+      "title": "Editorial",
+      "representative": "editorial-dark",
+      "description": "Serif headlines, generous reading space and quiet controls.",
+      "axes": [
+        "serif headings",
+        "reading-led spacing",
+        "rounded surfaces"
+      ],
+      "variants": [
+        "notion"
+      ]
+    },
+    {
+      "id": "marketplace",
+      "title": "Marketplace",
+      "representative": "light-marketplace",
+      "description": "Roomy controls, open cards and welcoming rounded shapes.",
+      "axes": [
+        "roomy controls",
+        "open card treatment",
+        "large corners"
+      ],
+      "variants": [
+        "airbnb",
+        "apple"
+      ]
+    },
+    {
+      "id": "tactile",
+      "title": "Tactile",
+      "representative": "tactile-minimal",
+      "description": "Inset edges, layered shadows and controls with physical depth.",
+      "axes": [
+        "inset borders",
+        "layered shadows",
+        "raised controls"
+      ],
+      "variants": [
+        "pillow-light",
+        "inset-dark",
+        "beam-custom",
+        "beam-lib"
+      ]
+    },
+    {
+      "id": "industrial",
+      "title": "Industrial",
+      "representative": "monochrome-industrial",
+      "description": "Square geometry, strong rules and geometric typography.",
+      "axes": [
+        "square corners",
+        "strong borders",
+        "geometric font"
+      ],
+      "variants": [
+        "tv-style"
+      ]
+    },
+    {
+      "id": "glass",
+      "title": "Glass",
+      "representative": "glassmorphic-dark",
+      "description": "Translucent layers, soft edges and luminous surface depth.",
+      "axes": [
+        "translucent surfaces",
+        "soft shadows",
+        "large corners"
+      ],
+      "variants": [
+        "midnight-glass",
+        "cinematic-dark",
+        "lumen-dark"
+      ]
+    },
+    {
+      "id": "neutral",
+      "title": "Neutral",
+      "representative": "minimal-light",
+      "description": "Quiet surfaces, balanced spacing and unobtrusive controls.",
+      "axes": [
+        "balanced spacing",
+        "subtle elevation",
+        "medium corners"
+      ],
+      "variants": [
+        "neutral-monochrome"
+      ]
+    },
+    {
+      "id": "expressive",
+      "title": "Expressive",
+      "representative": "vibrant-dark",
+      "description": "Emphatic controls, layered surfaces and a stronger visual rhythm.",
+      "axes": [
+        "emphatic control weight",
+        "layered surfaces",
+        "pronounced elevation"
+      ],
+      "variants": [
+        "dark-orange",
+        "metal-fx-chromatic",
+        "metal-fx-gold",
+        "metal-fx-silver"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "id": "airbnb",
+      "family": "marketplace",
+      "representative": false,
+      "font": "\"Airbnb Cereal VF\", Circular, -apple-system, system-ui, Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.75rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Airbnb Cereal VF\", Circular, -apple-system, system-ui, Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "60495b279c8f0c8794b93d25e7a46df92a5f4d14732f01a53e09ce9fb5514572",
+          "shapes": [
+            "rounded-lg",
+            "rounded-xl",
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-6",
+            "py-3",
+            "px-4",
+            "px-8"
+          ],
+          "shadows": []
+        },
+        "input": {
+          "sourceHash": "2924a8e6f78d3e750b50aec392f809e6fbed74fe5a947f2594e25a67944cb850",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "py-3"
+          ],
+          "shadows": [
+            "shadows"
+          ]
+        },
+        "card": {
+          "sourceHash": "d811664f20d05e830fd5ad32a9ad957fd9841775983e4cde15741601828cbc9e",
+          "shapes": [
+            "rounded-xl",
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": []
+        },
+        "dialog": {
+          "sourceHash": "e5ef3a6ffe6879e21330a4cc4384e0a76899b8607698773b75d4f74b6412d479",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_10px_40px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "206c3bca42f19eb9bb8c9060f124dbfbe2c12619015b349c6c49d10a78007755",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "apple",
+      "family": "marketplace",
+      "representative": false,
+      "font": "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro Display\", \"Helvetica Neue\", \"Helvetica\", \"Arial\", sans-serif",
+      "radius": "1.125rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: -apple-system, BlinkMacSystemFont, \"SF Pro Text\", \"SF Pro Display\", \"Helvetica Neue\", \"Helvetica\", \"Arial\", sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "886d62c13bc28d5b202d07c8e3dfd38df807ec67a33202dac3c6a7900596ff2b",
+          "shapes": [
+            "rounded-[980px]"
+          ],
+          "spacing": [
+            "gap-2"
+          ],
+          "shadows": []
+        },
+        "input": {
+          "sourceHash": "d15bcd089e2a2da642ac87ce18550ec37946b27569a1d44fcd408d150ace05a2",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow]",
+            "shadow-[0_0_0_3px_color-mix"
+          ]
+        },
+        "card": {
+          "sourceHash": "4eb758b260efd7138db7d9c5cab1c80147fdffec1c7e39cb28602590bf2ab517",
+          "shapes": [
+            "rounded-[18px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[2px_4px_12px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "0e812bd6aeaf8b2d7c6bdd2b8b185bec021f13901b80945198eb12ec16132994",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "beam-custom",
+      "family": "tactile",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.875rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "d2144ee80a40c27b870d6d67c98a0faab6155e0c230a413791bbff0fd775d384",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-s"
+          ]
+        },
+        "input": {
+          "sourceHash": "09b79960dba4ff3e4d2d65753d5ab62c8688e304297e25c56cdd8b35bdc593d8",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "127eb47a2b38cc05ba238a2c4e63ff5b99bb2f5dc594127835179a318a4691c7",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-m",
+            "shadow]",
+            "shadow-l"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beam-lib",
+      "family": "tactile",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.875rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "e143a876e722c234a9ff9ae9a62f0e6f4311c9fdf76d40c9a073c55c9c66e56d",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-s"
+          ]
+        },
+        "input": {
+          "sourceHash": "fea8c1332c16feaeb3a7716f29ebbe70b9584ef8310a97c2e2be2d966b223351",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "1bd0dc29b658a48a85d3e4448404f7b9f5ef7cec7ed2838b4acfeac567e7eb87",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-m",
+            "shadow]",
+            "shadow-l"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "cinematic-dark",
+      "family": "glass",
+      "representative": false,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.75rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "ee829972bfa0f5db0a8446acea15073644cd1ff9ac68eea118e8190591f4f9ba",
+          "shapes": [
+            "rounded-[0.75rem]",
+            "rounded-[0.625rem]"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_0_0_1px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "1d6ed4fcc0c1ba3a97aff72f0e7f4006217f9bb25ff9f57abe02829cf86c1700",
+          "shapes": [
+            "rounded-[calc"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_2px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "7c0bc58ddc424853f2236389a9fa51d476ccbc2b5f16be80a0d39b0a54487a02",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_2px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "1d4737918482df89b9241f23cc7c764a7c5f6df8859e4b19bb93dccca9db668a",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "corporate-fintech",
+      "family": "precision",
+      "representative": false,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.6rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "6d1f7f1843de8950c37524e29fdf4ac22de9c0d7e012e039ec261a93382f73e3",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2",
+            "px-3",
+            "px-8"
+          ],
+          "shadows": [
+            "shadow-[inset_0_-2px_color-mix",
+            "shadow-lg",
+            "shadow-xl",
+            "shadow-[0_1px_1px_rgba",
+            "shadow-[0_1px_2px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "7b360976dbd43ce01075a6c3c914ba7d732e33b554e0b03eceba07497d29915f",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_2px_4px_rgba",
+            "shadow-[inset_0_0px_0px_rgba"
+          ]
+        },
+        "card": {
+          "sourceHash": "45974569174cbea3e02ac96a79c5cd52c80773b8a19504f3246ccb613f5da01f",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_3px_color-mix"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "f5d15f197cc2fd9a483a5ec63587ef7c6d10d1cbbdf79d68381f3fc8f98d2e01",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "dark-orange",
+      "family": "expressive",
+      "representative": false,
+      "font": "var(--font-inter), \"Inter\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.625rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-inter), \"Inter\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "a12534ffbb1995cb98f1967c858721c69456add4ffa39817dc0585af8726e179",
+          "shapes": [
+            "rounded-[10px]",
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "gap-3",
+            "px-2",
+            "gap-2",
+            "px-4"
+          ],
+          "shadows": [
+            "shadow-none",
+            "shadow-[0_16px_8px_color-mix",
+            "shadow-[0_16px_8px_rgba",
+            "shadow-[0_4px_4px_rgba",
+            "shadow-[0_0_0_3px_color-mix",
+            "shadow-[0_1px_1px_0.5px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "191ec1de9cfda4d3e69e50b638dfba326816c60454df934d19780f3017302779",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[0_1px_2px_0_rgb",
+            "shadow-button-important-focus",
+            "shadow-[0_0_0_3px_rgb"
+          ]
+        },
+        "card": {
+          "sourceHash": "8313003111b12f2168b4a2df942294f1b047427bb20e3571866b6d474cd454b7",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_1px_0.5px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "f951e888429ffbc84fb818883bd86545787042298a9cd7d24caf9ed6f25d1b55",
+          "shapes": [
+            "rounded-20",
+            "rounded-[20px]",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-regular-md",
+            "shadow-[0_8px_24px_0_rgb"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "dd6a44190bd8a28e5d2d0b931146ce58fd80e4d4a35778f6e7fba1266810c44d",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "editorial-dark",
+      "family": "editorial",
+      "representative": true,
+      "font": "Georgia, \"Times New Roman\", serif",
+      "radius": "1rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: Georgia, \"Times New Roman\", serif",
+        "font-family: \"Inter\", var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "86cf84981d97b2f6347d09aa603b1fbccc4ce0d4e8465568464e9e7c1a95734b",
+          "shapes": [
+            "rounded-2xl",
+            "rounded-none",
+            "rounded-xl"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": []
+        },
+        "input": {
+          "sourceHash": "bb1d11dd3e672b3d2c146dedd5b2a6c65df3c7b75225e3a5c287fd75e18f81fc",
+          "shapes": [
+            "rounded-[calc"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow]",
+            "shadow-[0_0_0_3px_rgba"
+          ]
+        },
+        "card": {
+          "sourceHash": "308459ccccc3c474a7eaa66271c0ab615ea815c6768fabc5a47e3ea567826153",
+          "shapes": [
+            "rounded-[28px]",
+            "rounded-[20px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-5",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:",
+            "shadow-[0_1px_0.908px_0_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "29011f396a8bc95baa00bf5a68322456a794862bda7212e04af5faf39e2f5002",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "75055fca7725d0e6af89cff86e25cda6ef91519cfbd1c370543f8e1426cf5986",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "40ede6e555bd5dba95d7c0437934c952e11eceac403ccabf8aec539cddaec6f6",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "figma",
+      "family": "precision",
+      "representative": false,
+      "font": "\"Figma Sans\", \"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Figma Sans\", \"Inter\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "3c3b34c1be44630fd07c983bea69804d16b0a18feb7008accdfef2fb458be703",
+          "shapes": [
+            "rounded-lg",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-5",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_4px_16px_color-mix"
+          ]
+        },
+        "input": {
+          "sourceHash": "85fa882145688a6f5719cbf72b6485ead49300cb6b7d66e3362b2d4e67b72e39",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow]",
+            "shadow-[0_0_0_3px_color-mix"
+          ]
+        },
+        "card": {
+          "sourceHash": "d50a18d1726f736582125ef1241515e8247bb62969c9a2a2ee56dd935ac58f5e",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_2px_8px_color-mix",
+            "shadow]",
+            "shadow-[0_4px_16px_color-mix"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "33f27a549850dc89d082e4aaf6b5ce8baf2678a0f94c28561d3e8eab3bb916fe",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "glassmorphic-dark",
+      "family": "glass",
+      "representative": true,
+      "font": "var(--font-geist-sans),\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif",
+      "radius": "1.25rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family:\n      var(--font-geist-sans),\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "cadf949150f21f9ea2e12b1cb95f1d82f3607ec0b3240e460e26cf21606b65de",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_8px_rgba",
+            "shadow-[inset_0_0_12px_rgba",
+            "shadow-[inset_0_1px_0_rgba",
+            "shadow-[inset_0_0_6px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "b3d9b66b0621504e2d681bd1528436f61ce746b7cd359d09ccefb68406048809",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_6px_rgba"
+          ]
+        },
+        "card": {
+          "sourceHash": "b6df3421bfa8b9f60b1c156e7ecbe1ee77b13fefe56d1b012ce26d90c54bcd5e",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_4px_24px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "dad739e71626e8924cc9ba2d72b6741f8402952fdc29ee4ce4a6486a933cdc00",
+          "shapes": [
+            "rounded-2xl",
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_8px_32px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "f8c6012ddc7983092bc8fba8824a276651d381cb6fc87afc04cd68f9435c9e15",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "a571d55bc6f10e12e7760a351b2bdec98b5af08dba70c115c2e6521c519f1034",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-3",
+            "py-2",
+            "px-2",
+            "gap-0"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_8px_rgba"
+          ]
+        }
+      }
+    },
+    {
+      "id": "inset-dark",
+      "family": "tactile",
+      "representative": false,
+      "font": "-apple-system, BlinkMacSystemFont, \"SF Pro Text\", system-ui, sans-serif",
+      "radius": "0.75rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: -apple-system, BlinkMacSystemFont, \"SF Pro Text\", system-ui, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "0fc9618186fe521f5f21811244298d76f9dfa2a914d45f00d4862572442cc2cb",
+          "shapes": [
+            "rounded-[9px]",
+            "rounded-[7px]",
+            "rounded-[11px]"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-pressed",
+            "shadow-pill",
+            "shadow-pill-hover",
+            "shadow-sm",
+            "shadow-md",
+            "shadow-xs"
+          ]
+        },
+        "input": {
+          "sourceHash": "d5cf98c550261e9eeca1a76f14003b862da10e531958dfab9c86d10f1ccb25d4",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "52463436b4695cd1cb8ceb6311594c3396ce15750a0f84e12bcea76a3e920bda",
+          "shapes": [
+            "rounded-[12px]"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow:var",
+            "shadow-md",
+            "shadow]",
+            "shadow-lg"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "light-marketplace",
+      "family": "marketplace",
+      "representative": true,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.875rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "85067bcb83a36e2dddef4e906f3dd245aab792de2de07a2dd93c7edcc07995c8",
+          "shapes": [
+            "rounded-[14px]",
+            "rounded-xl"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "px-5",
+            "px-8"
+          ],
+          "shadows": [
+            "shadow-[0_1px_3px_rgba",
+            "shadow-[0_2px_6px_rgba",
+            "shadow-[0_1px_2px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "945d713099bc403b21259a1847c126fb88e627246f83633e6b7237d413028013",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2"
+          ],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "58ca537ebb2395cbf39af9f995e320588bb21c86925ce32ef35b1b7fbf694b5f",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": []
+        },
+        "dialog": {
+          "sourceHash": "29011f396a8bc95baa00bf5a68322456a794862bda7212e04af5faf39e2f5002",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "75055fca7725d0e6af89cff86e25cda6ef91519cfbd1c370543f8e1426cf5986",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "57444b1e9afec7d979a074e261cdec22163d9b2f4a087c78d094e2c364b18caf",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "py-4",
+            "px-3",
+            "py-3",
+            "py-1",
+            "gap-2",
+            "py-2"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "linear",
+      "family": "precision",
+      "representative": true,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "f2c80405baf5197562a5859b2c9c9b811d60516c856c88210561efff352419b9",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow-[0_0_0_1px_color-mix",
+            "shadow-[0_1px_2px_rgba",
+            "shadow-[0_1px_4px_rgba",
+            "shadow-[0_0_0_1px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "30dfaef208d4baf07e524b5f4fcaf55329e7b71c1f513d6328dfe9f1445da77f",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_2px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "f4be2a98ca993d0ac8ac1fd5838c3057f289a9dd4303555d12f632970644d688",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_3px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "29011f396a8bc95baa00bf5a68322456a794862bda7212e04af5faf39e2f5002",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "ffdb90be8be55625ace2b50cc75b122ea24e1f1a4f66f363f8b04b45ef56ed0e",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "5a9ebb73b20f6f334502d78e3549a879e90e65a69788e4f0428f6b1c6d2d31e0",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "linear-quality",
+      "family": "precision",
+      "representative": false,
+      "font": "\"Inter\", var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Inter\", var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "91a4acd4ad88071e5e784c3a2b5f8dd9905ee7f8abb9457abc7c6dae09ce625f",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_0_0_1px_color-mix",
+            "shadow-[0_1px_2px_rgba",
+            "shadow-[0_1px_4px_rgba",
+            "shadow-[0_0_0_1px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "0ba0f202fb45f926b9168cc24e909de61a642c0c97091a01bbd43de6fc70a26a",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_2px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "a371f97b7f1524ee37b5871cf1f8d22365f24e881510807bd89a7da23aea4053",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_3px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "0db382b5e0de5e9ff17aac968ecbd3d296d984308dbf5b8209e4edb91a30987f",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "lumen-dark",
+      "family": "glass",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "54e659024ef4f3eb234f52f0c3d16cec98e006642b759ad15c988ee2f6817717",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow:var",
+            "shadow-s",
+            "shadow-button",
+            "shadow-button-hover",
+            "shadow-primary",
+            "shadow-m"
+          ]
+        },
+        "input": {
+          "sourceHash": "d5cf98c550261e9eeca1a76f14003b862da10e531958dfab9c86d10f1ccb25d4",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "0d8440be1218998e69b08e09241e5d1613b09115034d9f81c3a75ee210ec77aa",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow-m",
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "metal-fx-chromatic",
+      "family": "expressive",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.625rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "74d1ee4463fb582d1f94c4d803cc9dca380c89870a50d92fa07f35306c1d5241",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "px-5",
+            "px-7"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-button-hover",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "input": {
+          "sourceHash": "5e8704696119210e38a98306f66a3792f67a1b56f423780d7e197d8a74c62b0d",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "9e48dde9696af4d4aedddb8a3c6cc9772463c8dfd772cf40177e7c25d0225137",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow:var",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "metal-fx-gold",
+      "family": "expressive",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.625rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "74d1ee4463fb582d1f94c4d803cc9dca380c89870a50d92fa07f35306c1d5241",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "px-5",
+            "px-7"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-button-hover",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "input": {
+          "sourceHash": "5e8704696119210e38a98306f66a3792f67a1b56f423780d7e197d8a74c62b0d",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "9e48dde9696af4d4aedddb8a3c6cc9772463c8dfd772cf40177e7c25d0225137",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow:var",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "metal-fx-silver",
+      "family": "expressive",
+      "representative": false,
+      "font": "system-ui",
+      "radius": "0.625rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [],
+      "components": {
+        "button": {
+          "sourceHash": "74d1ee4463fb582d1f94c4d803cc9dca380c89870a50d92fa07f35306c1d5241",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "px-5",
+            "px-7"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-button-hover",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "input": {
+          "sourceHash": "5e8704696119210e38a98306f66a3792f67a1b56f423780d7e197d8a74c62b0d",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "9e48dde9696af4d4aedddb8a3c6cc9772463c8dfd772cf40177e7c25d0225137",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow.",
+            "shadow:var",
+            "shadow-sm",
+            "shadow-md"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "midnight-glass",
+      "family": "glass",
+      "representative": false,
+      "font": "var(--font-geist-sans),\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif",
+      "radius": "1.25rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family:\n      var(--font-geist-sans),\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "7cb26309b570b8896b8f9800efd33366eaded726ff53a03ee35bad7e818a5ccd",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-8",
+            "px-10"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_8px_rgba",
+            "shadow-[inset_0_1px_0_rgba",
+            "shadow-[inset_0_0_6px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "1362ae6cf7f3e360cd9a431de64d9320fea5c4999ba55c489d561a50d94aa023",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "px-5",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_6px_rgba"
+          ]
+        },
+        "card": {
+          "sourceHash": "f9d861ab49957789acfde6b5446ea39dc35a2f30e6338e4b4398e607cae2c46b",
+          "shapes": [
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_4px_24px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "429b3221f609708085fffd6df2e93361bd77cc3903384bb84546153d3c5ba46a",
+          "shapes": [
+            "rounded-2xl",
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_8px_32px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "7b67f72c49f1e851cea1d51e9ac7680c134088c42ab33d102b383c15fe8e77a3",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "7a2f06f4f31b69db50cacb9a363a8f10ff16124bace1c68532ab632044a8fb5a",
+          "shapes": [
+            "rounded-full"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-3",
+            "py-2",
+            "px-2",
+            "gap-0"
+          ],
+          "shadows": [
+            "shadow-[inset_0_0_8px_rgba"
+          ]
+        }
+      }
+    },
+    {
+      "id": "minimal-light",
+      "family": "neutral",
+      "representative": true,
+      "font": "\"Geist\", \"GeistSans\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.75rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Geist\", \"GeistSans\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "714b504cc08d57827bfffdff6870de36c9c7518f730196ea794f2d672cbb84f6",
+          "shapes": [
+            "rounded-xl",
+            "rounded-lg"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "px-10"
+          ],
+          "shadows": [
+            "shadows"
+          ]
+        },
+        "input": {
+          "sourceHash": "904cc99bc7e1ac1b2401e2872acdaca3bd2f721b2958b9c1de2b209a6c15f477",
+          "shapes": [
+            "rounded-full",
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2"
+          ],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "d03a7af0fe08d68955cf34d123f6b40f24e41f16b32de7a1b7123ecb0c74615c",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow:"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "3cd409984bab675398b5b850e9f268d7ed0626d062901a3008cfffb4a32a339c",
+          "shapes": [
+            "rounded-lg",
+            "rounded-full"
+          ],
+          "spacing": [
+            "px-4",
+            "py-3",
+            "p-3",
+            "gap-1",
+            "px-2",
+            "py-1",
+            "gap-3",
+            "px-3",
+            "py-2"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "monochrome-industrial",
+      "family": "industrial",
+      "representative": true,
+      "font": "\"Space Grotesk\", \"DM Sans\", system-ui, sans-serif",
+      "radius": "0rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "--font-display: \"Doto\", \"Space Mono\", monospace",
+        "--font-sans: \"Space Grotesk\", \"DM Sans\", system-ui, sans-serif",
+        "--font-mono: \"Space Mono\", \"JetBrains Mono\", \"SF Mono\", monospace",
+        "--font-display: var(--font-display)",
+        "--font-sans: var(--font-sans)",
+        "--font-mono: var(--font-mono)",
+        "font-family: var(--font-sans)",
+        "font-family: var(--font-mono)",
+        "font-family: var(--font-display)",
+        "font-family: var(--font-mono)"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "64c0c1b5d9f68d735a9d2870904e5fcb468bf7b929dc2856e82b59baff45337e",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-5",
+            "px-7"
+          ],
+          "shadows": [
+            "shadows",
+            "shadow."
+          ]
+        },
+        "input": {
+          "sourceHash": "1e4abc98944ba20583c52f54dfb1d2a6c1c080db47c327f3eb7225d1799c03f3",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "cc7a99a8a90055b663b2e632a85ebca3afe286cc7ba69135f66b4b00fd3705f2",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "gap-2",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow."
+          ]
+        },
+        "dialog": {
+          "sourceHash": "c69121e6e650dc3ca57ee9218aedb642bc4fe5e2de8db03692b1e4c85d55eee3",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "b35e818b68ad9fb0d5969382770dcd9a5bc0c0097d824c83af1e648b33cb114c",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "2ea655c636b1911002079243254afcb05565caa59934468a9d55ddc8de61a862",
+          "shapes": [
+            "rounded-none"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "neutral-monochrome",
+      "family": "neutral",
+      "representative": false,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "d6c3fdd2aed4ebe41422c6b14d16b365bd1d86a1e3deb244dd3e24f0d941d443",
+          "shapes": [
+            "rounded-lg",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadows",
+            "shadow-[0_0_0_1px_rgba",
+            "shadow-[0_1px_2px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "d70ba96ae7ef90da24ffd01a8e0e2f15528766f64b5ff0ffa5701d870156772d",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_2px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "9123654393931e444156bc3f9dd3a34a0af23ef78f48ec768b4bdb1c32008290",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_4px_6px_-1px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "246f7ff37f34a1c8e1184a152982142a64b03a6e827df28aa25ca32b31f32031",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_4px_6px_-1px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "e4f8df1098b0c99e54e9e2151799e261681fdf4e03471e79adca1dac19943271",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2",
+            "px-3",
+            "py-3",
+            "px-2",
+            "py-1",
+            "gap-3"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "notion",
+      "family": "editorial",
+      "representative": false,
+      "font": "ui-sans-serif, -apple-system, \"system-ui\", \"Segoe UI Variable Display\", \"Segoe UI\", Helvetica, \"Apple Color Emoji\", Arial, sans-serif",
+      "radius": "0rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: ui-sans-serif, -apple-system, \"system-ui\", \"Segoe UI Variable Display\", \"Segoe UI\", Helvetica, \"Apple Color Emoji\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "93a64c958ee4746d411f6362440c3a96d2d9f35f097f31987e3611141db7f1c5",
+          "shapes": [
+            "rounded-sm",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "py-2",
+            "px-8"
+          ],
+          "shadows": []
+        },
+        "input": {
+          "sourceHash": "6351de32afda6b33d8b096cb1a33bb0e1014f19a65d874b2dedf188e6962e786",
+          "shapes": [
+            "rounded-[6px]"
+          ],
+          "spacing": [
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow]",
+            "shadow-[0_0_0_2px_color-mix"
+          ]
+        },
+        "card": {
+          "sourceHash": "b8d3ae292d81f04a2aab3f047fcac562c0247636a62a66cd6523f85ce0ef3cff",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-4"
+          ],
+          "shadows": [
+            "shadow-[rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "93e12081dac12eeedb2d377e1f595e45249cce9ffd42e2f38a8407300dafcebf",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "pillow-light",
+      "family": "tactile",
+      "representative": false,
+      "font": "\"Inter\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.875rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Inter\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "642b1e04549c3056e175f197545e1ec058ae6f568ddb9d4cb1c795b627dede01",
+          "shapes": [
+            "rounded-[14px]",
+            "rounded-[10px]",
+            "rounded-[16px]"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-5",
+            "py-2",
+            "px-4",
+            "px-8"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_0_0_rgba",
+            "shadow-none"
+          ]
+        },
+        "input": {
+          "sourceHash": "2924a8e6f78d3e750b50aec392f809e6fbed74fe5a947f2594e25a67944cb850",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "py-3"
+          ],
+          "shadows": [
+            "shadows"
+          ]
+        },
+        "card": {
+          "sourceHash": "99fe45ab8824b20e183c06a6fb7d9a5936071db2185c79645bae928a2e4693f7",
+          "shapes": [
+            "rounded-xl",
+            "rounded-2xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": []
+        },
+        "dialog": {
+          "sourceHash": "e5ef3a6ffe6879e21330a4cc4384e0a76899b8607698773b75d4f74b6412d479",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_10px_40px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "206c3bca42f19eb9bb8c9060f124dbfbe2c12619015b349c6c49d10a78007755",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "precision-light",
+      "family": "precision",
+      "representative": false,
+      "font": "var(--font-inter-var), var(--font-inter), \"Inter\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.625rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-inter-var), var(--font-inter), \"Inter\", ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "06bceced6aff33e391076f5e7d30ddfd8ace30c24bb933fc73a763fc6ddce84a",
+          "shapes": [
+            "rounded-[10px]",
+            "rounded-lg",
+            "rounded-[13px]"
+          ],
+          "spacing": [
+            "gap-3",
+            "px-3",
+            "gap-2",
+            "px-2",
+            "px-4"
+          ],
+          "shadows": [
+            "shadow:",
+            "shadow-[0_16px_8px_rgba",
+            "shadow-[0_1px_1px_0.5px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "798508831db7654804ccfcbecf4e8ad23a7becb7205d9492d4b65f3d5228f0da",
+          "shapes": [
+            "rounded-[9px]",
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[0_0_0_1px_rgba",
+            "shadow-[0_0_0_1.5px_hsl"
+          ]
+        },
+        "card": {
+          "sourceHash": "cc7af6494b8a6e3a21d06d4ce7727a28ee664c70fa0f80135443c0c618a24ef5",
+          "shapes": [
+            "rounded-[10px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_1px_0.5px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "84bbecf4fdc3c0362dc1d0be76d5f19f2ecff602d2196644b9f9ecb87f5220ee",
+          "shapes": [
+            "rounded-20",
+            "rounded-[20px]",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-regular-md",
+            "shadow-[0_8px_24px_0_rgb"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "3b2b6a1475996f5e46d5d17b06813ffacb205c39d183cb2bcb7de1f136597ac5",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "stripe",
+      "family": "precision",
+      "representative": false,
+      "font": "\"Sohne\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "radius": "0.375rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Sohne\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "569ade3902d22bdc836bb27bbc0c319046633e6f6c4b8fbce8868ee7f347ef3a",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-5",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_4px_6px_rgba",
+            "shadow-[0_7px_14px_rgba",
+            "shadow-[0_1px_2px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "57a60070192fa64032555a54d4ed2c50f6cfd7c4d9bc3dba4b4480c2704ca4c0",
+          "shapes": [],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[0px_1px_1px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "cb22adcfd10098b076c67db6cfa3c74ae2d6d06ff9a0e1579e04d4bca5db4ff6",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_0px_0px_0.5px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "0d74b06c58116d696648b641c12beaf0d1c29f71daef53c5a84e819d612348c7",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "supabase",
+      "family": "precision",
+      "representative": false,
+      "font": "var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.5rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "834fd68f050640f1d2ba4265421ec0779ab0164eb93d882948d5f39d31ce64c5",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_2px_rgba",
+            "shadow-[0_1px_3px_rgba"
+          ]
+        },
+        "input": {
+          "sourceHash": "656748488ca3319c8b7655c4aba247d97b77fd5c961d8ac0e70728b00afc2546",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow-[inset_0_1px_2px_rgba",
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "99f1c0625420bff7e931ddf281a2b1c58622b12dfba934242062f6e9abbc16fb",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_1px_3px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "6ad6e26a4f160fadf382cdd72e079e72bd29ba27d88bd2e5ac9c415946fea912",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "tactile-minimal",
+      "family": "tactile",
+      "representative": true,
+      "font": "ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif",
+      "radius": "0.375rem",
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "fontRules": [
+        "font-family:\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif",
+        "font-family:\n      ui-sans-serif,\n      system-ui,\n      -apple-system,\n      BlinkMacSystemFont,\n      \"Segoe UI\",\n      Roboto,\n      \"Helvetica Neue\",\n      Arial,\n      sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "c800210b284034b038c4c6110808dbab9a010e679c847fc39fa691d0b11da299",
+          "shapes": [
+            "rounded-[12px]",
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-5",
+            "py-2",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow-[0_2px_0_rgba",
+            "shadow-none"
+          ]
+        },
+        "input": {
+          "sourceHash": "d5cf98c550261e9eeca1a76f14003b862da10e531958dfab9c86d10f1ccb25d4",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "420e78efddc8eb9219498838781926192769a812914bc1ac2616e98830bc8ce2",
+          "shapes": [
+            "rounded-[20px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-7"
+          ],
+          "shadows": [
+            "shadow-[0_4px_12px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "983916a553e34d822883f42ed63fc749c80f636f8f25d348905d4938afc3ab76",
+          "shapes": [
+            "rounded-[20px]",
+            "rounded-[6px]"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-[0_8px_32px_rgba"
+          ]
+        },
+        "table": {
+          "sourceHash": "246dfef4b8036a9f7e3ed17b7afd389b1c365c4a9f397e14d7dba6fbd963d668",
+          "shapes": [
+            "rounded-[0.625rem]"
+          ],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "79867086f05444c00d4cb2c371c72cb6dd13c56f805289d16b6238761eb560db",
+          "shapes": [
+            "rounded-[6px]"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-3",
+            "py-2",
+            "px-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "tv-style",
+      "family": "industrial",
+      "representative": false,
+      "font": "\"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "radius": "0.1875rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "92ae71593fa3a49a6d3020c93f75ccbe3f1e30e0ca02fbba000622bf009071e8",
+          "shapes": [
+            "rounded-[3px]"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-button",
+            "shadow-button-hover",
+            "shadow-primary"
+          ]
+        },
+        "input": {
+          "sourceHash": "d5cf98c550261e9eeca1a76f14003b862da10e531958dfab9c86d10f1ccb25d4",
+          "shapes": [],
+          "spacing": [],
+          "shadows": []
+        },
+        "card": {
+          "sourceHash": "eeeb73c20cbb8d6a25bce1d0b3512dba89f59e9f7d6235ee03bd3a92691f3661",
+          "shapes": [
+            "rounded-[3px]"
+          ],
+          "spacing": [
+            "gap-1",
+            "p-5",
+            "px-5",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]",
+            "shadow-m"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "9699bbb8742d873012475230b2e683f5d1dcf569a522a0727f24120d2f97f20c",
+          "shapes": [
+            "rounded-xl",
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "p-1",
+            "space-y-1",
+            "gap-2"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-l",
+            "shadow]"
+          ]
+        },
+        "table": {
+          "sourceHash": "4da2694b9db57beb64ac3689ebbd5e7e439cdb63e3295c42f0b59601252ffe05",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-3",
+            "p-3"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s"
+          ]
+        },
+        "sidebar": {
+          "sourceHash": "2a75aa56add7508d4d847ccb128d9f220336f4b438a2c6de6957244a907ea48c",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-4",
+            "py-3",
+            "p-2",
+            "gap-0",
+            "py-2",
+            "px-2",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow:var",
+            "shadow-s",
+            "shadow]"
+          ]
+        }
+      }
+    },
+    {
+      "id": "vercel",
+      "family": "precision",
+      "representative": false,
+      "font": "var(--font-geist-sans), \"Geist Sans\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "radius": "0.375rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-geist-sans), \"Geist Sans\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "94f312cd4b12abe4d2ae2d43935c93e14149f28288286bd6d266585f1981220a",
+          "shapes": [
+            "rounded-md",
+            "rounded-[5px]",
+            "rounded-lg"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-2",
+            "px-3",
+            "px-4"
+          ],
+          "shadows": []
+        },
+        "input": {
+          "sourceHash": "e800032f7125a32b623776024aaa52ac0c0a884414595fb7f0a36dcfa405fd37",
+          "shapes": [
+            "rounded-md"
+          ],
+          "spacing": [
+            "px-3",
+            "py-1"
+          ],
+          "shadows": [
+            "shadow]",
+            "shadow-[0_0_0_3px_rgba"
+          ]
+        },
+        "card": {
+          "sourceHash": "3327ba931e8c1af0f1291b1e1314fce1c73b1057500f5be6f3e644a271881cb5",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_0_0_1px_rgba",
+            "shadow]"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "d0e68bc7890dd03983a42cc9417ec9a108a1e3ea56483afdc4a92a57f0108d10",
+          "shapes": [
+            "rounded-lg",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-lg"
+          ]
+        },
+        "table": {
+          "sourceHash": "65698648c1cadfc8f4121f0ea30b38fea4fd913209381123e85b275d422ed41a",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "011eae6061438455e53b2256a283774fe9b3636f7abe72480f4a3504f2db5b12",
+          "shapes": [
+            "rounded-lg"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    },
+    {
+      "id": "vibrant-dark",
+      "family": "expressive",
+      "representative": true,
+      "font": "var(--font-inter), ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "radius": "0.75rem",
+      "modes": [
+        "light"
+      ],
+      "fontRules": [
+        "font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system,\n      BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+      ],
+      "components": {
+        "button": {
+          "sourceHash": "3374bef8921d4063988988eb9e59907af82fd588e6f7f4dedaa363f30791bfa9",
+          "shapes": [
+            "rounded-lg",
+            "rounded-xl",
+            "rounded-[14px]",
+            "rounded-full"
+          ],
+          "spacing": [
+            "gap-2",
+            "px-3",
+            "px-4",
+            "px-6"
+          ],
+          "shadows": [
+            "shadow:",
+            "shadow-[0_10px_15px_-3px_hsl"
+          ]
+        },
+        "input": {
+          "sourceHash": "ec3e6f1af7d54e315226061f6c51acdc8c18ce724aca180a0dd280c495e2adfc",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "py-2"
+          ],
+          "shadows": [
+            "shadow]"
+          ]
+        },
+        "card": {
+          "sourceHash": "650868a4f686f11250be1a9eed92c00e1e250f3de06c47f871e1e79cc5c7dceb",
+          "shapes": [
+            "rounded-[14px]"
+          ],
+          "spacing": [
+            "space-y-1",
+            "p-6"
+          ],
+          "shadows": [
+            "shadow-[0_0_15px_rgba"
+          ]
+        },
+        "dialog": {
+          "sourceHash": "26529ae68f412a037446b34f268cc467df59f5dbea92399594272f2f0d6f1000",
+          "shapes": [
+            "rounded-2xl",
+            "rounded-sm"
+          ],
+          "spacing": [
+            "gap-4",
+            "p-6",
+            "space-y-1",
+            "space-x-2"
+          ],
+          "shadows": [
+            "shadow-xl"
+          ]
+        },
+        "table": {
+          "sourceHash": "75055fca7725d0e6af89cff86e25cda6ef91519cfbd1c370543f8e1426cf5986",
+          "shapes": [],
+          "spacing": [
+            "px-4",
+            "p-4"
+          ],
+          "shadows": []
+        },
+        "sidebar": {
+          "sourceHash": "70271090a4edb8bd6003af4aca5c396f5bf9bba27120046ea5f59f4c40f8ac07",
+          "shapes": [
+            "rounded-xl"
+          ],
+          "spacing": [
+            "px-4",
+            "gap-1",
+            "p-2",
+            "gap-2",
+            "px-2",
+            "py-2",
+            "gap-0"
+          ],
+          "shadows": []
+        }
+      }
+    }
+  ]
+}

@@ -1,108 +1,76 @@
 # Open Design MCP
 
-Independent, MIT-licensed design tools for coding agents. The server uses its own
-component registry, editable guidance and deterministic review algorithms. It
-does not call Better Design or require its subscription.
+Design-system selection, real React components, and practical UI review for coding agents. Eight curated families retain all 31 registry IDs. Core exposes 11 typed read-only tools; full keeps 40 public tools and 41 owner tools.
 
-- Website: https://open-design-website.vercel.app
-- Streamable HTTP MCP: https://open-design-mcp-liard.vercel.app/mcp
-- Website source: https://github.com/pranav256/open-design-website
-
-## Connect
-
-Use Streamable HTTP with the public MCP URL. Clients supporting `mcpServers` can
-use this configuration; check your client's configuration format.
-
-```json
-{
-  "mcpServers": {
-    "open-design": {
-      "type": "streamable-http",
-      "url": "https://open-design-mcp-liard.vercel.app/mcp"
-    }
-  }
-}
-```
-
-For Codex: `codex mcp add open-design --url https://open-design-mcp-liard.vercel.app/mcp`.
-
-## Included
-
-31 design systems with actual React/Radix component source and shadcn-compatible
-registry dependencies, local Lucide icons, 72 original guidance topics and 25
-original review rules. Tools support theme search/kits, extraction from supplied
-CSS or public page stylesheets, custom catalog-based themes, comprehension,
-rendered spacing evidence, inline source review, feature maps and video planning.
-
-Private project rules support guidelines, part rules and exact screen specs with
-owner isolation and explicit replacement. First-visit tools support brief, ranking
-and recheck against supplied walk reports. See the
-[compatibility investigation](docs/COMPATIBILITY-PASS.md) for recovered contracts,
-independently implemented behavior and remaining gaps.
-
-Public catalog/guidance/review calls need no account. Persistent theme edits and
-team rules use a private workspace capability key. Generate one with
-`POST /api/workspace-key` and send it as `Authorization: Bearer <key>` on MCP
-requests. Store it securely; anyone holding the key can edit that workspace.
-Theme registries are public by unguessable project URL; do not put secrets in theme names.
+**0.2.0 is a release candidate, not a published npm package.** Verify the [website](https://open-design-website.vercel.app), [full HTTP endpoint](https://open-design-mcp-liard.vercel.app/mcp) and `/mcp/core` against the matching deployed version. Hosted core URLs and new specimens need the coordinated [release](docs/DEPLOYMENT.md); local checks alone do not certify deployment.
 
 ## Run locally
 
-Node 22 or newer:
+Use Node 22 or newer:
 
 ```sh
 npm ci
+npm run build
+npm start
+codex mcp add open-design --url http://localhost:3000/mcp/core
+```
+
+Use `/mcp` for full. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
+
+For stdio use an absolute path, independently of your client's working directory:
+
+```sh
+node /absolute/path/open-design-mcp/dist/stdio.js --profile core
+node /absolute/path/open-design-mcp/dist/stdio.js doctor
+```
+
+Stdio defaults to full. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. Before publication, run `npm pack` and install the resulting tarball in your consumer environment. Its installed executable is `open-design-mcp`.
+
+## First useful tasks
+
+- “Find a distinctive family for this settings screen. Preserve our existing design if present and retrieve only the components we need.”
+- “Extract this supplied brand CSS and extend the existing interface consistently.”
+- “Review this form's source and copy. Use rendered DOM evidence for spacing and give specific repairs.”
+
+Search returns compact family summaries. Retrieve a selected kit with `target: "react"` and a component name/list; its shadcn command resolves real source and dependencies. In an initialized React/Tailwind 4 project:
+
+```sh
+npx shadcn@latest add http://localhost:3000/registry/linear/button.json
+```
+
+The [family recipes](docs/DESIGN-FAMILIES.md) explain material, typography, geometry and density. The website puts installation in the hero and keeps its own appearance fixed. **View components** opens a separate viewer of actual Button, Input, Card, Dialog, Table and Sidebar source. Variants have exact token links and an explicitly labelled family specimen.
+
+## Context cost
+
+Full public discovery falls from **125,752 to 51,503 UTF-8 bytes**; core discovery is **19,237 bytes**. All six fixed full-profile workflows meet the 50% reduction gate. These are compact JSON protocol bytes; model token counts and actual client context traces were not measured. See [benchmark scope](docs/BENCHMARK.md).
+
+Detailed guidance is at `design://workflow/v1`, with principle/review resources and three optional prompts. Ordinary tools work without these resources/prompts. Choose full for private mutation and specialist guidance; core cannot call tools absent from its discovery.
+
+## Persistence and boundaries
+
+Saving themes or team/project rules over HTTP requires a private capability key from `POST /api/workspace-key`, sent as `Authorization: Bearer <key>`. Anyone with that key can edit its workspace. Keys have no email recovery, rotation or revocation. Public custom-theme registry URLs intentionally reveal theme configuration; private rules stay owner-scoped and uncached.
+
+Local state defaults to `.open-design/state` under the working directory. Set `OPEN_DESIGN_STATE_DIR` for durable state and `OPEN_DESIGN_BASE_URL` for the HTTP origin. Hosted persistence uses private Vercel Blob conditional writes, never ephemeral function disk.
+
+The deterministic core needs no external language model. URL extraction fetches bounded public CSS without rendering pages. Source review requires inline content; spacing measures supplied rendered geometry. [DTCG export](docs/DTCG.md) is a documented 2025.10 typed subset. Reviews apply to their evidence and are not accessibility certification.
+
+Hosted AI generation, proprietary inspiration, vendor accounts, native/Shopify install kits, credential administration and trusted dashboard browser receipts remain outside this release. The opt-in [private archive](docs/PRIVATE-ARCHIVE.md) serves an owner's existing saved responses offline; archived files are excluded from distribution.
+
+## Verify and maintain
+
+```sh
+npm run build:upstream
 npm run check
 npm test
 npm run build
-npm start
+npm run smoke:stdio
+npm run smoke:package
+npm run benchmark -- --check
+npm run audit:themes
 ```
 
-HTTP listens on port 3000. Configure `OPEN_DESIGN_BASE_URL` when using another
-origin. `npm run dev` runs TypeScript directly; `node /absolute/path/dist/stdio.js`
-runs stdio. Catalog/content assets resolve from the package location, while local
-state defaults to `.open-design/state` under the working directory. Set
-`OPEN_DESIGN_STATE_DIR` to choose a durable local location.
+`npm run verify:consumers` uses the local registry and actual shadcn CLI in six disposable Vite/Next consumers. Website checks are in [deployment](docs/DEPLOYMENT.md). Edit `content/library.json` or use the [content importer](docs/CONTENT-LIBRARY.md); restart to load changes.
 
-Install component source in a consumer project:
+Read the [API](docs/API.md), [candidate verification](docs/RELEASE-CANDIDATE.md), [implementation status](docs/SOL-IMPLEMENTATION-PLAN.md) and [security policy](SECURITY.md). Open Design remains the working name until a replacement is selected and checked.
 
-```sh
-npx shadcn@latest add https://open-design-mcp-liard.vercel.app/registry/minimal-light/button.json
-```
-
-Edit `content/library.json` or import authorized writing with
-`npm run content:import -- /path/to/export.json`. See
-[the library contract](docs/CONTENT-LIBRARY.md). Restart or redeploy to load edits.
-
-## Hosting and scope
-
-See [deployment](docs/DEPLOYMENT.md), [API](docs/API.md),
-[source coverage](docs/REPOSITORY-COVERAGE.md),
-[runtime boundaries](docs/RUNTIME-BOUNDARIES.md) and
-[registry verification](docs/REGISTRY-VERIFICATION.md).
-
-This is an independent replacement, not full vendor parity. The private hosted
-content library was unavailable; guidance here is independently authored and
-editable. AI generation, proprietary inspiration, hosted sales/image generation,
-vendor accounts, mobile/Shopify install kits and trusted dashboard browser receipts
-are not implemented. Custom themes reuse a catalog base and supplied tokens.
-Review tools report only the evidence they actually receive.
-
-Local stdio also supports an opt-in [private capture archive](docs/PRIVATE-ARCHIVE.md)
-for an owner's saved inspiration and native/Shopify kit responses. Captured
-assets are not included in this repository or the public service. This mode
-serves saved file contents and references offline; it does not generate or
-install missing kits.
-
-To start a saved private archive, run
-`npm run stdio:private -- /absolute/path/to/private/archive`. For Codex, register
-the committed `scripts/start-private.mjs` launcher with your absolute Node,
-checkout and archive paths; the private setup guide includes the command.
-
-There is no project-imposed monthly call quota. The public service remains subject
-to Vercel capacity and hosting limits; self-hosting lets you choose that capacity.
-
-Upstream copyright and MIT notices are preserved in [NOTICE](NOTICE),
-`assets/LICENSE` and `vendor/upstream/LICENSE`. This project is unaffiliated with
-Better Design. Research captures, credentials and private workspaces are excluded
-from the public repositories.
+This independent MIT project is unaffiliated with Better Design. Copyright, Tabler's embedded SVG license and Lucide's ISC notice are retained in [NOTICE](NOTICE) and bundled licenses. Supplemental icons use local Lucide; some specialist registry components retain their original Iconify dependencies.

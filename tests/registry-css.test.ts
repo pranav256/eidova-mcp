@@ -11,7 +11,7 @@ test('catalog globals inline full styles and preserve the raw source assets', as
   const styles = item.css as ReturnType<typeof cssRules>;
   assert.equal(styles['@theme inline'], undefined);
   assert.equal(item.cssVars!.theme['color-primary'], 'var(--primary)');
-  assert.equal(item.cssVars!.theme['radius-xl'], 'calc(var(--radius) + 4px)');
+  assert.equal(item.cssVars!.theme['radius-xl'], 'calc(var(--radius) + 0.25rem)');
   const base = styles['@layer base'] as ReturnType<typeof cssRules>;
   assert.match((base.html as Record<string,string>)['font-family'], /Geist/);
   assert.ok(base.body);

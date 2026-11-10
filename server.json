@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.pranav256/open-design",
+  "title": "Open Design MCP",
+  "description": "Design families, real React kits and evidence-based review for coding agents.",
+  "repository": { "url": "https://github.com/pranav256/open-design-mcp", "source": "github" },
+  "version": "0.2.0",
+  "websiteUrl": "https://open-design-website.vercel.app",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "open-design-mcp",
+      "version": "0.2.0",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" },
+      "packageArguments": [{ "type": "named", "name": "--profile", "value": "core" }]
+    }
+  ],
+  "remotes": [{ "type": "streamable-http", "url": "https://open-design-mcp-liard.vercel.app/mcp/core" }]
+}

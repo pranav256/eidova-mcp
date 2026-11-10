@@ -11,3 +11,5 @@ adapter localizes network endpoints and removes hosted filesystem execution.
 Original Open Design guidance is MIT licensed. Imported content retains its own
 rights and provenance. This project is independent and unaffiliated with Better Design.
 Lucide icons are provided by @iconify-json/lucide under the ISC license.
+The embedded Tabler close SVG is MIT licensed, Copyright (c) 2020-2026 Paweł Kuna.
+See assets/TABLER-LICENSE and https://github.com/tabler/tabler-icons.
