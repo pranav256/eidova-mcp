@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { catalog, registryItem, baseUrl, systemWithComponents } from './catalog.js';
 import { iconSvg } from './icons.js';
 import { workspaceId } from './provider.js';
@@ -13,9 +13,17 @@ import { ProjectRulesStore } from './project-rules-store.js';
 
 export const app = express();
 app.disable('x-powered-by');
+const mcpPaths=['/mcp','/api/mcp','/mcp/core','/api/mcp/core'];
+const operations=new Set(['initialize','tools/list','tools/call','resources/list','resources/read','resources/templates/list','prompts/list','prompts/get','notifications/initialized']);
+let inFlight=0;
 app.use((req,res,next)=> {
   res.setHeader('X-Content-Type-Options','nosniff');
   res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
+  if(req.path.startsWith('/mcp')||req.path.startsWith('/api/'))res.setHeader('Cache-Control','no-store');
+  if(mcpPaths.includes(req.path)||req.path==='/api/v1/brand-extract/from-url') {
+    const requestId=randomUUID(),started=Date.now();res.setHeader('X-Request-Id',requestId);
+    res.once('close',()=>process.stderr.write(JSON.stringify({requestId,operation:operations.has(req.body?.method)?req.body.method:req.path==='/api/v1/brand-extract/from-url'?'extract-from-url':'protocol',durationMs:Date.now()-started,requestBytes:res.locals.requestBytes??0,status:res.statusCode,errorClass:res.locals.errorClass??(!res.writableFinished?'aborted':res.statusCode>=500?'server':res.statusCode>=400?'request':'none')})+'\n'));
+  }
   if (req.path.startsWith('/mcp') || req.path.startsWith('/api/') || req.path.startsWith('/registry/')) {
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization, MCP-Protocol-Version, Mcp-Session-Id');
@@ -24,10 +32,16 @@ app.use((req,res,next)=> {
   }
   next();
 });
-app.use(express.json({limit:'4mb',strict:true}));
+app.use((req,res,next)=> {
+  if(!mcpPaths.includes(req.path)&&req.path!=='/api/v1/brand-extract/from-url'){next();return;}
+  // This process cap bounds memory; deployment-wide rate limits belong at the host.
+  if(inFlight>=16){res.setHeader('Retry-After','2');res.status(429).json({error:'Server is busy. Retry in two seconds; nothing was changed.'});return;}
+  inFlight++;res.once('close',()=>{inFlight--;});next();
+});
+app.use(express.json({limit:'4mb',strict:true,verify:(_req,res,buffer)=>{(res as Response).locals.requestBytes=buffer.byteLength;}}));
 const store=createStore();
-app.get('/health',(_req,res)=>res.json({status:'ok',name:'Open Design MCP',version:'0.1.0'}));
-app.get('/api/catalog',async (_req,res)=>res.json(await catalog()));
+app.get('/health',(_req,res)=>res.json({status:'ok',name:'Open Design MCP',version:'0.2.0'}));
+app.get('/api/catalog',async (_req,res)=>{res.setHeader('Cache-Control','public,max-age=300');res.json(await catalog());});
 app.post('/api/workspace-key',(_req,res)=> {
   res.setHeader('Cache-Control','no-store');
   res.json({key:randomBytes(32).toString('base64url'),note:'Keep this workspace capability key private. It is not recoverable by an email account.'});
@@ -46,18 +60,20 @@ function identity(req:Request) {
   if (req.headers.authorization && !bearer) throw new Error('Use Authorization: Bearer <workspace-key>.');
   return workspaceId(bearer);
 }
-app.all(['/mcp','/api/mcp'],async (req,res)=> {
+app.all(mcpPaths,async (req,res)=> {
+  res.setHeader('Cache-Control','no-store');
   if (req.method !== 'POST') {res.status(405).json({jsonrpc:'2.0',error:{code:-32000,message:'Use MCP Streamable HTTP POST requests.'},id:null});return;}
   let owner:string|undefined;
   try {owner=identity(req);} catch {res.status(401).json({error:'Invalid workspace key format'});return;}
-  const server=createServer(store,owner);
+  const server=createServer(store,owner,undefined,req.path.endsWith('/core')?'core':'full');
   const transport=new StreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true});
   const close=()=> {void transport.close();void server.close();};
   res.on('close',close);
   try {await server.connect(transport);await transport.handleRequest(req,res,req.body);}
-  catch (error) {if (!res.headersSent) res.status(500).json({error:'MCP request failed'});close();}
+  catch {res.locals.errorClass='transport';if (!res.headersSent) res.status(500).json({error:'MCP request failed'});close();}
 });
 app.all(/^\/api\/(?:projects|fragments|v1)\//,async (req,res)=> {
+  res.setHeader('Cache-Control','no-store');
   let owner:string|undefined;
   try {owner=identity(req);} catch {res.status(401).json({error:'Invalid workspace key format'});return;}
   const response=await apiDispatcher(new Projects(store,owner),new ProjectRulesStore(store,owner))(baseUrl()+req.originalUrl,{method:req.method,body:['GET','HEAD'].includes(req.method)?undefined:JSON.stringify(req.body)});

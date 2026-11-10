@@ -3,6 +3,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { VIDEO_COMPONENT_CATALOG, VIDEO_COMPONENT_FILES } from '../vendor/upstream/runtime.mjs';
 import { inlineRegistryCss } from './registry-css.js';
+import { z } from 'zod';
 
 export type RegistryItem = {
   name: string; type?: string; description?: string;
@@ -15,12 +16,19 @@ export type CatalogSystem = {
   id: string; title: string; description: string; personality: string[]; industry: string[];
   componentCount: number; primaryColor: string; font: string; borderRadius: string;
   iconLibraryId: string; iconVariant: string; components: string[];
+  family: {id:string;title:string;representative:string;description:string;axes:string[]};
+  variant: boolean;
 };
 
 const REGISTRY_ROOT = process.env.OPEN_DESIGN_ASSETS_DIR ? path.resolve(process.env.OPEN_DESIGN_ASSETS_DIR) : resourcePath('assets/registry');
 const slug = /^[a-z0-9][a-z0-9_-]{0,80}$/;
 const cache = new Map<string, RegistryItem>();
 let catalogPromise: Promise<CatalogSystem[]> | undefined;
+const familySchema=z.object({version:z.literal(1),families:z.array(z.object({id:z.string(),title:z.string(),representative:z.string(),description:z.string(),axes:z.array(z.string()).min(3),members:z.array(z.string())})).min(6).max(8)});
+const familyLibrary=familySchema.parse(JSON.parse(await readFile(resourcePath('content/design-families.json'),'utf8')));
+const familyBySystem=new Map(familyLibrary.families.flatMap(family=>family.members.map(id=>[id,family] as const)));
+if(familyBySystem.size!==familyLibrary.families.reduce((count,family)=>count+family.members.length,0)) throw new Error('A theme belongs to more than one family.');
+export const designFamilies=familyLibrary.families.map(({members,...family})=>({...family,variants:members.filter(id=>id!==family.representative)}));
 const tags: Record<string, string> = {
   linear: 'minimal precise developer productivity', stripe: 'professional fintech payments clear',
   notion: 'minimal documents collaboration neutral', airbnb: 'warm travel marketplace friendly',
@@ -54,6 +62,8 @@ export async function catalog(): Promise<CatalogSystem[]> {
       const css = globals.files?.find(f => f.path.endsWith('.css'))?.content ?? '';
       const title = dir.name.split('-').map(s => s[0].toUpperCase() + s.slice(1)).join(' ');
       const style = tags[dir.name] ?? dir.name.replaceAll('-', ' ');
+      const family=familyBySystem.get(dir.name);
+      if(!family) throw new Error(`Theme ${dir.name} has no design family.`);
       return {
         id: dir.name, title, description: `${title}: reusable React components and CSS tokens from the MIT licensed upstream registry.`,
         personality: style.split(' '), industry: style.split(' ').filter(t => ['developer', 'finance', 'commerce', 'travel', 'consumer'].includes(t)),
@@ -62,6 +72,7 @@ export async function catalog(): Promise<CatalogSystem[]> {
         borderRadius: vars.radius ?? vars['--radius'] ?? css.match(/--radius\s*:\s*([^;]+)/)?.[1] ?? '0.75rem',
         font: css.match(/--font-sans\s*:\s*([^;]+)/)?.[1] ?? css.match(/font-family\s*:\s*([^;]+)/)?.[1] ?? 'system-ui',
         iconLibraryId: 'lucide', iconVariant: 'outline', components: entries,
+        family:{id:family.id,title:family.title,representative:family.representative,description:family.description,axes:[...family.axes]},variant:dir.name!==family.representative,
       };
     }));
   })();
@@ -70,11 +81,14 @@ export async function catalog(): Promise<CatalogSystem[]> {
 
 export async function searchCatalog(query: string, limit = 5) {
   const words = query.toLowerCase().match(/[a-z0-9]+/g) ?? [];
-  return (await catalog()).map(system => {
-    const text = `${system.id} ${system.title} ${system.description} ${system.font} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
+  const ranked=(await catalog()).map(system => {
+    const text = `${system.id} ${system.title} ${system.description} ${system.font} ${system.family.title} ${system.family.description} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
     const matchScore = words.reduce((score, word) => score + (text.includes(word) ? 1 : 0), 0) / Math.max(words.length, 1);
     return { ...system, matchScore };
-  }).sort((a, b) => b.matchScore - a.matchScore || a.id.localeCompare(b.id)).slice(0, Math.min(limit, 20));
+  }).sort((a,b)=>Number(b.id===query.trim().toLowerCase())-Number(a.id===query.trim().toLowerCase()) || b.matchScore-a.matchScore || Number(a.variant)-Number(b.variant) || a.id.localeCompare(b.id));
+  const seen=new Set<string>();
+  const diverse=ranked.filter(system=>{if(seen.has(system.family.id))return false;seen.add(system.family.id);return true;});
+  return [...diverse,...ranked.filter(system=>!diverse.includes(system))].slice(0,Number.isFinite(limit)?Math.max(0,Math.min(Math.floor(limit),20)):5);
 }
 
 export async function registryItem(system: string, component: string, origin = baseUrl()): Promise<RegistryItem> {
@@ -100,6 +114,8 @@ export async function registryItem(system: string, component: string, origin = b
   }
   if (component === 'index') return { name: system, type: 'registry:index', components: info.components };
   const item = await sourceItem(system, component);
+  const localImports=(item.files??[]).flatMap(file=>[...file.content.matchAll(/from\s+["']\.\/([a-z0-9_-]+)(?:\.[tj]sx?)?["']/gi)].map(match=>match[1])).filter(name=>info.components.includes(name)&&name!==component);
+  item.registryDependencies=[...new Set([...(item.registryDependencies??[]),...localImports])];
   item.registryDependencies = item.registryDependencies?.map(dep => {
     const match = dep.match(/\/registry\/([^/]+)\/([^/]+)\.json$/);
     if (match) return `${origin}/registry/${match[1]}/${match[2]}.json`;

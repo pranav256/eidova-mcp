@@ -1,0 +1,12 @@
+:root { --font-geist-sans: "Geist"; --font-geist-mono: "Space Mono"; }
+.consumer-shell { display:flex; min-height:100vh; background:var(--background); color:var(--foreground); }
+.consumer-nav { flex-shrink:0; width:12rem; height:auto; }
+.consumer-content { min-width:0; width:100%; max-width:50rem; padding:2rem; }
+.consumer-content h1 { font-size:1.75rem; font-weight:500; line-height:1.25; }
+.consumer-content > p { margin-block:0.75rem 2rem; }
+.consumer-content > div { margin-top:1.5rem; }
+.consumer-content label { display:block; margin-bottom:0.5rem; }
+.consumer-actions { gap:1rem; flex-wrap:wrap; }
+.consumer-invite { display:grid; gap:1rem; }
+@media(prefers-reduced-motion:reduce) { :root[data-consumer] *, :root[data-consumer] *::before, :root[data-consumer] *::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; } }
+@media(max-width:640px) { .consumer-shell{display:block;} .consumer-nav{width:100%;} .consumer-content{padding:1.5rem;} }

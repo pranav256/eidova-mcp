@@ -16,7 +16,7 @@ await client.connect(process.env.MCP_PRIVATE_ARCHIVE
 try {
   const rules = await client.callTool({ name: 'get-review-rules', arguments: { category: 'all' } });
   assert.ok(!rules.isError, 'Review rules failed');
-  const paths = ['App.tsx', 'styles.css', 'theme.css', 'theme.ts', 'catalog-themes.json', 'components/ui/button.tsx', 'components/ui/input.tsx', 'components/ui/textarea.tsx', 'main.tsx'];
+  const paths = ['App.tsx', 'styles.css', 'theme.css', 'theme.ts', 'catalog-themes.json', 'components/ui/button.tsx', 'components/ui/input.tsx', 'components/ui/textarea.tsx', 'main.tsx', 'previews/Specimen.tsx', 'previews/specimen.css'];
   const files = await Promise.all(paths.map(async path => ({ path, content: await readFile(join(website, 'src', path), 'utf8') })));
   const source = await client.callTool({ name: 'review-ui-code', arguments: { files } });
   await writeFile(join(output, 'website-source-review.json'), JSON.stringify({ rules, source }, null, 2));

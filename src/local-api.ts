@@ -61,7 +61,7 @@ export function apiDispatcher(projects: Projects, projectRules?: ProjectRulesSto
         const sheetResults = await Promise.allSettled(links.map(async link => {
           const href = link[0].match(/href\s*=\s*["']([^"']+)["']/i)?.[1];
           if (!href) return null;
-          const sheet = await safeFetchPublic(new URL(href,target).toString(), 0, AbortSignal.timeout(15_000));
+          const sheet = await safeFetchPublic(new URL(href,response.url).toString(), 0, AbortSignal.timeout(15_000));
           return sheet.ok ? {name: href, kind: 'css', content: (await sheet.text()).slice(0,200000)} : null;
         }));
         for (const result of sheetResults) if (result.status === 'fulfilled' && result.value) sources.push(result.value);

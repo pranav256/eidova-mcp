@@ -6,7 +6,7 @@
   "functions": {
     "api/index.ts": {
       "maxDuration": 60,
-      "includeFiles": "{assets/registry/**,content/library.json,vendor/upstream/runtime.mjs,node_modules/@iconify-json/lucide/icons.json}"
+      "includeFiles": "{assets/registry/**,content/**,vendor/upstream/runtime.mjs,node_modules/@iconify-json/lucide/icons.json}"
     }
   },
   "rewrites": [
@@ -16,6 +16,10 @@
     },
     {
       "source": "/mcp",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/mcp/:path*",
       "destination": "/api/index"
     },
     {
