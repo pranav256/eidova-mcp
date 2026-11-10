@@ -74,7 +74,7 @@ node scripts/verify-specimens.mjs
 npm run verify:consumers
 ```
 
-The browser scripts use Edge on Windows or installed Playwright Chromium elsewhere. `PLAYWRIGHT_CHANNEL` can select another installed channel. On Linux, install Chromium with `npx playwright install --with-deps chromium`. Clean consumers use actual shadcn 4.23.0, React 19.2, Tailwind 4.3.5, Vite 7.3.7 and Next 16.4.6, and run only against a local registry.
+The browser scripts use Edge on Windows or installed Playwright Chromium elsewhere. `PLAYWRIGHT_CHANNEL` can select another installed channel. On Linux, install Chromium with `npx playwright install --with-deps chromium`; the CI browser job pins Ubuntu 24.04 for the locked Playwright 1.56.1 version. Clean consumers use actual shadcn 4.23.0, React 19.2, Tailwind 4.3.5, Vite 7.3.7 and Next 16.4.6, and run only against a local registry.
 
 `npm run sync:previews` copies exact public source and required licensed fonts/notices into the sibling website. `node scripts/sync-website-themes.mjs ../open-design-website` regenerates catalog tokens and appearance metadata without rewriting the source registry. The website keeps its own appearance fixed; theme selection opens an isolated viewer. Restart the MCP after registry/content edits because source is cached per process.
 
