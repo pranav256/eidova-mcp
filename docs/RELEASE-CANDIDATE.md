@@ -18,11 +18,13 @@ Verified locally on 2026-11-10 in the independent MCP and website repositories. 
 
 ## Verification and evidence
 
-Reference environment: Windows x64, Node **24.20.0**, Intel Core 3 100U, Edge through Playwright **1.56.1**. Browser widths: **390, 1440 and 1728px**. CI covers Node 22/24 on Linux/Windows plus clean installed consumers; remote results are separate from this local evidence.
+Local reference environment: Windows x64, Node **24.20.0**, Intel Core 3 100U, Edge through Playwright **1.56.1**. Browser widths: **390, 1440 and 1728px**. Remote CI subsequently passed Node 22/24 on Linux/Windows plus clean installed consumers on MCP `3f30dd4`; website CI passed `6441ac4`. The browser job pins Ubuntu 24.04 for the locked Playwright version.
 
 | Check | Recorded result | Evidence |
 | --- | --- | --- |
 | MCP typecheck / production build | Passed | Local commands; package prepack repeats these checks |
+| Remote service CI | All four Node 22/24 Linux/Windows jobs and six installed consumers passed | [MCP run on 3f30dd4](https://github.com/pranav256/open-design-mcp/actions/runs/42818900705) |
+| Remote website CI | Typecheck/build and production audit passed | [Website run on 6441ac4](https://github.com/pranav256/open-design-website/actions/runs/42818368810) |
 | Service suite | **89 passed**, zero failures/skips | `.work/verification/service-tests.log` |
 | Both production dependency audits | Zero reported vulnerabilities | Local `npm audit --omit=dev`; not an all-dependency security certification |
 | Built stdio | Passed from a different working directory | `npm run smoke:stdio` |
@@ -85,10 +87,12 @@ Build the sibling website against the same local API, then use the [review comma
 Release work remains explicit:
 
 - Observe actual Codex, Claude Code/Desktop, Cursor and VS Code walkthroughs; record host versions, five-minute first-task results, recovery and context traces. Configuration formats were checked against official docs; SDK/browser checks do not substitute for these walks.
-- Run remote CI and the intended Node/Linux/Windows matrix; execute Docker/Vercel staging checks. Configure deployment-wide rate/abuse controls: the 16-request process cap is not global rate enforcement.
+- Execute Docker/Vercel staging checks. Configure deployment-wide rate/abuse controls: the 16-request process cap is not global rate enforcement.
 - Verify package/Registry namespace ownership, activate and check the candidate hosted core route, and coordinate API then website promotion. Publish only a tested tarball/metadata under release authorization.
 - Select and collision-check a replacement name before migration. **Open Design remains the working name**; Formwright, Formward and Patternwell are uncleared suggestions in the plan.
 
 No destructive state/key migration was added. Preserve both repositories' previous deployment IDs and the same durable store; [rollback](DEPLOYMENT.md#rollback) restores coordinated deployments and moves core clients back to full if necessary. The adapter still relies on pinned SDK registration internals, tested here; upgrades require those checks. Bearer keys still lack recovery, rotation and revocation.
+
+After the pushes, the public API still reported `0.1.0` and the website served the previous hero demo. Neither repository showed GitHub deployment records. The new installation guide needs the matching API with `/mcp/core` and website deployment; Git pushes and successful CI alone did not promote them.
 
 Trusted rendered dashboard capture, native/Shopify installation kits, proprietary inspiration, hosted AI generation, account administration and the follow-on roadmap remain outside this candidate. The deterministic web core requires no external model. Keep the private archive excluded from publication.

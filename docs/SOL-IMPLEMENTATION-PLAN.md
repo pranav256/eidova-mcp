@@ -2,7 +2,7 @@
 
 Prepared and implemented locally: 2026-11-10. Status: **0.2.0 local release candidate; release gates remain open**. See [candidate verification](RELEASE-CANDIDATE.md) for evidence and limits.
 
-Checked tasks below record local implementation/verification, not deployment or complete phase acceptance. Unchecked tasks identify optional omissions or remaining release work.
+Checked tasks below record implementation and the stated local/remote verification scope, not deployment or complete phase acceptance. Unchecked tasks identify optional omissions or remaining release work.
 
 | Phase | Current status |
 | --- | --- |
@@ -10,7 +10,7 @@ Checked tasks below record local implementation/verification, not deployment or 
 | 1 — Families/previews | Eight internally reviewed families; all 31 IDs retained; faithful specimens complete |
 | 2 — Context cost | Local byte/latency gates pass; named-host context traces pending |
 | 3 — Setup | CLI/package/client examples and browser recovery complete; actual five-minute host walkthroughs pending |
-| 4 — Reliability | Local protocol/security/store checks pass; CI configured; remote matrix/global abuse controls pending |
+| 4 — Reliability | Local checks and remote Node 22/24 Linux/Windows CI pass; deployment-wide abuse controls pending |
 | 5 — Release | Web/DTCG/metadata/artifacts/rollback prepared; naming, staging, promotion and publication pending |
 
 ## 1. Mission and instructions for Sol
@@ -206,11 +206,11 @@ Scope: `MCP/src/app.ts`, `safe-fetch.ts`, `public-fetch.ts`, `store.ts`, `projec
 - [x] Add minimal diagnostics: request ID, operation, duration, size and error class. No user source, project-rule text or secrets in default logs. Publish only measured uptime/latency and hosting limits.
 - [x] Improve review usefulness with a small labelled corpus: known real defects, clean examples and previous false positives. Check finding IDs, severity, file/line/evidence and repair guidance. Critical/serious findings must remain visible under output budgets.
 - [x] Add CI for the existing checks, package smoke, benchmark regressions, registry integrity and critical boundary tests. Use available dependency scanning; do not mass-upgrade unrelated libraries.
-- [ ] Run remote CI across its Node 22/24 and Linux/Windows matrix, including the clean consumer job.
+- [x] Run remote CI across its Node 22/24 and Linux/Windows matrix, including the clean consumer job. [Service run](https://github.com/pranav256/open-design-mcp/actions/runs/42818900705) passed on `3f30dd4`; [website run](https://github.com/pranav256/open-design-website/actions/runs/42818368810) passed on `6441ac4`.
 
 Done when: no known unresolved critical/serious issue remains in the release scope, CI passes, and each advertised behavior has a relevant check. A deterministic checker passing is not accessibility certification or proof that an entire product works.
 
-Local service suite: 89/89 passing. Both production audits report zero vulnerabilities. Upstream guards, primitive scoping and labelled review regressions pass; remote CI/global controls remain release gates. [SECURITY.md](../SECURITY.md) records key and review boundaries.
+Local service suite: 89/89 passing. Both production audits report zero vulnerabilities. Upstream guards, primitive scoping and labelled review regressions pass. Remote service/package/benchmark/audit checks passed on Node 22/24 across Linux/Windows; all six clean installed consumers and website CI passed. Deployment-wide controls remain a release gate. [SECURITY.md](../SECURITY.md) records key and review boundaries.
 
 ## 9. Phase 5 — Complete web delivery and prepare release
 
@@ -317,6 +317,6 @@ node scripts/verify-website.mjs
 node scripts/verify-website-themes.mjs
 ```
 
-Benchmark/package/profile checks are now included in CI; remote execution is pending. Run each relevant suite after changes; broaden testing when a failure or new concern justifies it. Never report old release documents as a fresh check.
+Benchmark/package/profile checks and six clean consumers passed in the remote CI linked above; website CI also passed. The browser job pins Ubuntu 24.04 for Playwright 1.56.1. The production website and API still served the older release when checked after the pushes, with no GitHub deployment records for either repository. Run each relevant suite after source changes; broaden testing when a failure or new concern justifies it. Never report old release documents as a fresh check.
 
 For each phase, Sol should report: what changed, what was measured/tested, evidence file paths, compatibility implications and remaining work. End with what was not checked and material risks. The final release handoff must explicitly state the theme-family count versus retained variants, measured token/byte savings by client, supported targets, remaining unavailable capabilities and naming/publication status.
