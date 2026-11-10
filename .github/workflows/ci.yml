@@ -27,7 +27,8 @@ jobs:
       - run: npm run audit:themes
       - run: npm audit --omit=dev
   consumers:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 requires a supported Ubuntu release.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
