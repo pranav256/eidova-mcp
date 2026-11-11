@@ -11,7 +11,7 @@ import {
 } from "../src/store.js";
 
 async function temporaryStore(run: (store: LocalFileStore, directory: string) => Promise<void>) {
-  const directory = await mkdtemp(join(tmpdir(), "open-design-store-"));
+  const directory = await mkdtemp(join(tmpdir(), "eidova-store-"));
   try { await run(new LocalFileStore(directory), directory); }
   finally {
     assert.equal(dirname(directory), resolve(tmpdir()));
@@ -244,5 +244,23 @@ test("hosted configuration never falls back to ephemeral local function disk", a
   } finally {
     if (originalVercel === undefined) delete process.env.VERCEL; else process.env.VERCEL = originalVercel;
     if (originalToken === undefined) delete process.env.BLOB_READ_WRITE_TOKEN; else process.env.BLOB_READ_WRITE_TOKEN = originalToken;
+  }
+});
+
+test("Eidova state settings override legacy aliases without moving existing data", () => {
+  const keys = ["VERCEL", "EIDOVA_STATE_DIR", "OPEN_DESIGN_STATE_DIR"] as const;
+  const previous = keys.map(key => process.env[key]);
+  try {
+    delete process.env.VERCEL;
+    delete process.env.EIDOVA_STATE_DIR;
+    delete process.env.OPEN_DESIGN_STATE_DIR;
+    assert.equal((createStore() as LocalFileStore).directory, resolve(".open-design/state"));
+    process.env.OPEN_DESIGN_STATE_DIR = "legacy-state";
+    assert.equal((createStore() as LocalFileStore).directory, resolve("legacy-state"));
+    process.env.EIDOVA_STATE_DIR = "eidova-state";
+    assert.equal((createStore() as LocalFileStore).directory, resolve("eidova-state"));
+    assert.equal((createStore({localDirectory:"explicit-state"}) as LocalFileStore).directory, resolve("explicit-state"));
+  } finally {
+    keys.forEach((key,index) => { if (previous[index] === undefined) delete process.env[key]; else process.env[key] = previous[index]; });
   }
 });

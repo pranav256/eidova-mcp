@@ -19,7 +19,7 @@ test("every advertised guidance domain has original usable content", async () =>
     for (const item of index) {
       const entry = await getPrincipleByTopic(item.topic, area);
       assert.equal(entry?.id, item.id);
-      assert.ok(entry!.content.includes("Source: Open Design original guidance (MIT)."));
+      assert.ok(entry!.content.includes("Source: Eidova original guidance (MIT)."));
       assert.ok(entry!.content.includes("Verify:"));
       assert.ok(entry!.content.length > 400, `${entry!.id} lacks substantive content`);
     }

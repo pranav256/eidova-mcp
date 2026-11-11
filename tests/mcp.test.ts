@@ -10,7 +10,7 @@ import { LocalFileStore } from '../src/store.js';
 import { Projects } from '../src/projects.js';
 
 test('MCP advertises working tools and refuses server filesystem reads',async()=> {
-  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-mcp-'));
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-mcp-'));
   const store=new LocalFileStore(directory);
   const server=createServer(store);
   const client=new Client({name:'test-client',version:'0.1.0'});
@@ -46,13 +46,13 @@ test('MCP advertises working tools and refuses server filesystem reads',async()=
     assert.equal((brief.structuredContent as {walks:unknown[]}).walks.length,5);
   } finally {
     await client.close();await server.close();
-    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-mcp-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'eidova-mcp-')));
     await rm(directory,{recursive:true,force:true});
   }
 });
 
 test('MCP project rule schemas retain approval, screen selection and owner isolation',async()=> {
-  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-project-rules-mcp-'));
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-project-rules-mcp-'));
   const store=new LocalFileStore(directory);
   const project=await new Projects(store,'alice').create({value:'Rules protocol test',designSystemId:'minimal-light'});
   async function connect(owner:string) {
@@ -74,13 +74,13 @@ test('MCP project rule schemas retain approval, screen selection and owner isola
     assert.equal(denied.isError,true);assert.doesNotMatch(JSON.stringify(denied),/Show saved billing changes/);
   } finally {
     await alice.client.close();await alice.server.close();await bob.client.close();await bob.server.close();
-    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-project-rules-mcp-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'eidova-project-rules-mcp-')));
     await rm(directory,{recursive:true,force:true});
   }
 });
 
 test('approved workspace rules report saved and are visible only to their owner',async()=> {
-  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-rules-'));
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-rules-'));
   const store=new LocalFileStore(directory);
   async function connected(owner: string) {
     const server=createServer(store,owner);
@@ -99,13 +99,13 @@ test('approved workspace rules report saved and are visible only to their owner'
     assert.doesNotMatch(JSON.stringify(await bob.client.callTool({name:'get-team-rules',arguments:{}})),/Release verification/);
   } finally {
     await alice.client.close();await alice.server.close();await bob.client.close();await bob.server.close();
-    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-rules-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'eidova-rules-')));
     await rm(directory,{recursive:true,force:true});
   }
 });
 
 test('project writes are owner-isolated, durable and reject CSS injection',async()=> {
-  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-project-'));
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-project-'));
   try {
     const store=new LocalFileStore(directory);
     const alice=new Projects(store,'alice');const bob=new Projects(store,'bob');
@@ -119,7 +119,7 @@ test('project writes are owner-isolated, durable and reject CSS injection',async
     const registry=await alice.item(fresh!,'all');assert.ok(registry.registryDependencies!.every(dep=>!dep.includes('better-design.com')));
     await assert.rejects(new Projects(store).create({value:'Anonymous theme'}),/workspace key/);
   } finally {
-    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-project-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'eidova-project-')));
     await rm(directory,{recursive:true,force:true});
   }
 });

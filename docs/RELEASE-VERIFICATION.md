@@ -22,7 +22,7 @@ The separate website repository maintains the final deployment results in its
 
 The original release results below are retained as the initial baseline.
 
-The independent Open Design service and website are deployed publicly:
+The independent Eidova service and website are deployed publicly:
 
 - MCP: https://open-design-mcp-liard.vercel.app/mcp
 - Website: https://open-design-website.vercel.app

@@ -27,12 +27,12 @@ class BoundedMemoryStore implements JsonStore {
 }
 
 async function fixture() {
-  const directory = await mkdtemp(path.join(os.tmpdir(), 'open-design-project-rules-'));
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'eidova-project-rules-'));
   const store = new LocalFileStore(directory);
   const projectId = randomUUID();
   await store.set(`projects/${projectId}`, { owner: 'alice' });
   return { directory, store, projectId, alice: new ProjectRulesStore(store, 'alice'), cleanup: async () => {
-    assert.ok(directory.startsWith(path.join(os.tmpdir(), 'open-design-project-rules-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(), 'eidova-project-rules-')));
     await rm(directory, { recursive: true, force: true });
   } };
 }

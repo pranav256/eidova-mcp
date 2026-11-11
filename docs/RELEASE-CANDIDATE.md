@@ -1,4 +1,4 @@
-# Open Design 0.2.0 local release candidate
+# Eidova 0.2.0 local release candidate
 
 Verified locally on 2026-11-10 in the independent MCP and website repositories. **Implementation is ready for release evaluation; npm/Registry publication and permanent renaming remain separate work.** The evidence below covers the local 0.2.0 candidate. Check CI, deployment status and hosted versions for the pushed commits separately; a Git push can trigger the existing deployment integrations.
 
@@ -7,7 +7,7 @@ Verified locally on 2026-11-10 in the independent MCP and website repositories. 
 - Eight curated families—Precision, Editorial, Marketplace, Tactile, Industrial, Glass, Neutral and Expressive—retain all 31 registry IDs and routes. Search favors different families and preserves explicit ID selection.
 - Actual Button, Input, Card, Dialog, Table and Sidebar specimens use matching workspace-settings/member content, isolated kit CSS and licensed fonts. **View components** opens a separate modal viewer of installed family source while the website keeps its own design. Variants keep exact token links and an explicitly labelled representative family specimen.
 - The installation guide sits beside the hero copy: six client formats, Essentials default, full tools in a collapsed disclosure and clipboard recovery. A header light/dark toggle controls the site's own Geist appearance. All 31 IDs open isolated viewers, preserving setup, scroll, focus and URL/history. Eight source-verified native gallery images, larger typography and numbered workflow rows remain. The eight lazy-loaded PNGs total 260,311 bytes (about 254 KiB); this is an asset measurement, not a speed score.
-- Full retains 40 public tools and 41 owner tools. The optional `/mcp/core` endpoint and stdio `--profile core` expose 11 typed read-only tools. Ordinary calls work without resource-rich clients or deferred discovery.
+- Full retains 42 public tools and 43 owner tools. The optional `/mcp/core` endpoint and stdio `--profile core` expose 13 typed read-only tools. Ordinary calls work without resource-rich clients or deferred discovery.
 - Short descriptions, compact structured/text results, whole-entry guidance, versioned workflow/principle/review resources and three prompts reduce discovery and workflow bytes. Explicit component retrieval still returns requested source.
 - CLI help/version and offline `doctor`, a published-file allowlist, tarball installation smoke, official Registry schema validation, six client setup tabs, first tasks and useful recovery paths prepare distribution.
 - DTCG 2025.10 exports validate a documented typed subset and retain unsupported originals. Bounded, DNS-pinned extraction preserves SSRF defenses and correct redirected stylesheet bases.
@@ -53,15 +53,15 @@ Raw screenshots, DOM states and tool responses remain in ignored `.work` directo
 
 | Compact JSON UTF-8 bytes | Baseline | Candidate |
 | --- | ---: | ---: |
-| Public full discovery | 125,752 | 51,503 |
-| Owner full discovery | 127,977 | 52,511 |
-| Core discovery | — | 19,237 |
+| Public full discovery | 125,752 | 53,393 |
+| Owner full discovery | 127,977 | 54,401 |
+| Core discovery | — | 21,127 |
 | Initialize instructions | 1,961 | 305 |
-| Default theme search | 34,333 | 6,983 |
-| Full choose/install workflow | 180,145 | 80,408 |
-| Core choose/install workflow | — | 48,142 |
+| Default theme search | 34,333 | 5,183 |
+| Full choose/install workflow | 180,145 | 81,134 |
+| Core choose/install workflow | — | 48,868 |
 
-All six fixed full workflows meet **at least 50% byte reduction**, including complete discovery, requests/responses and both protocol representations. Five public workflows also pass through core using ordinary tools. Final 20-sample warm p95: **catalog 0.75ms**, **guidance 0.13ms**, both within the local 200ms gate. [Benchmark report and method](BENCHMARK.md) link the original/candidate measurements.
+All six fixed full workflows meet **at least 50% byte reduction**, including complete discovery, requests/responses and both protocol representations. Five public workflows also pass through core using ordinary tools. Final 20-sample warm p95: **catalog 0.77ms**, **guidance 0.21ms**, both within the local 200ms gate. [Benchmark report and method](BENCHMARK.md) link the original/candidate measurements.
 
 These are protocol bytes and local SDK timings. Actual model tokens, host context injection/caching and named-client traces were not measured. HTTP caching is a separate network/CPU optimization.
 
@@ -89,7 +89,7 @@ Release work remains explicit:
 - Observe actual Codex, Claude Code/Desktop, Cursor and VS Code walkthroughs; record host versions, five-minute first-task results, recovery and context traces. Configuration formats were checked against official docs; SDK/browser checks do not substitute for these walks.
 - Execute Docker/Vercel staging checks. Configure deployment-wide rate/abuse controls: the 16-request process cap is not global rate enforcement.
 - Verify package/Registry namespace ownership, activate and check the candidate hosted core route, and coordinate API then website promotion. Publish only a tested tarball/metadata under release authorization.
-- Select and collision-check a replacement name before migration. **Open Design remains the working name**; Formwright, Formward and Patternwell are uncleared suggestions in the plan.
+- **Eidova is the selected name** and the local source/package/CLI rename is applied. Verify name ownership and complete the coordinated hosted rename; domains and remote repositories remain unchanged.
 
 No destructive state/key migration was added. Preserve both repositories' previous deployment IDs and the same durable store; [rollback](DEPLOYMENT.md#rollback) restores coordinated deployments and moves core clients back to full if necessary. The adapter still relies on pinned SDK registration internals, tested here; upgrades require those checks. Bearer keys still lack recovery, rotation and revocation.
 

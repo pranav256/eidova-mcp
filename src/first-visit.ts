@@ -94,7 +94,7 @@ function rank(walks: Walk[]): Ranked[] {
 
 function receipt(input: unknown, verdict: Verdict, complete: boolean) {
   return {
-    issuer: 'open-design-mcp', kind: 'supplied-first-visit-evidence', algorithm: 'first-visit-v1',
+    issuer: 'eidova-mcp', kind: 'supplied-first-visit-evidence', algorithm: 'first-visit-v1',
     inputSha256: sha256(JSON.stringify(input)), verdict, complete,
     evidenceSource: 'Caller-supplied walk reports; their execution was not independently verified.',
     browserOpened: false, serviceTested: false, realVisitorResearch: false,

@@ -16,7 +16,7 @@ const representative = ['linear', 'editorial-dark', 'tactile-minimal'];
 const familyFor = id => families.find(family => family.representative === id || family.variants.includes(id));
 const save = (name, value) => writeFile(path.join(dir, name + '.json'), JSON.stringify(value, null, 2));
 await mkdir(dir, { recursive: true });
-const client = new Client({ name: 'open-design-theme-viewer-review', version: '0.2.0' });
+const client = new Client({ name: 'eidova-theme-viewer-review', version: '0.2.0' });
 await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({ command: process.execPath, args: [path.resolve('scripts/start-private.mjs'), path.resolve(process.env.MCP_PRIVATE_ARCHIVE)] })
   : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'https://open-design-mcp-liard.vercel.app/mcp')));

@@ -2,6 +2,7 @@ import { createReadStream } from "node:fs";
 import { mkdir, open, rename, unlink } from "node:fs/promises";
 import { createHash, randomUUID } from "node:crypto";
 import { dirname, resolve } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import {
   BlobError,
   BlobNotFoundError,
@@ -102,6 +103,7 @@ async function queued<T>(identity: string, operation: () => Promise<T>): Promise
 export class LocalFileStore implements JsonStore {
   readonly directory: string;
 
+  // Keep the existing state location so a brand rename cannot hide saved workspaces.
   constructor(directory = ".open-design/state") {
     this.directory = resolve(directory);
   }
@@ -140,7 +142,18 @@ export class LocalFileStore implements JsonStore {
       } finally {
         await handle.close();
       }
-      await rename(temporary, path);
+      // Windows readers and scanners can briefly lock the destination; keep replacement atomic.
+      for (let attempt = 0; ; attempt++) {
+        try {
+          await rename(temporary, path);
+          break;
+        } catch (error) {
+          if (process.platform !== "win32" || attempt === 7 ||
+            typeof error !== "object" || error === null || !("code" in error) ||
+            !["EPERM", "EBUSY"].includes(String(error.code))) throw error;
+          await delay(10 * 2 ** attempt);
+        }
+      }
     } finally {
       await unlink(temporary).catch((error: unknown) => {
         if (!isMissing(error)) throw error;
@@ -219,6 +232,7 @@ export class VercelBlobStore implements JsonStore {
     }
     this.token = token;
     this.transport = options.transport ?? { get: getBlob, put: putBlob };
+    // Existing private Blob documents use this prefix; changing it would strand saved workspaces.
     this.prefix = options.prefix ?? "open-design/state";
     validateKey(this.prefix);
     this.queueIdentity = createHash("sha256").update(token).digest("hex");
@@ -310,5 +324,5 @@ export class VercelBlobStore implements JsonStore {
 export function createStore(options: { localDirectory?: string; blobToken?: string } = {}): JsonStore {
   return process.env.VERCEL
     ? new VercelBlobStore({ token: options.blobToken })
-    : new LocalFileStore(options.localDirectory ?? process.env.OPEN_DESIGN_STATE_DIR ?? ".open-design/state");
+    : new LocalFileStore(options.localDirectory ?? (process.env.EIDOVA_STATE_DIR ?? process.env.OPEN_DESIGN_STATE_DIR) ?? ".open-design/state");
 }

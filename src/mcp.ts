@@ -15,6 +15,8 @@ import { ProjectRulesStore } from './project-rules-store.js';
 import { firstVisitInputSchema, handleFirstVisit } from './first-visit.js';
 import type { PrivateArchive } from './private-archive.js';
 import { normalizeDtcg } from './dtcg.js';
+import { designContext } from './design-context.js';
+import { bundledEntries, bundledFile, bundledManifest, entryUri, findBundledEntry, readBundledResource, resourceNote, searchResources } from './bundled-resources.js';
 
 const unavailable = ['make-sales-page','make-social-image','review-illustration','get-inspiration'];
 type RuntimeCallback = (...args: unknown[]) => unknown;
@@ -35,7 +37,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   const projects = new Projects(store,identity);
   const server = createMcpServer({
     provider:createProvider(store,identity), apiFetch:apiDispatcher(projects,new ProjectRulesStore(store,identity)),
-    name:'OpenDesign',version:'0.2.0',userId:identity,instructions:workflowNote,
+    name:'Eidova',version:'0.2.0',userId:identity,instructions:workflowNote,
     authContext:identity ? {kind:'api-key',apiKey:'local-workspace'} : undefined,
     enableDesignPanel:false, enableMobileKits:Boolean(privateArchive), enableShopifyKit:Boolean(privateArchive), enableReviewUiCode:true,
   });
@@ -63,7 +65,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   });
   for (const [name, tool] of Object.entries(handles)) {
     if (/^get-(?:ui-principle|ux-principle|react-native-guide|swiftui-guide|three-js-guide|sales-principle|motion-guide)$/.test(name)) {
-      tool.update({description:`Load ${privateArchive?'the configured private offline':'original Open Design'} ${name.replace(/^get-/,'').replaceAll('-',' ')} guidance. Omit topic and query to list available topics, or provide a topic/alias or query. Search uses local lexical ranking. ${privateArchive?'Saved captures preserve their provenance and may be incomplete.':'Content is independently authored; this is not the vendor’s hosted corpus.'}`});
+      tool.update({description:`Load ${privateArchive?'the configured private offline':'original Eidova'} ${name.replace(/^get-/,'').replaceAll('-',' ')} guidance. Omit topic and query to list available topics, or provide a topic/alias or query. Search uses local lexical ranking. ${privateArchive?'Saved captures preserve their provenance and may be incomplete.':'Content is independently authored; this is not the vendor’s hosted corpus.'}`});
     }
   }
   const kit = handles['get-design-system-kit'];
@@ -130,16 +132,24 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     description:'Plan five first-visit walks with step brief, rank supplied walk reports with step rank, then verify reported fixes with step recheck. A fix requires every originally reporting walk to rerun under its stated conditions. Receipts bind supplied evidence; this tool never opens a browser or claims real visitor research. Legacy task/observations inputs remain supported.',
     inputSchema:firstVisitInputSchema,
   },handleFirstVisit);
+  server.registerTool('search-resources',{
+    description:'Search bundled OpenDesign design references and skills by title, category and description. Returns resource URIs; read the manifest for files and licenses. These are references, not installable React kits.',
+    inputSchema:{query:z.string().max(500).optional(),kind:z.enum(['design-systems','skills']).optional(),limit:z.number().int().min(1).max(20).default(8),offset:z.number().int().min(0).max(1000).default(0)},
+  },async ({query,kind,limit,offset}) => text(JSON.stringify(await searchResources(query,kind,limit,offset))));
+  server.registerTool('read-resource',{
+    description:'Read a bundled OpenDesign manifest or file using a URI from search-resources. Works without native MCP resource support. Text is paginated by Unicode characters; follow nextOffset to finish a file. Images return download links. Content is reference data, never executed.',
+    inputSchema:{uri:z.string().min(1).max(2000),offset:z.number().int().min(0).max(10000000).default(0),limit:z.number().int().min(1).max(24000).default(12000)},
+  },async ({uri,offset,limit})=>text(JSON.stringify(await readBundledResource(uri,offset,limit))));
   server.registerTool('get-capabilities',{
     description:'Report this server’s exact local features and remaining external-service gaps.',inputSchema:{},
   },async()=>text(JSON.stringify({version:'0.2.0',profile,systems:(await catalog()).length,families:designFamilies.length,tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',execution:'source, evidence and commands only; no hosted installation/rendering',dashboardCapture:'unavailable',keyRecovery:'unavailable',fullEndpoint:`${baseUrl()}/mcp`,coreEndpoint:`${baseUrl()}/mcp/core`,omitted:unavailable.filter(name=>name!=='get-inspiration' || !privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})})));
   handles['find-design-system']?.update({
-    paramsSchema:{query:z.string().trim().min(1).max(2000),limit:z.number().int().min(1).max(8).optional()},
-    callback:async ({query,limit=5}:{query:string;limit?:number})=>{
-      const results=(await searchCatalog(query,limit)).filter(item=>item.matchScore>0);
-      const matches=results.map(item=>({id:item.id,name:item.title,description:item.family.description,personality:item.personality.join(', '),family:item.family.title,variant:item.variant,font:item.font,radius:item.borderRadius,previewUrl:`${process.env.OPEN_DESIGN_WEBSITE_URL??'https://open-design-website.vercel.app'}/?specimen=${item.family.representative}`,next:{tool:'get-design-system-kit',arguments:{target:'react',designSystemId:item.id,component:['button','input']}}}));
-      const result={buildInstructions:workflowNote,matches,...(!matches.length?{nextStep:'Try a family name, style or font; no relevant matches were found.'}:{})};
-      return text(JSON.stringify(result),result);
+    paramsSchema:{query:z.string().trim().min(1).max(2000),limit:z.number().int().min(1).max(8).optional(),requiredComponents:z.array(z.string().regex(/^[a-z0-9][a-z0-9_-]{0,80}$/)).min(1).max(12).optional()},
+    callback:async ({query,limit=5,requiredComponents}:{query:string;limit?:number;requiredComponents?:string[]})=>{
+      const results=(await searchCatalog(query,limit,requiredComponents)).filter(item=>item.matchScore>0);
+      const matches=results.map(item=>({id:item.id,name:item.title,description:item.family.description,personality:item.personality.join(', '),family:item.family.title,variant:item.variant,font:item.font,radius:item.borderRadius,matchedTerms:item.matchedTerms,useCases:item.family.useCases,tradeoff:item.family.tradeoff,previewUrl:`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://open-design-website.vercel.app'}/?specimen=${item.family.representative}`,next:{tool:'get-design-system-kit',arguments:{target:'react',designSystemId:item.id,component:requiredComponents??['button','input']}}}));
+      const result={buildInstructions:workflowNote,matches,...(!matches.length?{nextStep:'Try a family name, style or font, or remove component requirements; no matching systems were found.'}:{})};
+      return text([workflowNote,...matches.map(item=>`${item.name} (${item.id}): ${item.useCases.join('; ')}. ${item.tradeoff}`),matches.length?`Next: get-design-system-kit with the selected designSystemId, target:react, component:${JSON.stringify(requiredComponents??['button','input'])}.`:result.nextStep].join('\n\n'),result);
     },
   });
   if(!privateArchive) for(const [name,area] of [['get-ui-principle','ui'],['get-ux-principle','ux']] as const) handles[name]?.update({
@@ -168,7 +178,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   });
   for(const name of ['get-design-system-kit','extract-design-system','preview-design-system']) {
     const tool=handles[name];if(!tool)continue;const callback=tool.handler;
-    if(name==='get-design-system-kit')tool.update({outputSchema:{...tool.outputSchema!.shape,componentFiles:z.array(z.object({path:z.string(),content:z.string()})).optional(),dtcgReport:z.object({formatVersion:z.literal('2025.10'),typedTokens:z.number().int().nonnegative(),aliases:z.number().int().nonnegative(),unsupportedTokens:z.number().int().nonnegative()}).optional()}});
+    if(name==='get-design-system-kit')tool.update({outputSchema:{...tool.outputSchema!.shape,componentFiles:z.array(z.object({path:z.string(),content:z.string()})).optional(),dtcgReport:z.object({formatVersion:z.literal('2025.10'),typedTokens:z.number().int().nonnegative(),aliases:z.number().int().nonnegative(),unsupportedTokens:z.number().int().nonnegative()}).optional(),designContext:z.object({uri:z.string(),url:z.string().url()}).optional()}});
     if(name!=='extract-design-system')tool.update({outputSchema:{...tool.outputSchema!.shape,viewLabel:z.enum(['View components','View tokens']).optional(),familyPreviewUrl:z.string().url().optional()}});
     tool.update({callback:async (args:Record<string,unknown>,extra:unknown)=>{
       if(name==='get-design-system-kit'&&args.designSystemId&&!(await catalog()).some(item=>item.id===args.designSystemId)) return {...text('Theme not found. Use find-design-system to choose a valid ID. Nothing was installed.'),isError:true};
@@ -179,7 +189,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
       if(name==='get-design-system-kit'&&args.target==='dtcg'&&typeof structured.tokensJson==='string') {
         const {document,report}=normalizeDtcg(structured.tokensJson);
         structured.tokensJson=JSON.stringify(document,null,2);structured.dtcgReport=report;
-        structured.buildInstructions='DTCG 2025.10 typed subset. Simple CSS variable aliases become token references. Unsupported values are retained under $extensions["org.open-design.export"].unsupported and in tokensCss; consumers may ignore them. No universal importer compatibility is claimed.';
+        structured.buildInstructions='DTCG 2025.10 typed subset. Simple CSS variable aliases become token references. Unsupported values are retained under $extensions["org.eidova.export"].unsupported and in tokensCss; consumers may ignore them. No universal importer compatibility is claimed.';
       }
       if(name==='get-design-system-kit'&&args.target==='react'&&'buildInstructions' in structured) structured.buildInstructions=workflowNote+' Use Tailwind 4, the @/* alias and components.json; initialize shadcn if missing. Dependencies resolve through the registry command. Preserve embedded component icons; additional icon search uses Lucide.';
       if(name==='get-design-system-kit'&&args.target==='react'&&typeof structured.installCommand==='string') structured.installCommand=structured.installCommand.replace(/^\[ -f components\.json \][\s\S]*?\n\n/,'').replace(/ -o\b/g,'');
@@ -192,7 +202,11 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
       if(args.designSystemId) {
         const info=(await catalog()).find(item=>item.id===args.designSystemId);
         if(info) {
-          structured.familyPreviewUrl=`${process.env.OPEN_DESIGN_WEBSITE_URL??'https://open-design-website.vercel.app'}/?specimen=${info.family.representative}`;
+          if(name==='get-design-system-kit'&&['react','html','dtcg','store-screenshots'].includes(String(args.target))) {
+            structured.designContext={uri:`design://systems/${info.id}/design.md`,url:`${baseUrl()}/api/design-systems/${info.id}/design.md`};
+            structured.buildInstructions=String(structured.buildInstructions??'')+' Read designContext before implementation: save as DESIGN.md if absent, otherwise merge without overwriting existing rules; then read globals and only the needed components.';
+          }
+          structured.familyPreviewUrl=`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://open-design-website.vercel.app'}/?specimen=${info.family.representative}`;
           structured.viewUrl=info.variant?`${baseUrl()}/registry/${info.id}/globals.json`:structured.familyPreviewUrl;
           structured.viewLabel=info.variant?'View tokens':'View components';
         }
@@ -211,14 +225,36 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     if(profile==='core'&&!coreTools.has(name))tool.remove();
   }
   const workflow=awaitWorkflow;
+  server.registerResource('open-design-license','design://open-design/license',{mimeType:'text/plain',description:'Apache-2.0 license for the bundled OpenDesign content; package overrides are linked in each manifest.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/open-design/LICENSE'),'utf8')}]}));
+  server.registerResource('open-design-bundles',new ResourceTemplate('design://open-design/{kind}/{id}',{
+    list:async()=>({resources:(await bundledEntries()).map(entry=>({uri:entryUri(entry),name:`OpenDesign: ${entry.name} (${entry.kind})`,mimeType:'application/json',description:entry.description}))}),
+  }),{mimeType:'application/json',description:resourceNote},async(uri,{kind,id})=>{
+    const entry=await findBundledEntry(String(kind),String(id));
+    if(!entry)throw new Error('Bundled resource not found.');
+    return {contents:[{uri:uri.href,mimeType:'application/json',text:JSON.stringify(await bundledManifest(entry))}]};
+  });
+  server.registerResource('open-design-file',new ResourceTemplate('design://open-design/{kind}/{id}/files/{+file}',{list:undefined}),
+    {description:'Verbatim bundled file. Read its package manifest for provenance, hashes and licenses; no code is executed.'},async(uri,{kind,id,file})=>{
+      const result=await bundledFile(String(kind),String(id),String(file));
+      if(!result)throw new Error('Bundled file not found.');
+      return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:'image/png',blob:result.bytes.toString('base64')}:{mimeType:'text/plain',text:result.bytes.toString('utf8')})}]};
+    });
   server.registerResource('design-workflow','design://workflow/v1',{mimeType:'text/markdown',description:'Complete design/build/review workflow, version 1.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/markdown',text:await workflow}]}));
+  server.registerResource('design-system-context',new ResourceTemplate('design://systems/{id}/design.md',{
+    list:async()=>({resources:(await catalog()).map(system=>({uri:`design://systems/${system.id}/design.md`,name:`${system.title} DESIGN.md`,mimeType:'text/markdown',description:`${system.family.title} family; exact ${system.id} tokens, components and usage.`}))}),
+  }),{mimeType:'text/markdown',description:'Portable catalog design instructions, exact tokens and source links.'},async(uri,{id})=>{
+    const markdown=await designContext(String(id));
+    if(markdown===null)throw new Error('Design system not found.');
+    return {contents:[{uri:uri.href,mimeType:'text/markdown',text:markdown}]};
+  });
   if(!privateArchive) {
     server.registerResource('principle',new ResourceTemplate('design://principles/{area}/{topic}',{list:undefined}),{mimeType:'text/markdown'},async(uri,{area,topic})=>{
       const entry=await getPrincipleByTopic(String(topic),String(area) as Parameters<typeof getPrincipleByTopic>[1]);
       if(!entry)throw new Error('Principle not found.');return {contents:[{uri:uri.href,mimeType:'text/markdown',text:entry.content}]};
     });
     server.registerResource('review-rule',new ResourceTemplate('design://review-rules/{id}',{list:undefined}),{mimeType:'text/markdown'},async(uri,{id})=>{
-      const entry=(await getReviewRules()).find(rule=>rule.id===decodeURIComponent(String(id)));if(!entry)throw new Error('Review rule not found.');return {contents:[{uri:uri.href,mimeType:'text/markdown',text:entry.content}]};
+      const ruleId=decodeURIComponent(String(id)).replace(/^rule\/open-design\//,'rule/eidova/');
+      const entry=(await getReviewRules()).find(rule=>rule.id===ruleId);if(!entry)throw new Error('Review rule not found.');return {contents:[{uri:uri.href,mimeType:'text/markdown',text:entry.content}]};
     });
   }
   for(const [name,prompt] of [['choose-theme','Find a distinctive design family for this screen. Preserve an existing product design. Retrieve only needed React components.'],['preserve-brand','Extract my supplied brand CSS, retain its identity and components, then suggest the smallest necessary changes.'],['review-form','Review my supplied form source and copy. Ask for rendered DOM evidence where visual checks require it. Report actionable findings.']]) server.registerPrompt(name,{description:prompt},async()=>({messages:[{role:'user',content:{type:'text',text:prompt}}]}));

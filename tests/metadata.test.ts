@@ -9,6 +9,7 @@ test('prepared registry metadata validates against the retrieved official schema
   const validate=new AjvJsonSchemaValidator().getValidator(schema);
   const result=validate(server);assert.equal(result.valid,true,JSON.stringify(result));
   assert.equal(server.name,npm.mcpName);assert.equal(server.version,npm.version);assert.equal(server.packages[0].version,npm.version);assert.equal(server.packages[0].identifier,npm.name);
+  assert.equal(npm.name,'eidova-mcp');assert.equal(npm.mcpName,'io.github.pranav256/eidova');assert.equal(server.title,'Eidova MCP');assert.deepEqual(npm.bin,{'eidova-mcp':'dist/stdio.js'});
   assert.equal(validate({...server,name:'invalid namespace'}).valid,false);
   assert.equal(server.$schema,schema.$id);
 });

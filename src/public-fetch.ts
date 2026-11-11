@@ -22,5 +22,5 @@ export async function publicFetch(input: string | URL | Request): Promise<Respon
   return jsonResponse({message:'Public asset route not found'},404);
 }
 
-declare global { var __OPEN_DESIGN_PUBLIC_FETCH__: typeof publicFetch }
-globalThis.__OPEN_DESIGN_PUBLIC_FETCH__ = publicFetch;
+declare global { var __EIDOVA_PUBLIC_FETCH__: typeof publicFetch }
+globalThis.__EIDOVA_PUBLIC_FETCH__ = publicFetch;

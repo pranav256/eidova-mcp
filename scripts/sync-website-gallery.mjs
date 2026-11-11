@@ -4,7 +4,7 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {chromium} from 'playwright';
 
-const website=path.resolve(process.env.WEBSITE_SOURCE_DIR||'../open-design-website');
+const website=path.resolve(process.env.WEBSITE_SOURCE_DIR||'../eidova-website');
 const origin=new URL(process.env.WEBSITE_REVIEW_URL||'http://127.0.0.1:5174');
 assert.ok(['localhost','127.0.0.1','::1','[::1]'].includes(origin.hostname),'Capture the local candidate only.');
 const source=await readFile(path.join(website,'src/previews/manifest.json'),'utf8');

@@ -11,21 +11,21 @@
         {
           "tool": "find-design-system",
           "requestBytes": 76,
-          "responseBytes": 6983,
+          "responseBytes": 5183,
           "isError": false,
           "expectedError": false,
-          "ms": 9.78
+          "ms": 22.51
         },
         {
           "tool": "get-design-system-kit",
           "requestBytes": 145,
-          "responseBytes": 21396,
+          "responseBytes": 22032,
           "isError": false,
           "expectedError": false,
-          "ms": 27.57
+          "ms": 34.18
         }
       ],
-      "totalBytes": 80408
+      "totalBytes": 81134
     },
     {
       "task": "preserve-brand",
@@ -36,10 +36,10 @@
           "responseBytes": 10549,
           "isError": false,
           "expectedError": false,
-          "ms": 3.66
+          "ms": 2.28
         }
       ],
-      "totalBytes": 62535
+      "totalBytes": 64425
     },
     {
       "task": "review-form",
@@ -47,10 +47,10 @@
         {
           "tool": "get-ux-principle",
           "requestBytes": 57,
-          "responseBytes": 721,
+          "responseBytes": 716,
           "isError": false,
           "expectedError": false,
-          "ms": 0.75
+          "ms": 0.62
         },
         {
           "tool": "review-ui-code",
@@ -58,7 +58,7 @@
           "responseBytes": 842,
           "isError": false,
           "expectedError": false,
-          "ms": 11.12
+          "ms": 17.83
         },
         {
           "tool": "check-comprehension",
@@ -66,10 +66,10 @@
           "responseBytes": 1223,
           "isError": false,
           "expectedError": false,
-          "ms": 3.07
+          "ms": 2.74
         }
       ],
-      "totalBytes": 54976
+      "totalBytes": 56861
     },
     {
       "task": "spacing",
@@ -77,13 +77,13 @@
         {
           "tool": "inspect-spacing",
           "requestBytes": 235,
-          "responseBytes": 1345,
+          "responseBytes": 1320,
           "isError": false,
           "expectedError": false,
-          "ms": 3.98
+          "ms": 3.81
         }
       ],
-      "totalBytes": 53388
+      "totalBytes": 55253
     },
     {
       "task": "recover-invalid-input",
@@ -102,10 +102,10 @@
           "responseBytes": 138,
           "isError": true,
           "expectedError": true,
-          "ms": 0.42
+          "ms": 0.47
         }
       ],
-      "totalBytes": 52320
+      "totalBytes": 54210
     },
     {
       "task": "owner-rules",
@@ -116,7 +116,7 @@
           "responseBytes": 340,
           "isError": false,
           "expectedError": false,
-          "ms": 6.44
+          "ms": 16.68
         },
         {
           "tool": "get-team-rules",
@@ -124,10 +124,10 @@
           "responseBytes": 383,
           "isError": false,
           "expectedError": false,
-          "ms": 2.63
+          "ms": 9.41
         }
       ],
-      "totalBytes": 53673
+      "totalBytes": 55563
     }
   ],
   "coreTasks": [
@@ -137,21 +137,21 @@
         {
           "tool": "find-design-system",
           "requestBytes": 76,
-          "responseBytes": 6983,
+          "responseBytes": 5183,
           "isError": false,
           "expectedError": false,
-          "ms": 0.72
+          "ms": 2.63
         },
         {
           "tool": "get-design-system-kit",
           "requestBytes": 145,
-          "responseBytes": 21396,
+          "responseBytes": 22032,
           "isError": false,
           "expectedError": false,
-          "ms": 9.67
+          "ms": 44.85
         }
       ],
-      "totalBytes": 48142
+      "totalBytes": 48868
     },
     {
       "task": "preserve-brand",
@@ -162,10 +162,10 @@
           "responseBytes": 10549,
           "isError": false,
           "expectedError": false,
-          "ms": 0.58
+          "ms": 1.46
         }
       ],
-      "totalBytes": 30269
+      "totalBytes": 32159
     },
     {
       "task": "review-form",
@@ -173,10 +173,10 @@
         {
           "tool": "get-ux-principle",
           "requestBytes": 57,
-          "responseBytes": 721,
+          "responseBytes": 716,
           "isError": false,
           "expectedError": false,
-          "ms": 0.17
+          "ms": 0.67
         },
         {
           "tool": "review-ui-code",
@@ -184,7 +184,7 @@
           "responseBytes": 842,
           "isError": false,
           "expectedError": false,
-          "ms": 1.76
+          "ms": 10.04
         },
         {
           "tool": "check-comprehension",
@@ -192,10 +192,10 @@
           "responseBytes": 1223,
           "isError": false,
           "expectedError": false,
-          "ms": 1.02
+          "ms": 5.47
         }
       ],
-      "totalBytes": 22710
+      "totalBytes": 24595
     },
     {
       "task": "spacing",
@@ -203,13 +203,13 @@
         {
           "tool": "inspect-spacing",
           "requestBytes": 235,
-          "responseBytes": 1345,
+          "responseBytes": 1320,
           "isError": false,
           "expectedError": false,
-          "ms": 1.83
+          "ms": 7.55
         }
       ],
-      "totalBytes": 21122
+      "totalBytes": 22987
     },
     {
       "task": "recover-invalid-input",
@@ -220,7 +220,7 @@
           "responseBytes": 209,
           "isError": true,
           "expectedError": true,
-          "ms": 0.28
+          "ms": 0.97
         },
         {
           "tool": "get-design-system-kit",
@@ -228,30 +228,30 @@
           "responseBytes": 138,
           "isError": true,
           "expectedError": true,
-          "ms": 0.47
+          "ms": 2.05
         }
       ],
-      "totalBytes": 20054
+      "totalBytes": 21944
     }
   ],
   "public": {
-    "tools": 40,
-    "manifestBytes": 51503,
+    "tools": 42,
+    "manifestBytes": 53393,
     "instructionsBytes": 305,
-    "connectMs": 61.72
+    "connectMs": 98.23
   },
-  "warmGuidanceP95Ms": 0.13,
-  "warmCatalogP95Ms": 0.75,
+  "warmGuidanceP95Ms": 0.21,
+  "warmCatalogP95Ms": 0.77,
   "owner": {
-    "tools": 41,
-    "manifestBytes": 52511,
+    "tools": 43,
+    "manifestBytes": 54401,
     "instructionsBytes": 305,
-    "connectMs": 30.37
+    "connectMs": 140.32
   },
   "core": {
-    "tools": 11,
-    "manifestBytes": 19237,
+    "tools": 13,
+    "manifestBytes": 21127,
     "instructionsBytes": 305,
-    "connectMs": 14.9
+    "connectMs": 68.15
   }
 }

@@ -41,7 +41,7 @@ jobs:
       - name: Install and review clean Vite and Next consumers
         shell: bash
         run: |
-          node dist/main.js > /tmp/open-design-consumer-service.log 2>&1 &
+          node dist/main.js > /tmp/eidova-consumer-service.log 2>&1 &
           mcp_service_pid=$!
           trap 'kill "$mcp_service_pid"' EXIT
           for attempt in {1..40}; do

@@ -41,6 +41,23 @@ test('eight distinct families retain all variants and exact ID selection',async(
   const result=await searchCatalog('professional',5);assert.equal(new Set(result.map(system=>system.family.id)).size,result.length);
 });
 
+test('brief matching ignores filler and explains actual use-case matches',async()=>{
+  const result=await searchCatalog('Please build me a dashboard',5);
+  assert.equal(result[0].family.id,'precision');
+  assert.deepEqual(result[0].matchedTerms,['dashboard']);
+  assert.ok(result[0].family.tradeoff);
+  assert.ok((await searchCatalog('a the please',5)).every(item=>item.matchScore===0));
+  assert.ok((await searchCatalog('linear nonexistentword',5)).every(item=>!item.matchedTerms.includes('nonexistentword')));
+  assert.ok((await searchCatalog('ear',5)).every(item=>item.matchScore===0),'partial words must not match clear or linear');
+});
+
+test('required components constrain every result without silently falling back',async()=>{
+  const matching=await searchCatalog('forms',8,['button','input','dialog']);
+  assert.ok(matching.length>0);
+  assert.ok(matching.every(item=>['button','input','dialog'].every(name=>item.components.includes(name))));
+  assert.deepEqual(await searchCatalog('linear',5,['not-a-component']),[]);
+});
+
 test('relative source helpers are included in registry dependency closure',async()=>{
   const button=await registryItem('tactile-minimal','button');assert.ok(button.registryDependencies!.some(dependency=>dependency.endsWith('/sound-provider.json')));
   const input=await registryItem('tactile-minimal','input');assert.ok(input.registryDependencies!.some(dependency=>dependency.endsWith('/_shared.json')));

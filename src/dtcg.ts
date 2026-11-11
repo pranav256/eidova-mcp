@@ -38,6 +38,6 @@ export function normalizeDtcg(input:string) {
   const unsupported:Record<string,Token>=Object.create(null);
   for(const[path,entry]of tokens)if(!resolve(path)){unsupported[path]=entry.original;delete entry.parent[entry.key];}
   delete document.$schema;
-  document.$extensions={...(document.$extensions as Record<string,unknown>??{}),'org.open-design.export':{formatVersion:'2025.10',unsupported}};
+  document.$extensions={...(document.$extensions as Record<string,unknown>??{}),'org.eidova.export':{formatVersion:'2025.10',unsupported}};
   return {document,report:{formatVersion:'2025.10',typedTokens:tokens.size-Object.keys(unsupported).length,aliases,unsupportedTokens:Object.keys(unsupported).length}};
 }

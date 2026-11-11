@@ -5,7 +5,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { designFamilies, registryItem, sourceItem } from '../src/catalog.js';
 
-const website=path.resolve(process.argv[2]??fileURLToPath(new URL('../../open-design-website',import.meta.url)));
+const website=path.resolve(process.argv[2]??fileURLToPath(new URL('../../eidova-website',import.meta.url)));
 const names=['button','input','card','dialog','table','sidebar'];
 const manifest=[];
 for(const family of designFamilies) {

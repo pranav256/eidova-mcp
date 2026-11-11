@@ -13,7 +13,7 @@ import { LocalFileStore } from '../src/store.js';
 const image={type:'image',mimeType:'image/png',data:Buffer.from('synthetic reference image').toString('base64')};
 const text=(value:string)=>({type:'text',text:value});
 async function temporary(run:(directory:string)=>Promise<void>) {
-  const directory=await mkdtemp(join(tmpdir(),'open-design-archive-'));
+  const directory=await mkdtemp(join(tmpdir(),'eidova-archive-'));
   try {await run(directory);} finally {
     assert.equal(dirname(resolve(directory)),resolve(tmpdir()));
     await rm(directory,{recursive:true,force:true});

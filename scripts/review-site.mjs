@@ -9,7 +9,7 @@ const endpoint = process.argv[2] ?? 'http://localhost:3000/mcp';
 const website = resolve(process.argv[3] ?? 'website');
 const output = resolve('.work/verification');
 await mkdir(output, { recursive: true });
-const client = new Client({ name: 'open-design-website-source-review', version: '0.1.0' });
+const client = new Client({ name: 'eidova-website-source-review', version: '0.1.0' });
 await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({command:process.execPath,args:[resolve('scripts/start-private.mjs'),resolve(process.env.MCP_PRIVATE_ARCHIVE)]})
   : new StreamableHTTPClientTransport(new URL(endpoint)));

@@ -10,6 +10,10 @@ import { createServer } from './mcp.js';
 import { Projects } from './projects.js';
 import { apiDispatcher } from './local-api.js';
 import { ProjectRulesStore } from './project-rules-store.js';
+import { designContext } from './design-context.js';
+import { readFile } from 'node:fs/promises';
+import { resourcePath } from './resources.js';
+import { bundledFile, bundledManifest, findBundledEntry, searchResources } from './bundled-resources.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -40,8 +44,38 @@ app.use((req,res,next)=> {
 });
 app.use(express.json({limit:'4mb',strict:true,verify:(_req,res,buffer)=>{(res as Response).locals.requestBytes=buffer.byteLength;}}));
 const store=createStore();
-app.get('/health',(_req,res)=>res.json({status:'ok',name:'Open Design MCP',version:'0.2.0'}));
+app.get('/health',(_req,res)=>res.json({status:'ok',name:'Eidova MCP',version:'0.2.0'}));
 app.get('/api/catalog',async (_req,res)=>{res.setHeader('Cache-Control','public,max-age=300');res.json(await catalog());});
+app.get('/api/resources',async (req,res)=>{
+  const {query='',kind,offset='0'}=req.query;
+  if(typeof query!=='string'||query.length>500||kind!==undefined&&!['design-systems','skills'].includes(String(kind))||typeof kind==='object'||typeof offset!=='string'||!/^\d{1,4}$/.test(offset)||Number(offset)>1000){res.status(400).json({error:'Use query text, kind design-systems or skills, and an offset from 0 to 1000.'});return;}
+  res.setHeader('Cache-Control','public,max-age=300');res.json(await searchResources(query,kind as string|undefined,20,Number(offset)));
+});
+app.get('/api/resources/:kind/:id',async (req,res)=>{
+  const entry=await findBundledEntry(req.params.kind,req.params.id);
+  if(!entry){res.status(404).json({error:'Bundled resource not found'});return;}
+  res.setHeader('Cache-Control','public,max-age=300');res.json(await bundledManifest(entry));
+});
+app.get('/api/resources/license',async (_req,res)=>{
+  res.setHeader('Cache-Control','public,max-age=300');
+  res.attachment('LICENSE');res.type('text/plain').send(await readFile(resourcePath('content/open-design/LICENSE')));
+});
+app.get('/api/resources/:kind/:id/file',async (req,res)=>{
+  if(typeof req.query.path!=='string'){res.status(400).json({error:'Supply the path listed in the resource manifest'});return;}
+  const file=await bundledFile(req.params.kind,req.params.id,req.query.path);
+  if(!file){res.status(404).json({error:'Bundled file not found'});return;}
+  res.setHeader('Cache-Control','public,max-age=300');
+  res.setHeader('Content-Security-Policy',"sandbox; default-src 'none'");
+  res.attachment(req.query.path.split('/').at(-1)!);
+  res.type('application/octet-stream').send(file.bytes);
+});
+app.get('/api/design-systems/:id/design.md',async (req,res)=> {
+  const markdown=await designContext(req.params.id);
+  if(markdown===null){res.status(404).json({error:'Design system not found'});return;}
+  res.setHeader('Cache-Control','public,max-age=300');
+  res.setHeader('Content-Disposition','attachment; filename="DESIGN.md"');
+  res.type('text/markdown').send(markdown);
+});
 app.post('/api/workspace-key',(_req,res)=> {
   res.setHeader('Cache-Control','no-store');
   res.json({key:randomBytes(32).toString('base64url'),note:'Keep this workspace capability key private. It is not recoverable by an email account.'});
@@ -79,7 +113,7 @@ app.all(/^\/api\/(?:projects|fragments|v1)\//,async (req,res)=> {
   const response=await apiDispatcher(new Projects(store,owner),new ProjectRulesStore(store,owner))(baseUrl()+req.originalUrl,{method:req.method,body:['GET','HEAD'].includes(req.method)?undefined:JSON.stringify(req.body)});
   res.status(response.status).type('application/json').send(await response.text());
 });
-app.get('/',(_req,res)=>res.json({name:'Open Design MCP',transport:'Streamable HTTP',endpoint:`${baseUrl()}/mcp`,website:'https://open-design-website.vercel.app',repository:'https://github.com/pranav256/open-design-mcp'}));
+app.get('/',(_req,res)=>res.json({name:'Eidova MCP',transport:'Streamable HTTP',endpoint:`${baseUrl()}/mcp`,website:'https://open-design-website.vercel.app',repository:'https://github.com/pranav256/open-design-mcp'}));
 app.get('/design-systems/:id',async (req,res)=> {
   const system=await systemWithComponents(req.params.id);
   if (!system) {res.status(404).json({error:'Design system not found'});return;}

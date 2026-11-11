@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.pranav256/open-design",
-  "title": "Open Design MCP",
+  "name": "io.github.pranav256/eidova",
+  "title": "Eidova MCP",
   "description": "Design families, real React kits and evidence-based review for coding agents.",
   "repository": { "url": "https://github.com/pranav256/open-design-mcp", "source": "github" },
   "version": "0.2.0",
@@ -9,7 +9,7 @@
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "open-design-mcp",
+      "identifier": "eidova-mcp",
       "version": "0.2.0",
       "runtimeHint": "npx",
       "transport": { "type": "stdio" },

@@ -9,7 +9,7 @@ import { ProjectRulesStore } from '../src/project-rules-store.js';
 import { apiDispatcher } from '../src/local-api.js';
 
 test('project rule HTTP contract returns scoped context, replacement conflicts and owner 404',async()=> {
-  const directory=await mkdtemp(path.join(os.tmpdir(),'open-design-project-rules-api-'));
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-project-rules-api-'));
   try {
     const store=new LocalFileStore(directory);
     const aliceProjects=new Projects(store,'alice');
@@ -30,7 +30,7 @@ test('project rule HTTP contract returns scoped context, replacement conflicts a
     assert.equal((await alice(url+'?parts=Button').then(r=>r.json())).rules[0].markdown,replacement.markdown);
     assert.equal((await alice(url,{method:'POST'})).status,405);
   } finally {
-    assert.ok(directory.startsWith(path.join(os.tmpdir(),'open-design-project-rules-api-')));
+    assert.ok(directory.startsWith(path.join(os.tmpdir(),'eidova-project-rules-api-')));
     await rm(directory,{recursive:true,force:true});
   }
 });

@@ -18,8 +18,8 @@ export const toolDescriptions:Record<string,string> = {
   'find-icons':'Find bundled Lucide SVGs by concept. Use exact returned names and source.',
   'install-icons':'Return selected bundled icon files and manifest data. targetDir is an output label; this server writes no caller files.',
   'detect-icon-library':'Inspect supplied manifestContent; no server or caller filesystem is read.',
-  'find-design-system':'Find a few distinct design families from a screen/style description. Keep an existing product design; fetch selected components with get-design-system-kit.',
-  'get-design-system-kit':'Return React/Radix install commands or an explicit HTML/DTCG kit. Request component names to install only what is needed. Requires Tailwind 4 and @/ alias; no hosted installation. Preserve existing product design and run source, copy and rendered-spacing review.',
+  'find-design-system':'Match distinct design families to a brief, with matched terms, suggested uses and tradeoffs. Optional requiredComponents filters out unsuitable kits. Keep an existing product design; fetch selected components with get-design-system-kit.',
+  'get-design-system-kit':'Return React/Radix install commands or an HTML/DTCG kit, plus a portable DESIGN.md resource for catalog systems. Request only needed component names. Requires Tailwind 4 and @/ alias; no hosted installation. Preserve existing design and review source, copy and rendered spacing.',
   'create-design-system':'Create a persistent theme using an explicit catalog base or supplied brandCss. Requires a private workspace; deterministic reuse, no AI generation.',
   'get-design-system-status':'Read persistent theme status and installation links. A completed status means stored source, not rendered verification.',
   'preview-design-system':'Return a catalog theme summary and links to its component specimen/tokens. No screenshot or visual approval is implied.',
@@ -42,5 +42,5 @@ export const toolDescriptions:Record<string,string> = {
   'get-capabilities':'Report exact tools, design families, transport profile, private-workspace support and remaining unavailable capabilities.',
 };
 
-export const coreTools=new Set(['get-capabilities','find-design-system','get-design-system-kit','extract-design-system','extract-from-url','get-ui-principle','get-ux-principle','get-review-rules','review-ui-code','check-comprehension','inspect-spacing']);
+export const coreTools=new Set(['get-capabilities','search-resources','read-resource','find-design-system','get-design-system-kit','extract-design-system','extract-from-url','get-ui-principle','get-ux-principle','get-review-rules','review-ui-code','check-comprehension','inspect-spacing']);
 export const workflowNote='Keep the product’s existing design. Otherwise choose a family and install its actual kit. Load UI guidance before styling and UX guidance before behavior. Review source, copy and rendered spacing; fix critical/serious findings. Source checks are not visual approval. Full workflow: design://workflow/v1.';

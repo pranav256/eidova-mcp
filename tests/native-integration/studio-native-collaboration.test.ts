@@ -1,0 +1,64 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import { randomUUID } from 'node:crypto';
+import { DatabaseSync } from 'node:sqlite';
+import { StudioStore } from '../../src/studio-store.js';
+import { StudioNativeStore } from '../../src/studio-native-store.js';
+import { createStudioBackend } from '../../src/studio-backend.js';
+const { createEidovaWorkspaceAuthority } = await import(new URL('../../../eidova-studio/apps/daemon/src/collab/eidova-workspace-context.ts', import.meta.url).href);
+const { createEidovaCollaborationClient } = await import(new URL('../../../eidova-studio/apps/daemon/src/collab/eidova-collaboration-client.ts', import.meta.url).href);
+
+test('native comments and presence preserve admitted file identities, author attribution, stable pages and deletion ordering', async () => {
+  const db = new DatabaseSync(':memory:'), store = new StudioStore(db), workspace = store.createWorkspace('Team', 'Owner'), owner = store.identity(workspace.token);
+  const joined = store.join(store.invite(owner).invite, 'Reviewer'), viewer = store.identity(joined.token), native = new StudioNativeStore(store);
+  const project = native.ensure(owner, 'project', 'Project');
+  store.writeFile(owner, project.resourceId, 'index.html', Buffer.from('<h1>Design</h1>'), 0);
+  native.policy(owner, 'project', 'team', 0);
+  const server = createStudioBackend(store).listen(0, '127.0.0.1'); await once(server, 'listening');
+  const url = 'http://127.0.0.1:' + (server.address() as { port: number }).port;
+  const ownerClient = createEidovaCollaborationClient(createEidovaWorkspaceAuthority({ url, key: workspace.token }));
+  const viewerClient = createEidovaCollaborationClient(createEidovaWorkspaceAuthority({ url, key: joined.token }));
+  const sourceFileId = randomUUID(), now = Date.now();
+  const comment = (id: string) => ({ id, projectId: 'project', conversationId: 'local', memberId: viewer.memberId, seq: 0, note: id, filePath: 'index.html',
+    sourceFileId, sourceFilePath: 'index.html', elementId: 'title', selector: 'h1', label: 'Title', text: 'Design', htmlHint: '<h1>Design</h1>', position: { x: 10, y: 20, width: 100, height: 30 }, status: 'open', createdAt: now, updatedAt: now, authorDisplayName: 'Forged' });
+  const api = (route: string, method: string, body?: unknown, key = workspace.token) => fetch(url + route, { method, headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
+  try {
+    const mutation = { schemaVersion: 1, baseRevision: 0, resourceId: project.resourceId, versionId: '1', files: [{ sourceFileId, sourceFilePath: 'index.html', entryPath: 'index.html', retired: false }] };
+    assert.equal((await api('/api/native/projects/project/comment-files', 'POST', mutation, joined.token)).status, 403);
+    await ownerClient.commentFileCommand(owner.workspaceId, ['team-projects', 'upsert', 'project', '--resource-id', project.resourceId, '--metadata-json', JSON.stringify({ _commentFiles: mutation })]);
+    const state = JSON.parse(await ownerClient.commentFileCommand(owner.workspaceId, ['team-projects', 'get', 'project', '--json']));
+    assert.equal(state.metadata._commentFiles.files[0].sourceFileId, sourceFileId);
+    assert.equal((await api('/api/native/projects/project/comment-files', 'POST', mutation)).status, 409);
+    const first = await viewerClient.pushComment(owner.workspaceId, 'project', comment('one'), 'key-one');
+    const duplicate = await viewerClient.pushComment(owner.workspaceId, 'project', comment('one'), 'key-one'); assert.deepEqual(duplicate, first);
+    await assert.rejects(viewerClient.pushComment(owner.workspaceId, 'project', { ...comment('one'), note: 'changed' }, 'key-one'), /409/);
+    await assert.rejects(viewerClient.pushComment(owner.workspaceId, 'project', { ...comment('spoof'), memberId: owner.memberId }), /403/);
+    await viewerClient.pushComment(owner.workspaceId, 'project', comment('two'));
+    let page = await viewerClient.pullMemberPage(owner.workspaceId, 'project', { mode: 'snapshot', limit: 1 }); assert.equal(page.kind, 'page');
+    assert.equal(page.page.comments[0].authorDisplayName, 'Reviewer'); assert.equal(page.page.skipped.length, 0); assert.equal(page.page.hasMore, true);
+    await viewerClient.pushComment(owner.workspaceId, 'project', comment('three'));
+    const terminal = await viewerClient.pullMemberPage(owner.workspaceId, 'project', { mode: 'snapshot', limit: 1, pageToken: page.page.nextPageToken });
+    assert.equal(terminal.page.complete, true); assert.equal(terminal.page.comments[0].id, 'two');
+    const added = await viewerClient.pullMemberPage(owner.workspaceId, 'project', { mode: 'incremental', resumeToken: terminal.page.resumeToken }); assert.equal(added.page.comments[0].id, 'three');
+    const resolved = { ...comment('one'), status: 'resolved', updatedAt: now + 1 };
+    await ownerClient.pushComment(owner.workspaceId, 'project', resolved, 'owner-resolve');
+    const repeated = await ownerClient.pushComment(owner.workspaceId, 'project', resolved, 'owner-resolve'); assert.equal(repeated.authorKey, viewer.memberId);
+    const all = await viewerClient.pullComments(owner.workspaceId, 'project', 0); assert.equal(all.comments[3].memberId, viewer.memberId); assert.equal(all.comments[3].authorDisplayName, 'Reviewer');
+    await viewerClient.pushComment(owner.workspaceId, 'project', { ...comment('one'), deleted: true, updatedAt: now + 2 });
+    await assert.rejects(viewerClient.pushComment(owner.workspaceId, 'project', { ...comment('one'), updatedAt: now + 3 }), /409/);
+    page = await viewerClient.pullMemberPage(owner.workspaceId, 'project', { mode: 'snapshot' }); assert.equal(page.page.comments.filter((row: any) => row.deleted).length, 1);
+    await viewerClient.heartbeatPresence('project', { member: { memberId: viewer.memberId, name: 'Forged owner', role: 'owner' }, clientId: 'tab', filePath: 'index.html', activity: { label: 'Reviewing title' } }, owner.workspaceId);
+    const viewers = await ownerClient.listPresence('project', owner.workspaceId); assert.equal(viewers[0].name, 'Reviewer'); assert.equal(viewers[0].role, 'member');
+    await viewerClient.leavePresence('project', { memberId: viewer.memberId, clientId: 'tab' }, owner.workspaceId); assert.deepEqual(await ownerClient.listPresence('project', owner.workspaceId), []);
+    await api('/api/native/projects/project/presence', 'DELETE', { clientId: 'late', sequence: 100 }, joined.token);
+    await api('/api/native/projects/project/presence', 'PUT', { clientId: 'late', sequence: 99 }, joined.token); assert.deepEqual(await ownerClient.listPresence('project', owner.workspaceId), []);
+    native.policy(owner, 'project', 'private', 1); native.policy(owner, 'project', 'team', 2);
+    const rebuild = await viewerClient.pullMemberPage(owner.workspaceId, 'project', { mode: 'incremental', resumeToken: added.page.resumeToken }); assert.equal(rebuild.kind, 'rebuild-required');
+    store.commit(owner, project.resourceId, [], ['index.html'], 1, 'Deleted HTML');
+    await assert.rejects(viewerClient.pushComment(owner.workspaceId, 'project', comment('retired')), /409/);
+    store.writeFile(owner, project.resourceId, 'index.html', Buffer.from('Recreated'), 2);
+    assert.equal((await api('/api/native/projects/project/comment-files', 'POST', { ...mutation, baseRevision: 2, versionId: '3' })).status, 409);
+    store.revoke(owner, viewer.memberId); await assert.rejects(viewerClient.listMembers(owner.workspaceId), /403/);
+  } finally { await new Promise<void>(resolve => server.close(() => resolve())); db.close(); }
+});

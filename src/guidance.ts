@@ -1,5 +1,5 @@
 /**
- * Original Open Design guidance. The field shapes follow the published MCP
+ * Original Eidova guidance. The field shapes follow the published MCP
  * client's Principle and ReviewRule contracts, not its hosted content corpus.
  * Retrieval is local lexical ranking; no model, telemetry or network is used.
  */
@@ -40,14 +40,14 @@ export interface ReviewRule {
 }
 
 export const GUIDANCE_PROVENANCE = {
-  author: "Open Design contributors and authorized library owners",
+  author: "Eidova contributors and authorized library owners",
   source: "Editable local library; original seed guidance and owner-managed imports",
   license: "MIT for the original seed; retain the rights of imported material",
   retrieval: "lexical",
   limitations: "General engineering guidance, not user research, a certification, or a copy of Better Design's hosted library.",
 } as const;
 
-const library = await loadContentLibrary(process.env.OPEN_DESIGN_CONTENT_LIBRARY ?? resourcePath('content/library.json'));
+const library = await loadContentLibrary((process.env.EIDOVA_CONTENT_LIBRARY ?? process.env.OPEN_DESIGN_CONTENT_LIBRARY) ?? resourcePath('content/library.json'));
 const corpus: Principle[] = library.principles;
 const reviewCorpus: ReviewRule[] = library.reviewRules;
 

@@ -8,7 +8,7 @@ import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/st
 import {measureTextContrast} from './browser-contrast.mjs';
 
 const origin=process.env.WEBSITE_REVIEW_URL||'http://127.0.0.1:5173';
-const website=path.resolve(process.env.WEBSITE_SOURCE_DIR||'../open-design-website');
+const website=path.resolve(process.env.WEBSITE_SOURCE_DIR||'../eidova-website');
 const directory=path.resolve(process.argv[2]||'.work/verification/specimens');
 const manifest=JSON.parse(await readFile(path.join(website,'src/previews/manifest.json'),'utf8'));
 const families=JSON.parse(await readFile(path.join(website,'src/design-families.json'),'utf8'));
@@ -17,7 +17,7 @@ await mkdir(directory,{recursive:true});
 assert.equal(manifest.length,families.length);
 for(const entry of manifest)for(const[file,hash]of Object.entries(entry.hashes))assert.equal(createHash('sha256').update(await readFile(path.join(website,'src/previews/kits',entry.id,file))).digest('hex'),hash,`${entry.id}/${file} differs from registry source`);
 
-const client=new Client({name:'open-design-family-review',version:'0.2.0'});
+const client=new Client({name:'eidova-family-review',version:'0.2.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL||'http://localhost:3000/mcp')));
 const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||(process.platform==='win32'?'msedge':undefined),headless:true});
 const states=[],metrics=[],panels=[],errors=[],network=[],spacing=[],contrasts=[];

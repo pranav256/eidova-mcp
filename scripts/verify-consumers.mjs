@@ -41,7 +41,7 @@ try {
     const dependencies={react:'19.2.0','react-dom':'19.2.0',tailwindcss:'4.3.5','tw-animate-css':'1.4.0',...Object.fromEntries(fonts.map(font=>['@fontsource/'+font,'5.3.0']))};
     if(next)dependencies.next='16.4.6';
     const devDependencies={typescript:'5.9.3','@types/node':'22.19.0','@types/react':'19.2.2','@types/react-dom':'19.2.2',...(next?{'@tailwindcss/postcss':'4.3.5',postcss:'8.5.32'}:{vite:'7.3.7','@tailwindcss/vite':'4.3.5'})};
-    await json(path.join(cwd,'package.json'),{name:'open-design-consumer',version:'0.0.0',private:true,type:'module',scripts:{build:next?'next build':'tsc --noEmit && vite build'},dependencies,devDependencies});
+    await json(path.join(cwd,'package.json'),{name:'eidova-consumer',version:'0.0.0',private:true,type:'module',scripts:{build:next?'next build':'tsc --noEmit && vite build'},dependencies,devDependencies});
     await json(path.join(cwd,'tsconfig.json'),{compilerOptions:{target:'ES2022',lib:['ES2022','DOM','DOM.Iterable'],module:'ESNext',moduleResolution:'Bundler',jsx:'react-jsx',strict:true,skipLibCheck:true,esModuleInterop:true,resolveJsonModule:true,noEmit:true,paths:{'@/*':['./src/*']}},include:['src','vite.config.ts']});
     await json(path.join(cwd,'components.json'),{$schema:'https://ui.shadcn.com/schema.json',style:'new-york',rsc:next,tsx:true,tailwind:{config:'',css:cssPath,baseColor:'neutral',cssVariables:true,prefix:''},aliases:{components:'@/components',utils:'@/lib/utils',ui:'@/components/ui',lib:'@/lib',hooks:'@/hooks'}});
     await write(path.join(cwd,cssPath),'@import "tailwindcss";\n@import "tw-animate-css";\n');
