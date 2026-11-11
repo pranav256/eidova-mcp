@@ -2,7 +2,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { mkdir, writeFile } from 'node:fs/promises';
 const endpoint = process.argv[2] ?? 'http://localhost:3000/mcp';
-const client = new Client({name:'open-design-verification',version:'0.1.0'});
+const client = new Client({name:'eidova-verification',version:'0.1.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(endpoint)));
 await mkdir('.work/verification',{recursive:true});
 const list=await client.listTools();
@@ -13,7 +13,7 @@ const calls=[
   ['get-ui-principle',{topic:'spacing'}],
   ['get-ux-principle',{topic:'search'}],
   ['get-review-rules',{category:'all'}],
-  ['check-comprehension',{screen:'Open Design landing page',headline:'Good interfaces start with good tools.',body:['Give your coding agent a real design system, practical guidance, and checks it can run before shipping.'],actions:['Copy MCP URL','Browse design systems'],knownTerms:['MCP','UI','React','HTTP','JSON','MIT','Geist']}],
+  ['check-comprehension',{screen:'Eidova landing page',headline:'Good interfaces start with good tools.',body:['Give your coding agent a real design system, practical guidance, and checks it can run before shipping.'],actions:['Copy MCP URL','Browse design systems'],knownTerms:['MCP','UI','React','HTTP','JSON','MIT','Geist']}],
   ['inspect-spacing',{}],
   ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://open-design-website.vercel.app'}],
   ['find-icons',{libraryId:'lucide',query:'home'}],

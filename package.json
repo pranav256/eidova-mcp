@@ -1,12 +1,35 @@
 {
-  "name": "open-design-mcp",
+  "name": "eidova-mcp",
   "version": "0.2.0",
-  "mcpName": "io.github.pranav256/open-design",
-  "bin": { "open-design-mcp": "dist/stdio.js" },
-  "files": ["dist", "assets/registry", "assets/LICENSE", "assets/TABLER-LICENSE", "assets/UPSTREAM.json", "content", "README.md", "LICENSE", "NOTICE", "server.json", "vendor/upstream/LICENSE", "docs", "CHANGELOG.md", "SECURITY.md"],
+  "mcpName": "io.github.pranav256/eidova",
+  "bin": {
+    "eidova-mcp": "dist/stdio.js"
+  },
+  "files": [
+    "dist",
+    "assets/registry",
+    "assets/LICENSE",
+    "assets/TABLER-LICENSE",
+    "assets/UPSTREAM.json",
+    "content",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "server.json",
+    "vendor/upstream/LICENSE",
+    "docs",
+    "CHANGELOG.md",
+    "SECURITY.md"
+  ],
   "type": "module",
   "description": "Independent open-source design tools with a local component registry",
-  "keywords": ["mcp", "design-systems", "react", "shadcn", "accessibility"],
+  "keywords": [
+    "mcp",
+    "design-systems",
+    "react",
+    "shadcn",
+    "accessibility"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=22"
@@ -16,12 +39,22 @@
     "start": "node dist/main.js",
     "stdio": "tsx src/stdio.ts",
     "stdio:private": "node scripts/start-private.mjs",
-    "build": "tsup src/main.ts src/stdio.ts --format esm --platform node --target node22 --clean",
+    "build": "tsup src/main.ts src/stdio.ts src/studio-main.ts src/studio-transfer-main.ts src/studio-sync-main.ts src/studio-backup-main.ts --format esm --platform node --target node22 --clean",
+    "studio:backend": "node dist/studio-main.js",
+    "studio:backup": "node dist/studio-backup-main.js",
+    "studio:check": "node scripts/studio.mjs check",
+    "studio:install": "node scripts/studio.mjs install",
+    "studio:start": "node scripts/studio.mjs start",
+    "studio:stop": "node scripts/studio.mjs stop",
+    "studio:mcp": "node scripts/studio.mjs mcp",
+    "studio:transfer": "node dist/studio-transfer-main.js",
+    "studio:sync": "node dist/studio-sync-main.js",
     "test": "tsx --test tests/*.test.ts",
+    "test:studio-native": "tsx --test tests/native-integration/*.test.ts",
     "check": "tsc --noEmit",
     "benchmark": "tsx scripts/benchmark.ts",
     "audit:themes": "tsx scripts/audit-themes.ts",
-    "sync:previews": "tsx scripts/sync-website-previews.ts ../open-design-website",
+    "sync:previews": "tsx scripts/sync-website-previews.ts ../eidova-website",
     "prepack": "npm run check && npm run build",
     "content:import": "tsx scripts/import-content.ts",
     "build:upstream": "node scripts/build-upstream.mjs",
@@ -30,7 +63,8 @@
     "smoke:stdio": "node scripts/smoke-stdio.mjs",
     "smoke:package": "node scripts/smoke-package.mjs",
     "verify:consumers": "node scripts/verify-consumers.mjs",
-    "review:website": "node scripts/review-site.mjs"
+    "review:website": "node scripts/review-site.mjs",
+    "resources:import": "node scripts/import-open-design.mjs"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.151",

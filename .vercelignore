@@ -6,6 +6,7 @@ local_design
 node_modules
 tests
 docs
+.eidova
 .open-design
 .env*
 vendor/upstream/src

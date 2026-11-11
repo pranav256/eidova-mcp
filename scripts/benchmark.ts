@@ -18,7 +18,7 @@ const fixtures: {task:string; calls:Call[]}[] = [
   {task:'recover-invalid-input',calls:[{name:'review-ui-code',arguments:{files:[{path:'server.ts'}]},error:true},{name:'get-design-system-kit',arguments:{target:'react',designSystemId:'not-a-system'},error:true}]},
 ];
 const bytes = (value:unknown) => Buffer.byteLength(JSON.stringify(value),'utf8');
-const directory = await mkdtemp(path.join(os.tmpdir(),'open-design-benchmark-'));
+const directory = await mkdtemp(path.join(os.tmpdir(),'eidova-benchmark-'));
 const report:Record<string,unknown> = {node:process.version,platform:process.platform,arch:process.arch,cpu:os.cpus()[0]?.model,measurement:'compact JSON UTF-8 wire bytes; not model tokens or client traces',tasks:[],coreTasks:[]};
 try {
   for (const [owner,profile,label] of [[undefined,'full','public'],['benchmark-owner','full','owner'],[undefined,'core','core']] as const) {

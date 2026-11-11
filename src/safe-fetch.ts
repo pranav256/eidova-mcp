@@ -34,7 +34,7 @@ export async function safeFetchPublic(input: string, redirects = 0, deadline: Ab
     const request = (url.protocol === 'https:' ? httpsRequest : httpRequest)({
       hostname, port: url.port || undefined, path: url.pathname + url.search, method: 'GET',
       signal: AbortSignal.any([deadline, AbortSignal.timeout(10_000)]),
-      headers: {'Accept': 'text/html,text/css;q=0.9', 'Accept-Encoding': 'identity', 'User-Agent': 'OpenDesignMCP/0.2'},
+      headers: {'Accept': 'text/html,text/css;q=0.9', 'Accept-Encoding': 'identity', 'User-Agent': 'EidovaMCP/0.2'},
       lookup: (_name, _options, callback) => callback(null, selected.address, selected.family),
     }, incoming => {
       const chunks: Buffer[] = []; let bytes = 0;

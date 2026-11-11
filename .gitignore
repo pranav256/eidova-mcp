@@ -10,6 +10,7 @@ dist/
 .local-design/
 .venv/
 .work/
+.eidova
 .open-design/
 site/evidence/
 research/

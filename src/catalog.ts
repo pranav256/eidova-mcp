@@ -16,15 +16,16 @@ export type CatalogSystem = {
   id: string; title: string; description: string; personality: string[]; industry: string[];
   componentCount: number; primaryColor: string; font: string; borderRadius: string;
   iconLibraryId: string; iconVariant: string; components: string[];
-  family: {id:string;title:string;representative:string;description:string;axes:string[]};
+  family: {id:string;title:string;representative:string;description:string;axes:string[];useCases:string[];tradeoff:string};
   variant: boolean;
 };
 
-const REGISTRY_ROOT = process.env.OPEN_DESIGN_ASSETS_DIR ? path.resolve(process.env.OPEN_DESIGN_ASSETS_DIR) : resourcePath('assets/registry');
+const assetsDirectory = process.env.EIDOVA_ASSETS_DIR ?? process.env.OPEN_DESIGN_ASSETS_DIR;
+const REGISTRY_ROOT = assetsDirectory ? path.resolve(assetsDirectory) : resourcePath('assets/registry');
 const slug = /^[a-z0-9][a-z0-9_-]{0,80}$/;
 const cache = new Map<string, RegistryItem>();
 let catalogPromise: Promise<CatalogSystem[]> | undefined;
-const familySchema=z.object({version:z.literal(1),families:z.array(z.object({id:z.string(),title:z.string(),representative:z.string(),description:z.string(),axes:z.array(z.string()).min(3),members:z.array(z.string())})).min(6).max(8)});
+const familySchema=z.object({version:z.literal(1),families:z.array(z.object({id:z.string(),title:z.string(),representative:z.string(),description:z.string(),axes:z.array(z.string()).min(3),useCases:z.array(z.string().min(1)).min(1),tradeoff:z.string().min(1),members:z.array(z.string())})).min(6).max(8)});
 const familyLibrary=familySchema.parse(JSON.parse(await readFile(resourcePath('content/design-families.json'),'utf8')));
 const familyBySystem=new Map(familyLibrary.families.flatMap(family=>family.members.map(id=>[id,family] as const)));
 if(familyBySystem.size!==familyLibrary.families.reduce((count,family)=>count+family.members.length,0)) throw new Error('A theme belongs to more than one family.');
@@ -37,7 +38,7 @@ const tags: Record<string, string> = {
   'editorial-dark': 'editorial expressive dark', 'light-marketplace': 'commerce warm light marketplace',
 };
 
-export const baseUrl = () => (process.env.OPEN_DESIGN_BASE_URL ??
+export const baseUrl = () => ((process.env.EIDOVA_BASE_URL ?? process.env.OPEN_DESIGN_BASE_URL) ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000')).replace(/\/$/, '');
 
 export async function sourceItem(system: string, component: string): Promise<RegistryItem> {
@@ -72,19 +73,22 @@ export async function catalog(): Promise<CatalogSystem[]> {
         borderRadius: vars.radius ?? vars['--radius'] ?? css.match(/--radius\s*:\s*([^;]+)/)?.[1] ?? '0.75rem',
         font: css.match(/--font-sans\s*:\s*([^;]+)/)?.[1] ?? css.match(/font-family\s*:\s*([^;]+)/)?.[1] ?? 'system-ui',
         iconLibraryId: 'lucide', iconVariant: 'outline', components: entries,
-        family:{id:family.id,title:family.title,representative:family.representative,description:family.description,axes:[...family.axes]},variant:dir.name!==family.representative,
+        family:{id:family.id,title:family.title,representative:family.representative,description:family.description,axes:[...family.axes],useCases:[...family.useCases],tradeoff:family.tradeoff},variant:dir.name!==family.representative,
       };
     }));
   })();
   return structuredClone(await catalogPromise);
 }
 
-export async function searchCatalog(query: string, limit = 5) {
-  const words = query.toLowerCase().match(/[a-z0-9]+/g) ?? [];
-  const ranked=(await catalog()).map(system => {
-    const text = `${system.id} ${system.title} ${system.description} ${system.font} ${system.family.title} ${system.family.description} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
-    const matchScore = words.reduce((score, word) => score + (text.includes(word) ? 1 : 0), 0) / Math.max(words.length, 1);
-    return { ...system, matchScore };
+const queryStopWords = new Set('a an and are as at be build create design for from give i in is it make me my of on or our please system that the this to use want with'.split(' '));
+export async function searchCatalog(query: string, limit = 5, requiredComponents: string[] = []) {
+  const words = [...new Set(query.toLowerCase().match(/[a-z0-9]+/g) ?? [])].filter(word => !queryStopWords.has(word));
+  const ranked=(await catalog()).filter(system => requiredComponents.every(name => system.components.includes(name))).map(system => {
+    const text = `${system.id} ${system.title} ${system.font} ${system.family.title} ${system.family.description} ${system.family.useCases.join(' ')} ${system.personality.join(' ')} ${system.industry.join(' ')}`.toLowerCase();
+    const terms = new Set(text.match(/[a-z0-9]+/g));
+    const matchedTerms = words.filter(word => terms.has(word));
+    const matchScore = matchedTerms.length / Math.max(words.length, 1);
+    return { ...system, matchScore, matchedTerms };
   }).sort((a,b)=>Number(b.id===query.trim().toLowerCase())-Number(a.id===query.trim().toLowerCase()) || b.matchScore-a.matchScore || Number(a.variant)-Number(b.variant) || a.id.localeCompare(b.id));
   const seen=new Set<string>();
   const diverse=ranked.filter(system=>{if(seen.has(system.family.id))return false;seen.add(system.family.id);return true;});

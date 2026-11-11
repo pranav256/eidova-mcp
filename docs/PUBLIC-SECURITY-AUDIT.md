@@ -40,7 +40,7 @@ At the audit point, the build adapter used plain `String.replace` for the securi
 
 ## Network audit
 
-The recovered runtime originally used global fetch for catalog tokens, catalog variant discovery and Iconify. The inspected adapted runtime replaces five active fetch sites with `globalThis.__OPEN_DESIGN_PUBLIC_FETCH__`.
+The recovered runtime originally used global fetch for catalog tokens, catalog variant discovery and Iconify. The inspected adapted runtime replaces five active fetch sites with `globalThis.__EIDOVA_PUBLIC_FETCH__`.
 
 `src/public-fetch.ts` only serves catalog registry and locally packaged Lucide SVG routes on this service's configured origin. It uses no request-scoped credentials. An unknown origin or path fails; it does not fall through to network fetch. Sharing this immutable adapter on `globalThis` is not a request-scoped fetch monkeypatch.
 

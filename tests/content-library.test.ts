@@ -21,7 +21,7 @@ const rule = { id: "review-original-focus", title: "Show keyboard focus", conten
 const library = (): ContentLibrary => ({ version: 1, principles: [{ ...principle, aliases: [...principle.aliases] }], reviewRules: [{ ...rule }] });
 
 async function temporaryDirectory(run: (directory: string) => Promise<void>): Promise<void> {
-  const directory = await mkdtemp(join(tmpdir(), "open-design-content-"));
+  const directory = await mkdtemp(join(tmpdir(), "eidova-content-"));
   try { await run(directory); }
   finally {
     assert.equal(dirname(resolve(directory)), resolve(tmpdir()));

@@ -1,6 +1,6 @@
 # Editable guidance library
 
-`content/library.json` is the versioned, editable content source for Open Design's local guidance. Its initial 72 principles and 25 review rules were independently written for this project under MIT. They are not a recovered copy of Better Design's hosted guidance: that private corpus was unavailable. The component catalog and its upstream license are documented separately.
+`content/library.json` is the versioned, editable content source for Eidova's local guidance. Its initial 72 principles and 25 review rules were independently written for this project under MIT. They are not a recovered copy of Better Design's hosted guidance: that private corpus was unavailable. The component catalog and its upstream license are documented separately.
 
 You can edit this JSON directly, or import your own writing and exports you are authorized to use. The importer does not fetch vendor content, read credentials, or call a language model.
 

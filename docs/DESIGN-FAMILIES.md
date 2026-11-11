@@ -1,8 +1,8 @@
 # Eight design families
 
-Open Design promotes eight representative web kits and retains all **31 compatible registry IDs**. A family is an editorial grouping, not a claim that every sibling has the same implementation. Minor palette/material alternatives live beneath their family; exact ID lookup and registry URLs still work.
+Eidova promotes eight representative web kits and retains all **31 compatible registry IDs**. A family is an editorial grouping, not a claim that every sibling has the same implementation. Minor palette/material alternatives live beneath their family; exact ID lookup and registry URLs still work.
 
-The website's **Apply palette** keeps the site shell/layout/type consistent. **View components** loads real source in an isolated workspace-settings specimen. Compare these specimens at the same width and with the same form/member content; color strips alone cannot show component differences.
+The website keeps its own theme. **View components** loads real source in an isolated workspace-settings specimen and shows family suitability and tradeoffs. **Copy agent prompt** carries the exact selected ID to the agent; **Project instructions** contains its DESIGN.md download. Compare specimens at the same width and with the same form/member content; color strips alone cannot show component differences.
 
 ## Recipes established from source and rendering
 

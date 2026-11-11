@@ -2,6 +2,7 @@
 .vercel
 .env*
 .work
+.eidova
 .open-design
 node_modules
 dist

@@ -1,4 +1,12 @@
-Open Design MCP includes MIT-licensed source from Better Design:
+Eidova MCP includes MIT-licensed source from Better Design:
+
+Bundled resource files under content/open-design are from nexu-io/open-design,
+commit b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f.
+Copyright 2026 Open Design contributors. Apache-2.0 except per-package overrides.
+Original files are unmodified; Eidova adds index.json and discovery adapters.
+See content/open-design/LICENSE and each entry's licensePaths in index.json for
+retained MIT/Apache notices and authors. Brand names identify references only;
+neither endorsement nor rights to third-party trademarks are implied.
 
 - Component registry: https://github.com/marvkr/better-design
   commit 175e7ba49bcf83857abc32933686b5aa3abb197e
@@ -8,7 +16,7 @@ Open Design MCP includes MIT-licensed source from Better Design:
 
 The original recovered source is retained under vendor/upstream/src; the build
 adapter localizes network endpoints and removes hosted filesystem execution.
-Original Open Design guidance is MIT licensed. Imported content retains its own
+Original Eidova guidance is MIT licensed. Imported content retains its own
 rights and provenance. This project is independent and unaffiliated with Better Design.
 Lucide icons are provided by @iconify-json/lucide under the ISC license.
 The embedded Tabler close SVG is MIT licensed, Copyright (c) 2020-2026 Paweł Kuna.

@@ -10,13 +10,14 @@ test('HTTP full/core profiles reconnect statelessly and keep private responses o
   const listener=app.listen(0,'127.0.0.1');await once(listener,'listening');
   const origin='http://127.0.0.1:'+(listener.address() as {port:number}).port;
   try {
-    const health=await fetch(origin+'/health');assert.equal((await health.json()).version,'0.2.0');
+    const health=await fetch(origin+'/health');assert.deepEqual(await health.json(),{status:'ok',name:'Eidova MCP',version:'0.2.0'});
     const catalog=await fetch(origin+'/api/catalog');const etag=catalog.headers.get('etag');assert.ok(etag);assert.match(catalog.headers.get('cache-control')!,/public/);
     assert.equal((await fetch(origin+'/api/catalog',{headers:{'if-none-match':etag},cache:'force-cache'})).status,304);
-    for(const[path,count,owner]of [['/mcp',40,false],['/mcp/core',11,false],['/api/mcp/core',11,false],['/mcp',41,true]] as const) {
+    for(const[path,count,owner]of [['/mcp',42,false],['/mcp/core',13,false],['/api/mcp/core',13,false],['/mcp',43,true]] as const) {
       const client=new Client({name:'http-test',version:'1'});
       try {
         await client.connect(new StreamableHTTPClientTransport(new URL(origin+path),{requestInit:owner?{headers:{Authorization:'Bearer '+'a'.repeat(43)}}:undefined}));
+        assert.equal(client.getServerVersion()?.name,'Eidova');
         assert.equal((await client.listTools()).tools.length,count);
         assert.ok((client.getInstructions()??'').length<1000);
         const guidance=await client.callTool({name:'get-ui-principle',arguments:{topic:'spacing'}});assert.ok(!guidance.isError);

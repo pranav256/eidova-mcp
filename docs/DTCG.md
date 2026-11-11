@@ -2,7 +2,7 @@
 
 `get-design-system-kit({ target: "dtcg", designSystemId: "linear" })` returns `tokensJson`, original `tokensCss`, and `dtcgReport`. This is a **DTCG 2025.10 typed subset**, validated for exports from the local CSS converter. It is not a complete importer or universal compliance claim.
 
-Supported values: `color` (OKLCH), `dimension` (px/rem), `shadow` (including inset and arrays), `fontFamily`, numeric `fontWeight`, `duration`, `cubicBezier`, and `number`. Unsupported expressions/composites and values without a valid supported type leave the token tree and are retained verbatim in `$extensions["org.open-design.export"].unsupported`. Original CSS remains available even if an importer ignores extensions.
+Supported values: `color` (OKLCH), `dimension` (px/rem), `shadow` (including inset and arrays), `fontFamily`, numeric `fontWeight`, `duration`, `cubicBezier`, and `number`. Unsupported expressions/composites and values without a valid supported type leave the token tree and are retained verbatim in `$extensions["org.eidova.export"].unsupported`. Original CSS remains available even if an importer ignores extensions.
 
 Exact simple variables such as `var(--primary)` resolve to typed aliases. Chained references work; mode-scoped references prefer their mode. A token that also owns children uses `DEFAULT`. Cycles and missing targets remain unsupported instead of dangling aliases. CSS fallbacks, `calc()`, arbitrary composites, general color-space conversion and arbitrary input DTCG documents are outside this subset.
 

@@ -10,8 +10,8 @@ no mechanism for acquiring additional content.
 Build the server with `npm run build`, then launch stdio with both paths set:
 
 ```powershell
-$env:OPEN_DESIGN_CONTENT_LIBRARY = 'C:/private/archive/effective-library.json'
-$env:OPEN_DESIGN_PRIVATE_ARCHIVE = 'C:/private/archive'
+$env:EIDOVA_CONTENT_LIBRARY = 'C:/private/archive/effective-library.json'
+$env:EIDOVA_PRIVATE_ARCHIVE = 'C:/private/archive'
 node D:/Projects/better-design-rea/dist/stdio.js
 ```
 
@@ -26,10 +26,10 @@ Register it in Codex with absolute paths (substitute your Node installation,
 checkout and private archive directory):
 
 ```powershell
-codex mcp add open-design -- 'C:/Program Files/nodejs/node.exe' D:/Projects/better-design-rea/scripts/start-private.mjs C:/private/archive
+codex mcp add eidova -- 'C:/Program Files/nodejs/node.exe' D:/Projects/better-design-rea/scripts/start-private.mjs C:/private/archive
 ```
 
-`codex mcp get open-design` shows the saved configuration. The
+`codex mcp get eidova` shows the saved configuration. The
 [official Codex MCP documentation](https://developers.openai.com/codex/mcp/)
 describes the shared CLI/app configuration and stdio command options.
 
@@ -41,7 +41,7 @@ missing kit files and unsafe file paths. It reads bounded local files and never
 executes reference HTML, fetches URLs or installs source files.
 
 Configure these environment variables only for the private local process.
-`OPEN_DESIGN_CONTENT_LIBRARY` also exists on the HTTP server, so pointing that
+`EIDOVA_CONTENT_LIBRARY` also exists on the HTTP server, so pointing that
 variable at private text on a public deployment would expose that text.
 
 ## Tools

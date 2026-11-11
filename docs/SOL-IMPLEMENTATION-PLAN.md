@@ -1,4 +1,4 @@
-# Sol implementation plan: finish and differentiate Open Design MCP
+# Sol implementation plan: finish and differentiate Eidova MCP
 
 Prepared and implemented locally: 2026-11-10. Status: **0.2.0 local release candidate; release gates remain open**. See [candidate verification](RELEASE-CANDIDATE.md) for evidence and limits.
 
@@ -31,8 +31,8 @@ The installation guide belongs in the hero, with six client formats, Essentials 
 
 The parent directory is **not** a Git repository. There are two independent repositories:
 
-- `MCP` = `D:\Projects\open-design\open-design-mcp`
-- `WEB` = `D:\Projects\open-design\open-design-website`
+- `MCP` = `D:\Projects\eidova\eidova-mcp`
+- `WEB` = `D:\Projects\eidova\eidova-website`
 
 Paths below use these prefixes. Check each repository's Git status and applicable AGENTS.md before edits. Keep this document current with completed tasks, evidence paths and outstanding blockers. Do not overwrite unrelated changes.
 
@@ -52,7 +52,7 @@ Paths below use these prefixes. Check each repository's Git status and applicabl
 
 ### Live read-only measurements taken during planning
 
-Endpoint: `https://open-design-mcp-liard.vercel.app/mcp`, server `OpenDesign` version `0.1.0`.
+Endpoint: `https://open-design-mcp-liard.vercel.app/mcp`, server `Eidova` version `0.1.0`.
 
 | Measurement | Observed value |
 | --- | ---: |
@@ -219,13 +219,13 @@ Local service suite: 89/89 passing. Both production audits report zero vulnerabi
 - [x] Address measured guidance gaps with versioned workflow/first-task examples, whole-entry retrieval, actionable review regressions, provenance and explicit evidence boundaries. Existing original guidance remains editable; no embeddings/vector database added.
 - [x] Prepare `server.json` and npm/registry metadata, changelog, supported-client matrix, security reporting, licensing/provenance notices and concise self-hosting docs. Verify the current official registry schema rather than copying a stale example.
 - [x] Prepare local build/package artifacts and rollback instructions. Coordinate MCP URLs, website build variables/proxy rewrites, install examples and package metadata across both repositories; execution on Docker/Vercel remains untested.
-- [ ] Apply the chosen name only after selection and basic collision checks. Preserve transport routes, registry IDs, old environment variables and saved theme preferences through documented aliases/migration. Existing bearer keys and private data must remain valid.
+- [x] Apply the user's selected Eidova name locally. Preserve transport routes, registry IDs, old environment variables, saved theme preferences, bearer keys and private data through documented compatibility. Collision checks and hosted renaming remain pending.
 - [x] Run final local/preview checks against the candidate and verify final packaged docs/notices/assets with private state excluded.
 - [ ] Run authorized Docker/Vercel staging and release checks, verify package/Registry namespace ownership and hosted core, then coordinate promotion/publication. Production private smoke writes disposable records; use staging first and perform external mutations only within authorized release scope.
 
-Release gate: Phases 0–5 complete, reproducible installs and measured context savings, curated distinguishable families, honest capability documentation, no known blocking regressions, and a concrete rollback path. If the name is still undecided, keep building under Open Design; do not block technical progress or silently pick a permanent brand.
+Release gate: Phases 0–5 complete, reproducible installs and measured context savings, curated distinguishable families, honest capability documentation, no known blocking regressions, and a concrete rollback path. Eidova is the user's selected brand; hosted aliases and namespace ownership still require verification.
 
-Local web acceptance passed: six actual shadcn-installed Vite/Next consumers, 72 states, DTCG tests across all 31 IDs and schema-checked metadata. The final [release report](RELEASE-CANDIDATE.md) and [deployment/rollback guide](DEPLOYMENT.md) form the handoff. Publication/promotion, remote-host claims and replacement-name migration remain unperformed.
+Local web acceptance passed: six actual shadcn-installed Vite/Next consumers, 72 states, DTCG tests across all 31 IDs and schema-checked metadata. The final [release report](RELEASE-CANDIDATE.md) and [deployment/rollback guide](DEPLOYMENT.md) form the handoff. The local Eidova rename is applied; publication/promotion, remote-host claims and hosted renaming remain unperformed.
 
 ## 10. Follow-on roadmap: finish specific capabilities when justified
 
@@ -291,7 +291,7 @@ Primary documentation and project sources retrieved on 2026-11-10. Product docs 
 | [MCP security best practices](https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices) | SSRF, token passthrough, confused deputy and session boundaries | Keep server/client credentials separate and retain public/private execution boundaries |
 | [Official MCP Registry publishing guide](https://modelcontextprotocol.io/registry/quickstart) | Package metadata, server.json, namespace verification and publication | Prepare discoverable, verifiable distribution after packaging is tested |
 
-Local evidence: `MCP/src/mcp.ts`, `src/catalog.ts`, `src/app.ts`, `src/local-api.ts`, `src/guidance.ts`, `scripts/build-upstream.mjs`, package manifests/tests and existing deployment/security/release docs; `WEB/src/theme.ts`, `src/theme.css`, `src/catalog-themes.json` and `.better-design/feature-map.json`. Open Design UX guidance and the connection feature map were also read for planning. No UI was built during the original planning session. The later implementation built/reviewed the website and eight settings specimens using the mandatory workflow; source/DOM/behavior evidence and internal visual inspection are recorded in [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md).
+Local evidence: `MCP/src/mcp.ts`, `src/catalog.ts`, `src/app.ts`, `src/local-api.ts`, `src/guidance.ts`, `scripts/build-upstream.mjs`, package manifests/tests and existing deployment/security/release docs; `WEB/src/theme.ts`, `src/theme.css`, `src/catalog-themes.json` and `.better-design/feature-map.json`. Eidova UX guidance and the connection feature map were also read for planning. No UI was built during the original planning session. The later implementation built/reviewed the website and eight settings specimens using the mandatory workflow; source/DOM/behavior evidence and internal visual inspection are recorded in [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md).
 
 ## 14. Execution checklist and handoff
 
@@ -312,7 +312,7 @@ npm run build
 
 # MCP browser/review scripts: inspect their required environment first
 # Point WEBSITE_SOURCE_DIR at the sibling website checkout.
-npm run review:website -- <authorized-review-mcp-url> ../open-design-website
+npm run review:website -- <authorized-review-mcp-url> ../eidova-website
 node scripts/verify-website.mjs
 node scripts/verify-website-themes.mjs
 ```

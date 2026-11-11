@@ -10,13 +10,13 @@ assert.equal(replaceExact('target','target','safe'),'safe');
 function patch(file, original) {
   let result = original.replaceAll('\r\n','\n');
   if (file.endsWith('/mcp/tools/shared.ts')) result = result
-  .replace('process.env.BETTER_DESIGN_REGISTRY_URL', 'process.env.OPEN_DESIGN_REGISTRY_URL')
-  .replace('"https://better-design.com/registry"', '`${process.env.OPEN_DESIGN_BASE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")}/registry`')
-  .replace('process.env.BETTER_DESIGN_APP_URL', 'process.env.OPEN_DESIGN_BASE_URL')
+  .replace('process.env.BETTER_DESIGN_REGISTRY_URL', '(process.env.EIDOVA_REGISTRY_URL ?? process.env.OPEN_DESIGN_REGISTRY_URL)')
+  .replace('"https://better-design.com/registry"', '`${(process.env.EIDOVA_BASE_URL ?? process.env.OPEN_DESIGN_BASE_URL) ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")}/registry`')
+  .replace('process.env.BETTER_DESIGN_APP_URL', '(process.env.EIDOVA_BASE_URL ?? process.env.OPEN_DESIGN_BASE_URL)')
   .replace('"https://better-design.com"', '(process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")')
-  .replace('export const ICONIFY_API_BASE = "https://api.iconify.design";', 'export const ICONIFY_API_BASE = `${process.env.OPEN_DESIGN_BASE_URL ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")}/icons`;')
+  .replace('export const ICONIFY_API_BASE = "https://api.iconify.design";', 'export const ICONIFY_API_BASE = `${(process.env.EIDOVA_BASE_URL ?? process.env.OPEN_DESIGN_BASE_URL) ?? (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")}/icons`;')
   ;
-  if(file.endsWith('/mcp/tools/shared.ts')) result=replaceExact(result,'return await globalThis.fetch(url, { signal: controller.signal });','return await globalThis.__OPEN_DESIGN_PUBLIC_FETCH__(url, { signal: controller.signal });');
+  if(file.endsWith('/mcp/tools/shared.ts')) result=replaceExact(result,'return await globalThis.fetch(url, { signal: controller.signal });','return await globalThis.__EIDOVA_PUBLIC_FETCH__(url, { signal: controller.signal });');
   if(file.endsWith('/mcp/selected-icon-handoff.ts')) result=replaceExact(result,'  if (CATALOG_ICON_LIBRARY_ASSIGNMENTS[metadata.id]) return resolveDesignSystemIcons({ id: metadata.id });','  // The independent catalog supplies its own supplemental icon assignment.');
   if(file.endsWith('/inspection/capture-script.ts')) result=replaceExact(result,'    if (hiddenByAncestor(element)) return false;',`    if (hiddenByAncestor(element)) return false;
     // Visually hidden assistive labels remain available to screen readers.
@@ -27,7 +27,7 @@ function patch(file, original) {
   if(file.endsWith('/mcp/tools/inspection-tools.ts')) result=replaceExact(result,'        const nextStep = reviewDesignSystemStep(await sessionLookup);','        const nextStep = "Fix critical and serious spacing findings, then recapture the affected rendered states.";');
   if (file.endsWith('/mcp/catalog-tokens.ts') || file.endsWith('/mcp/tools/design-system-tools.ts')) {
     assert.equal((result.match(/(?<![\w.])fetch\(/g)??[]).length,file.endsWith('/mcp/catalog-tokens.ts')?3:1,'Network patch call count changed.');
-    result = result.replace(/(?<![\w.])fetch\(/g, 'globalThis.__OPEN_DESIGN_PUBLIC_FETCH__(');
+    result = result.replace(/(?<![\w.])fetch\(/g, 'globalThis.__EIDOVA_PUBLIC_FETCH__(');
   }
   if(file.endsWith('/mcp/index.ts')) {
     result=replaceExact(result,'instructions: directoryListing','instructions: options.instructions ?? (directoryListing');
@@ -66,9 +66,9 @@ function patch(file, original) {
       && (componentName === primitiveName || (componentName.startsWith(primitiveName) && /^[A-Z]/.test(componentName.slice(primitiveName.length))))) return;
     const p = pos(sourceFile, node);`);
   }
-  return result.replaceAll('issuedBy: "better-design-mcp"', 'issuedBy: "open-design-mcp"')
-    .replaceAll('Better Design', 'Open Design')
-    .replaceAll('written by Open Design', 'from the MIT-licensed Better Design package')
+  return result.replaceAll('issuedBy: "better-design-mcp"', 'issuedBy: "eidova-mcp"')
+    .replaceAll('Better Design', 'Eidova')
+    .replaceAll('written by Eidova', 'from the MIT-licensed Better Design package')
     .replaceAll('https://better-design.com', 'https://open-design-mcp-liard.vercel.app')
     .replaceAll('https://www.better-design.com', 'https://open-design-mcp-liard.vercel.app');
 }
@@ -84,5 +84,5 @@ await build({
 });
 const built=await readFile('vendor/upstream/runtime.mjs','utf8');
 if (/loadReviewFiles|readLengthSamples/.test(built)) throw new Error('Unsafe filesystem review code remained in the runtime; refusing release.');
-assert.equal((built.match(/globalThis\.__OPEN_DESIGN_PUBLIC_FETCH__\(/g)??[]).length,5,'Unexpected network adapter calls in compiled runtime.');
+assert.equal((built.match(/globalThis\.__EIDOVA_PUBLIC_FETCH__\(/g)??[]).length,5,'Unexpected network adapter calls in compiled runtime.');
 console.log('Built recovered MIT runtime with local registry adapters.');
