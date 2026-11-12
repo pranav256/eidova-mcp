@@ -167,7 +167,11 @@ test('repeating native pagination is rejected before advertising an incomplete c
   await assert.rejects(createStudioMcpBridge(value.design, a), /repeating MCP catalog/);
 });
 
-test('native launch is loopback-only, excludes parent credentials, and closes its child', async () => {
+test('native launch requires Node 24, is loopback-only, excludes credentials, and closes its child', async () => {
+  if (process.versions.node.split('.')[0] !== '24') {
+    await assert.rejects(nativeStudioTransport({}), /Native Studio requires Node 24/);
+    return;
+  }
   const entry = fileURLToPath(new URL('./fixtures/native-studio.mjs', import.meta.url));
   await assert.rejects(nativeStudioTransport({}), /EIDOVA_NATIVE_STUDIO_ENTRY/);
   await assert.rejects(nativeStudioTransport({ EIDOVA_NATIVE_STUDIO_ENTRY: './relative.js' }), /absolute path/);
@@ -194,7 +198,7 @@ test('native launch is loopback-only, excludes parent credentials, and closes it
   }
 });
 
-test('combined stdio exits on host EOF without requiring a termination signal', { timeout: 15000 }, async () => {
+test('combined stdio rejects unsupported Node or exits on host EOF without a signal', { timeout: 15000 }, async () => {
   const child = spawn(process.execPath, ['--import', 'tsx', fileURLToPath(new URL('../src/stdio.ts', import.meta.url)), '--profile', 'core', '--native-studio'], {
     windowsHide: true, stdio: ['pipe', 'pipe', 'pipe'],
     env: { ...process.env, EIDOVA_NATIVE_STUDIO_ENTRY: fileURLToPath(new URL('./fixtures/native-studio.mjs', import.meta.url)) },
@@ -204,6 +208,12 @@ test('combined stdio exits on host EOF without requiring a termination signal', 
   let errors = ''; child.stderr.on('data', chunk => { errors += chunk; });
   const timer = setTimeout(() => child.kill(), 10000);
   try {
+    if (process.versions.node.split('.')[0] !== '24') {
+      const [code, signal] = await exited;
+      assert.equal(signal, null, errors); assert.equal(code, 1, errors);
+      assert.match(errors, /Native Studio requires Node 24/);
+      return;
+    }
     child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: {
       protocolVersion: '2024-11-05', capabilities: {}, clientInfo: { name: 'eof-test', version: '1' },
     } }) + '\n');
