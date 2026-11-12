@@ -52,9 +52,9 @@ Keep previous deployment IDs, URL settings and package version before promotion.
 
 ## Eidova hosted rename
 
-The source, package, CLI and local checkout names now use Eidova. Remote GitHub repositories and Vercel projects have not been renamed by this local change; all existing working URLs and `.vercel/project.json` links remain intact. Historical review receipts retain their original names and hashes.
+The source, package, CLI and local checkout names use Eidova. GitHub repositories are now `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs. Native Studio has a separate private `pranav256/eidova-studio` repository. Existing Vercel project IDs and working hostnames remain intact. Historical review receipts retain their original names and hashes.
 
-When Vercel access is available, verify and assign `eidova.vercel.app` to the website and `eidova-mcp.vercel.app` to the API. These are proposed hostnames, not verified live endpoints. Rename the existing projects while preserving their IDs, deployment history, Blob store and old aliases. Rename the GitHub repositories to `eidova-website` and `eidova-mcp`, then update Git remotes, `.vercel/project.json` project names, repository metadata and source links.
+For a later hostname migration, verify and assign `eidova.vercel.app` to the website and `eidova-mcp.vercel.app` to the API. These are proposed hostnames, not verified live endpoints. Preserve the existing project IDs, deployment history, Blob store and old aliases; coordinate the URL changes below after verifying the new hostnames.
 
 After the new aliases work, update website build variables and `vercel.json` rewrites, API `EIDOVA_BASE_URL` and `EIDOVA_WEBSITE_URL`, `server.json`, defaults and setup documentation together. Deploy the API before the website and verify health, MCP discovery, catalog and registry URLs. Do not point clients at unassigned hostnames or switch the existing storage prefixes or Docker volume during the rename.
 

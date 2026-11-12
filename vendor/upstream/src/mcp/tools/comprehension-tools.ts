@@ -50,6 +50,8 @@ Check every panel, not only the page's own copy. When a sales page, deck or soci
 
 For a slide, pass surface: "slide" (a screen named slide, deck or presentation gets it by default) and call once per slide. A slide adds a density test, and it never passes on text: approve it only after you review its rendered screenshot.
 
+For documentation or a data reference, explicitly pass surface: "reference". The short-screen word/time budgets then cover the title and actions; the body still gets jargon, acronym, sentence and brand checks. Use screen or slide for onboarding, forms, marketing sections and product mock-ups, even when they contain a sample table.
+
 Use knownTerms for words your audience genuinely knows, so the check stops flagging them. When the team saved rules, their approved words count as known and their banned words fail a brand test. Fix every critical and serious finding, then call this again on the rewritten copy.`,
       inputSchema: z.object({
         screen: z.string().trim().min(1).max(120)
@@ -64,8 +66,8 @@ Use knownTerms for words your audience genuinely knows, so the check stops flagg
           .describe("JSX, TSX or HTML for the screen. Copy is extracted from it when headline/body/actions are omitted."),
         knownTerms: z.array(z.string().trim().min(1).max(60)).max(50).optional()
           .describe("Words this audience already knows, so they are not flagged as insider language."),
-        surface: z.enum(["screen", "slide"]).optional()
-          .describe("\"slide\" adds the slide density test and withholds a pass until a screenshot review. Defaults to \"slide\" when the screen name says slide, deck or presentation."),
+        surface: z.enum(["screen", "slide", "reference"]).optional()
+          .describe("Reference documentation/data applies short-screen density budgets to title and actions, retaining all body language checks. Slides add density checks and require screenshot review. Defaults to screen, or slide for slide/deck/presentation names."),
         context: CONTEXT_ARG,
       }),
       annotations: READ_ONLY_TOOL_ANNOTATIONS,
@@ -136,6 +138,8 @@ Use knownTerms for words your audience genuinely knows, so the check stops flagg
               fix,
             })),
             words: report.stats.words,
+            surface: report.surface,
+            budgetWords: report.stats.budgetWords,
             estimatedExplainSeconds: report.stats.estimatedExplainSeconds,
           }
         : { verdict: "no-copy", findingCount: 0, findings: [] };

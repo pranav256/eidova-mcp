@@ -41,6 +41,7 @@ function formatStats(report: ComprehensionReport): string {
     "## What the check measured",
     "",
     `- Visible copy: ${words} words across ${actionCount} action${actionCount === 1 ? "" : "s"}.`,
+    ...(report.surface === "reference" ? [`- Reference mode: the short-screen word and time budgets cover ${report.stats.budgetWords} title/action words. All body copy is still checked for jargon, acronyms, long sentences and banned terms.`] : []),
     `- Insider words found: ${insiderTerms.length > 0 ? insiderTerms.join(", ") : "none"}.`,
     `- Rough explain time: about ${estimatedExplainSeconds} seconds. This is a heuristic budget from word count, insider words and choices, not a measurement of real users.`,
     "- It read text only: the copy passed in, or the text in the markup. It cannot see screenshots, text inside images, or visual hierarchy.",

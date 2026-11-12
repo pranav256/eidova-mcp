@@ -14,6 +14,7 @@ import {
   PRODUCT_TERMS,
   SLIDE_NAME,
   TECHNICAL_TERMS,
+  UPPERCASE_WORDS,
   VAGUE_ACTIONS,
 } from "./lexicon";
 
@@ -23,7 +24,7 @@ import {
  */
 export type ComprehensionTest = "mom" | "fifteen-second" | "screenshot" | "slide" | "brand";
 /** A slide gets the slide test and never passes on text alone. [BD-593] */
-export type ComprehensionSurface = "screen" | "slide";
+export type ComprehensionSurface = "screen" | "slide" | "reference";
 export type ComprehensionSeverity = "critical" | "serious" | "minor";
 
 export interface ComprehensionFinding {
@@ -61,6 +62,7 @@ export interface ComprehensionReport {
   copy: { headline: string | null; body: string[]; actions: string[] };
   stats: {
     words: number;
+    budgetWords: number;
     insiderTerms: string[];
     actionCount: number;
     longestSentenceWords: number;
@@ -115,7 +117,7 @@ function findBareAcronyms(text: string, known: Set<string>): string[] {
   const found = new Set<string>();
   for (const match of text.matchAll(/\b[A-Z]{2,5}\b/g)) {
     const acronym = match[0];
-    if (KNOWN_ACRONYMS.has(acronym) || known.has(acronym.toLowerCase())) continue;
+    if (KNOWN_ACRONYMS.has(acronym) || UPPERCASE_WORDS.has(acronym.toLowerCase()) || known.has(acronym.toLowerCase())) continue;
     // An expansion in brackets right after the acronym counts as explained.
     if (new RegExp(`\\(${acronym}\\)`).test(text)) continue;
     found.add(acronym);
@@ -210,7 +212,7 @@ function fifteenSecondFindings(
   }
 
   // A slide has its own, tighter word budget in the slide test.
-  if (surface === "screen" && words > MAX_SCREEN_WORDS) {
+  if (surface !== "slide" && words > MAX_SCREEN_WORDS) {
     findings.push({
       test: "fifteen-second",
       severity: "serious",
@@ -318,11 +320,15 @@ export function analyzeComprehension(input: ComprehensionInput): ComprehensionRe
   const words = countWords(visible);
 
   const insiderTerms = findInsiderTerms(visible, known);
-  const estimatedExplainSeconds = estimateExplainSeconds(words, insiderTerms.length, copy.actions.length);
+  // Reference data is read on demand; the title and actions still orient newcomers.
+  const orientation = [copy.headline ?? "", ...copy.actions].join(". ");
+  const budgetWords = surface === "reference" ? countWords(orientation) : words;
+  const budgetTerms = surface === "reference" ? findInsiderTerms(orientation, known) : insiderTerms;
+  const estimatedExplainSeconds = estimateExplainSeconds(budgetWords, budgetTerms.length, copy.actions.length);
 
   const findings = [
     ...momTestFindings(visible, known, insiderTerms),
-    ...fifteenSecondFindings(words, copy.actions, estimatedExplainSeconds, surface),
+    ...fifteenSecondFindings(budgetWords, copy.actions, estimatedExplainSeconds, surface),
     ...screenshotFindings(copy, words),
     ...(surface === "slide" ? slideFindings(words, copy.body) : []),
     ...brandFindings(visible, banned),
@@ -340,6 +346,7 @@ export function analyzeComprehension(input: ComprehensionInput): ComprehensionRe
     copy: { headline: copy.headline, body: copy.body, actions: copy.actions },
     stats: {
       words,
+      budgetWords,
       insiderTerms,
       actionCount: copy.actions.length,
       longestSentenceWords: countWords(longestSentence),

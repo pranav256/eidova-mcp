@@ -238,6 +238,7 @@ Slow by nature (a real browser loads the page): expect 10 to 45 seconds. For CSS
               // principles and the review on what it builds instead. [BD-1148]
               text: `${`Could not extract from that URL (HTTP ${res.status}). ${body.message ?? ""}`.trim()}\n\n${BUILD_LOOP}`,
             }],
+            isError: true,
           };
         }
         // SAFETY: the JSON contract of this payload; the producing side owns the shape.

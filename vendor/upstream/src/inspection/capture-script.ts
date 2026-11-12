@@ -210,6 +210,8 @@ export function captureSpacingSnapshot(): LayoutStateSnapshot {
       }
       : undefined;
 
+    // shortcut: without CSS Typed OM, auto margins may resolve to pixels; inspect those gaps visually.
+    const computed = element.computedStyleMap?.();
     return {
       id,
       selector: id,
@@ -235,6 +237,8 @@ export function captureSpacingSnapshot(): LayoutStateSnapshot {
         columnGap: number(style.columnGap),
         padding: edges(style, "padding"),
         margin: edges(style, "margin"),
+        autoMargins: ["top", "right", "bottom", "left"].filter(edge =>
+          (computed?.get(`margin-${edge}`)?.toString() ?? style.getPropertyValue(`margin-${edge}`)) === "auto"),
         overflowX: style.overflowX,
         overflowY: style.overflowY,
         textOverflow: style.textOverflow,

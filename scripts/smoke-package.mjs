@@ -19,6 +19,7 @@ try {
   assert.ok(packed.files.some(file=>file.path==='content/design-families.json'));
   const bundle=JSON.parse(await readFile(path.join(root,'content/open-design/index.json'),'utf8'));
   const packedPaths=new Set(packed.files.map(file=>file.path));
+  assert.ok(packedPaths.has('vendor/upstream/provenance.json'));
   assert.ok(packedPaths.has('content/open-design/LICENSE'));
   for(const entry of bundle.entries)for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${entry.kind}/${entry.id}/${file.path}`),`Missing bundled file: ${entry.id}/${file.path}`);
   for(const notice of ['LICENSE','NOTICE','assets/LICENSE','assets/TABLER-LICENSE','vendor/upstream/LICENSE'])assert.ok(packed.files.some(file=>file.path===notice),`Missing notice: ${notice}`);

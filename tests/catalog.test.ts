@@ -7,6 +7,7 @@ test('all checked-in systems can be searched and produce real component source',
   const result=await searchCatalog('minimal light',3);assert.ok(result.some(s=>s.id==='minimal-light'));
   const system=await systemWithComponents('minimal-light',{componentNames:['button']});
   assert.match(system!.components[0].code,/React/);
+  await assert.rejects(systemWithComponents('minimal-light',{componentNames:['button','missing-component']}),/Unknown components/);
 });
 test('font searches rank systems using that font ahead of unrelated themes',async()=> {
   const result=await searchCatalog('geist',20);

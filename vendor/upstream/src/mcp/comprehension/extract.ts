@@ -12,7 +12,7 @@ export interface ExtractedScreen {
 }
 
 const HEADING_TAGS = [
-  "h1", "h2", "h3",
+  "h1", "h2", "h3", "h4", "h5", "h6",
   "CardTitle", "DialogTitle", "AlertDialogTitle", "SheetTitle", "DrawerTitle",
 ];
 
@@ -158,9 +158,11 @@ function removeBlocks(code: string, tag: string): string {
 
 export function extractScreenCopy(code: string): ExtractedScreen {
   const cleaned = stripWayfinding(stripComments(code));
-  const { headline, remainder: withoutHeadings } = collectHeadline(cleaned);
-  const { actions, unlabelledControls, remainder } = collectActions(withoutHeadings);
-  const selfClosing = collectSelfClosingActions(remainder);
+  const { headline } = collectHeadline(cleaned);
+  // Links can contain their heading; read their names before removing headings.
+  const { actions, unlabelledControls, remainder } = collectActions(cleaned);
+  const { remainder: withoutHeadings } = collectHeadline(remainder);
+  const selfClosing = collectSelfClosingActions(withoutHeadings);
 
   return {
     headline,

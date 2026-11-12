@@ -8352,6 +8352,9 @@ var HEADING_TAGS = [
   "h1",
   "h2",
   "h3",
+  "h4",
+  "h5",
+  "h6",
   "CardTitle",
   "DialogTitle",
   "AlertDialogTitle",
@@ -8460,9 +8463,10 @@ function removeBlocks(code, tag) {
 }
 function extractScreenCopy(code) {
   const cleaned = stripWayfinding(stripComments(code));
-  const { headline, remainder: withoutHeadings } = collectHeadline(cleaned);
-  const { actions, unlabelledControls, remainder } = collectActions(withoutHeadings);
-  const selfClosing = collectSelfClosingActions(remainder);
+  const { headline } = collectHeadline(cleaned);
+  const { actions, unlabelledControls, remainder } = collectActions(cleaned);
+  const { remainder: withoutHeadings } = collectHeadline(remainder);
+  const selfClosing = collectSelfClosingActions(withoutHeadings);
   return {
     headline,
     body: collectBody(selfClosing.remainder),
@@ -8553,6 +8557,9 @@ var KNOWN_ACRONYMS = /* @__PURE__ */ new Set([
   "SMS",
   "URL"
 ]);
+var UPPERCASE_WORDS = new Set(
+  "about above after again all also an and any are as at back be been before best both but by can clip clips copy could day do does each end every find first for free from full get give go good great had has have help here how if in into is it its just keep last left less let like long look made make many may me more most much my need new no nor not now of off on one only open or other our out own page parts people price read right same save see set short should show side so some start still take text than that the their them then there these they thing this time to too top two up use user users video view want was way we well were what when which who why will with work would yes you your".split(" ")
+);
 var VAGUE_ACTIONS = /* @__PURE__ */ new Set([
   "click here",
   "continue",
@@ -8612,7 +8619,7 @@ function findBareAcronyms(text5, known) {
   const found = /* @__PURE__ */ new Set();
   for (const match of text5.matchAll(/\b[A-Z]{2,5}\b/g)) {
     const acronym = match[0];
-    if (KNOWN_ACRONYMS.has(acronym) || known.has(acronym.toLowerCase())) continue;
+    if (KNOWN_ACRONYMS.has(acronym) || UPPERCASE_WORDS.has(acronym.toLowerCase()) || known.has(acronym.toLowerCase())) continue;
     if (new RegExp(`\\(${acronym}\\)`).test(text5)) continue;
     found.add(acronym);
   }
@@ -8679,7 +8686,7 @@ function fifteenSecondFindings(words3, actions, seconds, surface) {
       fix: "Cut to one idea and one next step. Move the rest behind a link or a later screen."
     });
   }
-  if (surface === "screen" && words3 > MAX_SCREEN_WORDS) {
+  if (surface !== "slide" && words3 > MAX_SCREEN_WORDS) {
     findings.push({
       test: "fifteen-second",
       severity: "serious",
@@ -8770,10 +8777,13 @@ function analyzeComprehension(input) {
   const visible = [copy.headline ?? "", ...copy.body, ...copy.actions].join(". ");
   const words3 = countWords(visible);
   const insiderTerms = findInsiderTerms(visible, known);
-  const estimatedExplainSeconds = estimateExplainSeconds(words3, insiderTerms.length, copy.actions.length);
+  const orientation = [copy.headline ?? "", ...copy.actions].join(". ");
+  const budgetWords = surface === "reference" ? countWords(orientation) : words3;
+  const budgetTerms = surface === "reference" ? findInsiderTerms(orientation, known) : insiderTerms;
+  const estimatedExplainSeconds = estimateExplainSeconds(budgetWords, budgetTerms.length, copy.actions.length);
   const findings = [
     ...momTestFindings(visible, known, insiderTerms),
-    ...fifteenSecondFindings(words3, copy.actions, estimatedExplainSeconds, surface),
+    ...fifteenSecondFindings(budgetWords, copy.actions, estimatedExplainSeconds, surface),
     ...screenshotFindings(copy, words3),
     ...surface === "slide" ? slideFindings(words3, copy.body) : [],
     ...brandFindings(visible, banned)
@@ -8789,6 +8799,7 @@ function analyzeComprehension(input) {
     copy: { headline: copy.headline, body: copy.body, actions: copy.actions },
     stats: {
       words: words3,
+      budgetWords,
       insiderTerms,
       actionCount: copy.actions.length,
       longestSentenceWords: countWords(longestSentence),
@@ -8826,6 +8837,7 @@ function formatStats(report) {
     "## What the check measured",
     "",
     `- Visible copy: ${words3} words across ${actionCount} action${actionCount === 1 ? "" : "s"}.`,
+    ...report.surface === "reference" ? [`- Reference mode: the short-screen word and time budgets cover ${report.stats.budgetWords} title/action words. All body copy is still checked for jargon, acronyms, long sentences and banned terms.`] : [],
     `- Insider words found: ${insiderTerms.length > 0 ? insiderTerms.join(", ") : "none"}.`,
     `- Rough explain time: about ${estimatedExplainSeconds} seconds. This is a heuristic budget from word count, insider words and choices, not a measurement of real users.`,
     "- It read text only: the copy passed in, or the text in the markup. It cannot see screenshots, text inside images, or visual hierarchy."
@@ -8905,6 +8917,8 @@ Check every panel, not only the page's own copy. When a sales page, deck or soci
 
 For a slide, pass surface: "slide" (a screen named slide, deck or presentation gets it by default) and call once per slide. A slide adds a density test, and it never passes on text: approve it only after you review its rendered screenshot.
 
+For documentation or a data reference, explicitly pass surface: "reference". The short-screen word/time budgets then cover the title and actions; the body still gets jargon, acronym, sentence and brand checks. Use screen or slide for onboarding, forms, marketing sections and product mock-ups, even when they contain a sample table.
+
 Use knownTerms for words your audience genuinely knows, so the check stops flagging them. When the team saved rules, their approved words count as known and their banned words fail a brand test. Fix every critical and serious finding, then call this again on the rewritten copy.`,
       inputSchema: z13.object({
         screen: z13.string().trim().min(1).max(120).describe("What this screen is, e.g. 'lesson end card', 'billing page'."),
@@ -8913,7 +8927,7 @@ Use knownTerms for words your audience genuinely knows, so the check stops flagg
         actions: z13.array(z13.string().trim().min(1).max(120)).max(20).optional().describe("Visible button and link labels, e.g. ['Claim badge', 'Not now']. Search fields, filters and selects are not actions."),
         code: z13.string().max(6e4).optional().describe("JSX, TSX or HTML for the screen. Copy is extracted from it when headline/body/actions are omitted."),
         knownTerms: z13.array(z13.string().trim().min(1).max(60)).max(50).optional().describe("Words this audience already knows, so they are not flagged as insider language."),
-        surface: z13.enum(["screen", "slide"]).optional().describe('"slide" adds the slide density test and withholds a pass until a screenshot review. Defaults to "slide" when the screen name says slide, deck or presentation.'),
+        surface: z13.enum(["screen", "slide", "reference"]).optional().describe("Reference documentation/data applies short-screen density budgets to title and actions, retaining all body language checks. Slides add density checks and require screenshot review. Defaults to screen, or slide for slide/deck/presentation names."),
         context: CONTEXT_ARG
       }),
       annotations: READ_ONLY_TOOL_ANNOTATIONS
@@ -8971,6 +8985,8 @@ Use knownTerms for words your audience genuinely knows, so the check stops flagg
           fix
         })),
         words: report.stats.words,
+        surface: report.surface,
+        budgetWords: report.stats.budgetWords,
         estimatedExplainSeconds: report.stats.estimatedExplainSeconds
       } : { verdict: "no-copy", findingCount: 0, findings: [] };
       const structuredContent = { ...fields, ...nextStep && { nextStep } };
@@ -20982,7 +20998,8 @@ Slow by nature (a real browser loads the page): expect 10 to 45 seconds. For CSS
               text: `${`Could not extract from that URL (HTTP ${res.status}). ${body2.message ?? ""}`.trim()}
 
 ${BUILD_LOOP}`
-            }]
+            }],
+            isError: true
           };
         }
         const body = await res.json();
@@ -21909,10 +21926,10 @@ function actualSiblingGaps(parent, children) {
   if (children.length < 3) return [];
   if (direction2 === "column" || direction2 === "column-reverse") {
     const sorted2 = [...children].sort((a, b) => a.rect.y - b.rect.y);
-    return sorted2.slice(1).map((child, index2) => child.rect.y - (sorted2[index2].rect.y + sorted2[index2].rect.height));
+    return sorted2.slice(1).flatMap((child, index2) => child.style?.autoMargins?.includes("top") || sorted2[index2].style?.autoMargins?.includes("bottom") ? [] : [child.rect.y - (sorted2[index2].rect.y + sorted2[index2].rect.height)]);
   }
   const sorted = [...children].sort((a, b) => a.rect.x - b.rect.x);
-  return sorted.slice(1).map((child, index2) => child.rect.x - (sorted[index2].rect.x + sorted[index2].rect.width));
+  return sorted.slice(1).flatMap((child, index2) => child.style?.autoMargins?.includes("left") || sorted[index2].style?.autoMargins?.includes("right") ? [] : [child.rect.x - (sorted[index2].rect.x + sorted[index2].rect.width)]);
 }
 function inspectSiblingGaps(state, tolerance, findings) {
   const childrenByParent = /* @__PURE__ */ new Map();
@@ -22019,14 +22036,19 @@ function rowClusters(elements, tolerance) {
   return clusters;
 }
 function inspectRaggedTextRows(state, tolerance, findings) {
-  const parentOf = new Map(state.elements.map((element) => [element.id, element.parentId]));
+  const byId = new Map(state.elements.map((element) => [element.id, element]));
   const rows = /* @__PURE__ */ new Map();
   for (const element of state.elements) {
     if (!finite(element.lineCount) || element.lineCount < 1) continue;
     if (element.rect.width <= 0 || element.rect.height <= 0) continue;
+    if (element.style?.display === "inline") continue;
+    if ([element.id, ...ancestorIds(element, byId)].some((id) => {
+      const cell = byId.get(id);
+      return ["td", "th"].includes(cell?.tag?.toLowerCase() ?? "") || ["cell", "gridcell", "columnheader", "rowheader"].includes(cell?.role ?? "");
+    })) continue;
     const parent = element.parentId;
     if (!parent) continue;
-    const key = parentOf.get(parent) ?? parent;
+    const key = byId.get(parent)?.parentId ?? parent;
     const group = rows.get(key) ?? [];
     group.push(element);
     rows.set(key, group);
@@ -22084,9 +22106,23 @@ function inspectAlignmentGroups(state, tolerance, findings) {
   }
 }
 function inspectOverflow(state, tolerance, findings) {
+  const byId = new Map(state.elements.map((element) => [element.id, element]));
   for (const element of state.elements) {
     const { rect } = element;
-    const outsideViewport = rect.x < -tolerance || rect.x + rect.width > state.viewport.width + tolerance;
+    let left = rect.x;
+    let right = rect.x + rect.width;
+    let descendant = element;
+    for (const id of ancestorIds(element, byId)) {
+      if (descendant.style?.position === "fixed") break;
+      const parent = byId.get(id);
+      if (!parent) break;
+      if (["auto", "scroll", "hidden", "clip"].includes(parent.style?.overflowX ?? "")) {
+        left = Math.max(left, parent.rect.x);
+        right = Math.min(right, parent.rect.x + parent.rect.width);
+      }
+      descendant = parent;
+    }
+    const outsideViewport = right > left && (left < -tolerance || right > state.viewport.width + tolerance);
     if (outsideViewport) {
       makeFinding(findings, {
         ruleId: "spacing/viewport-overflow",
@@ -22457,6 +22493,7 @@ function captureSpacingSnapshot() {
       width: reach("right", rect.left + html.clientLeft, html.clientWidth),
       height: reach("bottom", rect.top + html.clientTop, html.clientHeight)
     } : void 0;
+    const computed = element.computedStyleMap?.();
     return {
       id,
       selector: id,
@@ -22482,6 +22519,7 @@ function captureSpacingSnapshot() {
         columnGap: number(style.columnGap),
         padding: edges(style, "padding"),
         margin: edges(style, "margin"),
+        autoMargins: ["top", "right", "bottom", "left"].filter((edge) => (computed?.get(`margin-${edge}`)?.toString() ?? style.getPropertyValue(`margin-${edge}`)) === "auto"),
         overflowX: style.overflowX,
         overflowY: style.overflowY,
         textOverflow: style.textOverflow,
@@ -23088,6 +23126,7 @@ var styleSchema = z24.object({
   columnGap: finiteNumber.optional(),
   padding: edgesSchema.optional(),
   margin: edgesSchema.optional(),
+  autoMargins: z24.array(z24.enum(["top", "right", "bottom", "left"])).max(4).optional(),
   overflowX: z24.string().max(60).optional(),
   overflowY: z24.string().max(60).optional(),
   textOverflow: z24.string().max(60).optional(),
@@ -30509,7 +30548,8 @@ function lintStylesheet(input, config) {
   const findings = [];
   const lines = lineIndex(input.content);
   if (config.rules.semanticTokens?.enabled !== false) {
-    for (const match of input.content.matchAll(COLOR)) {
+    const usage2 = maskBlockComments(input.content, (value) => value.replace(/[^\r\n]/g, " ")).replace(/--[\w-]+\s*:[^;{}]+/g, (value) => value.replace(/[^\r\n]/g, " "));
+    for (const match of usage2.matchAll(COLOR)) {
       findings.push(sourceFinding(input, lines, lines.lineAt(match.index ?? 0), {
         severity: "moderate",
         ruleId: "token/hardcoded-color",
@@ -30709,14 +30749,19 @@ function readComponentVariants(input) {
 }
 function buildProjectContext(inputs) {
   const colorTokens = /* @__PURE__ */ new Set();
+  const cssClasses = /* @__PURE__ */ new Set();
   for (const input of inputs.theme) {
     for (const token of readThemeColorTokens(input.content)) colorTokens.add(token);
+    const css = maskBlockComments(input.content, (value) => value.replace(/[^\r\n]/g, " ")).replace(/"[^"\\]*(?:\\.[^"\\]*)*"|'[^'\\]*(?:\\.[^'\\]*)*'/g, (value) => value.replace(/[^\r\n]/g, " "));
+    for (const selector of css.matchAll(/(?:^|(?<=[{}]))([^{}]*)\{/g)) {
+      for (const match of selector[1].matchAll(/\.([a-zA-Z_][\w-]*)/g)) cssClasses.add(match[1]);
+    }
   }
   const components = /* @__PURE__ */ new Map();
   for (const input of inputs.components) {
     for (const component of readComponentVariants(input)) components.set(component.name, component);
   }
-  return { colorTokens, components };
+  return { colorTokens, components, cssClasses };
 }
 
 // vendor/upstream/src/lint/class-contract-rules.ts
@@ -30842,7 +30887,7 @@ function templateFragments(template) {
   }
   return fragments2;
 }
-function dynamicClassFindings(expression) {
+function dynamicClassFindings(expression, cssClasses = /* @__PURE__ */ new Set()) {
   const fragments2 = [];
   const visit = (node) => {
     if (ts10.isTemplateExpression(node)) fragments2.push(...templateFragments(node));
@@ -30855,11 +30900,15 @@ function dynamicClassFindings(expression) {
     ts10.forEachChild(node, visit);
   };
   visit(expression);
-  if (fragments2.length === 0) return [];
+  const unresolved = fragments2.filter((fragment) => {
+    const [prefix, suffix = ""] = fragment.split(/\$\{…\}| \+ …/);
+    return ![...cssClasses].some((name) => name.startsWith(prefix) && name.endsWith(suffix));
+  });
+  if (unresolved.length === 0) return [];
   return [{
     severity: "moderate",
     ruleId: "class/dynamic",
-    message: `${quoted2(fragments2)} builds a class name from a variable, so Tailwind never generates it.`,
+    message: `${quoted2(unresolved)} builds a class name from a variable, so Tailwind never generates it.`,
     fix: "Map each value to a complete class in a lookup object, or use a component variant."
   }];
 }
@@ -31323,7 +31372,7 @@ function lintReviewableFile(input, baseConfig, context) {
   }
   function dynamicClassesOf(value) {
     if (classes.dynamicClasses === false || !value || !ts11.isJsxExpression(value) || !value.expression) return [];
-    return dynamicClassFindings(value.expression);
+    return dynamicClassFindings(value.expression, context?.cssClasses);
   }
   function isUiImport(tag) {
     return sourceFile.statements.some((statement) => ts11.isImportDeclaration(statement) && ts11.isStringLiteral(statement.moduleSpecifier) && /(?:^|\/)ui\/|^\.\.?\//.test(statement.moduleSpecifier.text) && statement.importClause?.namedBindings !== void 0 && ts11.isNamedImports(statement.importClause.namedBindings) && statement.importClause.namedBindings.elements.some((element) => element.name.text === tag));

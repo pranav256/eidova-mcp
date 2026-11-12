@@ -71,10 +71,13 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   const kit = handles['get-design-system-kit'];
   if (kit) {
     const callback = kit.handler;
+    const componentName=z.string().regex(/^(?:_shared|[a-z0-9][a-z0-9_-]{0,80})$/);
+    const componentSelection=z.union([componentName,z.array(componentName).min(1).max(24)]).optional();
     kit.update({
+      paramsSchema:{...kit.inputSchema!.shape,component:componentSelection,components:componentSelection},
       ...(privateArchive ? {
         description:'Return React/HTML/DTCG catalog kits, or saved private Linear react-native, swiftui and shopify file payloads. Archived files and tokens are verbatim captures, not newly generated, installed or rendered. Uncaptured mobile/Shopify systems and custom projects are unavailable. install:true is refused.',
-        paramsSchema:{target:z.enum(['react','html','dtcg','store-screenshots','react-native','swiftui','shopify']),designSystemId:z.string().min(1).optional(),projectId:z.string().min(1).optional(),component:z.union([z.string(),z.array(z.string())]).optional(),library:z.enum(['radix','base-ui']).optional(),screen:z.string().trim().min(1).max(80).optional(),install:z.boolean().optional(),context:z.string().max(280).optional()},
+        paramsSchema:{target:z.enum(['react','html','dtcg','store-screenshots','react-native','swiftui','shopify']),designSystemId:z.string().min(1).optional(),projectId:z.string().min(1).optional(),component:componentSelection,components:componentSelection,library:z.enum(['radix','base-ui']).optional(),screen:z.string().trim().min(1).max(80).optional(),install:z.boolean().optional(),context:z.string().max(280).optional()},
         outputSchema:{...kit.outputSchema!.shape,archive:z.object({capture:z.string(),timestamp:z.string().datetime(),responseSha256:z.string().regex(/^[a-f0-9]{64}$/),designSystemId:z.string(),target:z.string(),fileCount:z.number().int(),installation:z.literal('not performed'),validation:z.literal('captured source only')}).optional()},
       } : {}),
       callback:async (args: Record<string,unknown>, extra: unknown) => {
@@ -182,6 +185,14 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     if(name!=='extract-design-system')tool.update({outputSchema:{...tool.outputSchema!.shape,viewLabel:z.enum(['View components','View tokens']).optional(),familyPreviewUrl:z.string().url().optional()}});
     tool.update({callback:async (args:Record<string,unknown>,extra:unknown)=>{
       if(name==='get-design-system-kit'&&args.designSystemId&&!(await catalog()).some(item=>item.id===args.designSystemId)) return {...text('Theme not found. Use find-design-system to choose a valid ID. Nothing was installed.'),isError:true};
+      if(name==='get-design-system-kit') {
+        if(args.component!==undefined&&args.components!==undefined) return {...text('Use component or components, not both.'),isError:true};
+        const selection=args.component??args.components;
+        if(selection!==undefined&&args.target==='react') {
+          const names=[...new Set(Array.isArray(selection)?selection:[selection])];
+          args={...args,component:names};
+        }
+      }
       const result=await callback(args,extra) as {content?:{type:string;text?:string}[];structuredContent?:Record<string,unknown>;isError?:boolean};
       if(!result?.structuredContent||result.isError) return result;
       if(result.structuredContent.status==='error')return {...result,isError:true};

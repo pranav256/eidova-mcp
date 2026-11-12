@@ -3,7 +3,7 @@
   "name": "io.github.pranav256/eidova",
   "title": "Eidova MCP",
   "description": "Design families, real React kits and evidence-based review for coding agents.",
-  "repository": { "url": "https://github.com/pranav256/open-design-mcp", "source": "github" },
+  "repository": { "url": "https://github.com/pranav256/eidova-mcp", "source": "github" },
   "version": "0.2.0",
   "websiteUrl": "https://open-design-website.vercel.app",
   "packages": [

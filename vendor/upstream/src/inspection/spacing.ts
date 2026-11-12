@@ -424,11 +424,13 @@ function actualSiblingGaps(
 
   if (direction === "column" || direction === "column-reverse") {
     const sorted = [...children].sort((a, b) => a.rect.y - b.rect.y);
-    return sorted.slice(1).map((child, index) => child.rect.y - (sorted[index].rect.y + sorted[index].rect.height));
+    return sorted.slice(1).flatMap((child, index) => child.style?.autoMargins?.includes("top") || sorted[index].style?.autoMargins?.includes("bottom")
+      ? [] : [child.rect.y - (sorted[index].rect.y + sorted[index].rect.height)]);
   }
 
   const sorted = [...children].sort((a, b) => a.rect.x - b.rect.x);
-  return sorted.slice(1).map((child, index) => child.rect.x - (sorted[index].rect.x + sorted[index].rect.width));
+  return sorted.slice(1).flatMap((child, index) => child.style?.autoMargins?.includes("left") || sorted[index].style?.autoMargins?.includes("right")
+    ? [] : [child.rect.x - (sorted[index].rect.x + sorted[index].rect.width)]);
 }
 
 function inspectSiblingGaps(
@@ -582,14 +584,21 @@ function inspectRaggedTextRows(
   tolerance: number,
   findings: InspectionFinding[],
 ): void {
-  const parentOf = new Map(state.elements.map((element) => [element.id, element.parentId]));
+  const byId = new Map(state.elements.map((element) => [element.id, element]));
   const rows = new Map<string, LayoutElementSnapshot[]>();
   for (const element of state.elements) {
     if (!finite(element.lineCount) || element.lineCount < 1) continue;
     if (element.rect.width <= 0 || element.rect.height <= 0) continue;
+    if (element.style?.display === "inline") continue;
+    // Table cells align their boxes; their text can naturally wrap to different lengths.
+    if ([element.id, ...ancestorIds(element, byId)].some(id => {
+      const cell = byId.get(id);
+      return ["td", "th"].includes(cell?.tag?.toLowerCase() ?? "")
+        || ["cell", "gridcell", "columnheader", "rowheader"].includes(cell?.role ?? "");
+    })) continue;
     const parent = element.parentId;
     if (!parent) continue;
-    const key = parentOf.get(parent) ?? parent;
+    const key = byId.get(parent)?.parentId ?? parent;
     const group = rows.get(key) ?? [];
     group.push(element);
     rows.set(key, group);
@@ -667,14 +676,29 @@ function inspectOverflow(
   tolerance: number,
   findings: InspectionFinding[],
 ): void {
+  const byId = new Map(state.elements.map((element) => [element.id, element]));
   for (const element of state.elements) {
     const { rect } = element;
     // Horizontal only. getBoundingClientRect is viewport-relative, so every
     // element above the current scroll position has a negative y, and testing
     // it would report ordinary scrolled content as overflow on any capture
     // taken after a scroll.
-    const outsideViewport = rect.x < -tolerance
-      || rect.x + rect.width > state.viewport.width + tolerance;
+    let left = rect.x;
+    let right = rect.x + rect.width;
+    let descendant = element;
+    for (const id of ancestorIds(element, byId)) {
+      // shortcut: fixed containing blocks are not captured; inspect transformed fixed content visually.
+      if (descendant.style?.position === "fixed") break;
+      const parent = byId.get(id);
+      if (!parent) break;
+      if (["auto", "scroll", "hidden", "clip"].includes(parent.style?.overflowX ?? "")) {
+        left = Math.max(left, parent.rect.x);
+        right = Math.min(right, parent.rect.x + parent.rect.width);
+      }
+      descendant = parent;
+    }
+    const outsideViewport = right > left && (left < -tolerance
+      || right > state.viewport.width + tolerance);
     if (outsideViewport) {
       makeFinding(findings, {
         ruleId: "spacing/viewport-overflow",

@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { maskBlockComments } from "./template-masks";
 import type { LintInput } from "./types";
 
 // Reads the two facts the class checks need from a project: which colour
@@ -36,6 +37,8 @@ export interface ProjectContext {
   colorTokens: Set<string>;
   /** Components with variants, by component name. */
   components: Map<string, ComponentVariants>;
+  /** Literal selectors supplied in the project's CSS, outside comments and strings. */
+  cssClasses?: Set<string>;
 }
 
 /** Project files the CLI hands the engine next to the files under review. */
@@ -181,12 +184,18 @@ export function readComponentVariants(input: LintInput): ComponentVariants[] {
 /** Builds the context the class checks read from the project's theme and component files. */
 export function buildProjectContext(inputs: ProjectInputs): ProjectContext {
   const colorTokens = new Set<string>();
+  const cssClasses = new Set<string>();
   for (const input of inputs.theme) {
     for (const token of readThemeColorTokens(input.content)) colorTokens.add(token);
+    const css = maskBlockComments(input.content, value => value.replace(/[^\r\n]/g, " "))
+      .replace(/"[^"\\]*(?:\\.[^"\\]*)*"|'[^'\\]*(?:\\.[^'\\]*)*'/g, value => value.replace(/[^\r\n]/g, " "));
+    for (const selector of css.matchAll(/(?:^|(?<=[{}]))([^{}]*)\{/g)) {
+      for (const match of selector[1].matchAll(/\.([a-zA-Z_][\w-]*)/g)) cssClasses.add(match[1]);
+    }
   }
   const components = new Map<string, ComponentVariants>();
   for (const input of inputs.components) {
     for (const component of readComponentVariants(input)) components.set(component.name, component);
   }
-  return { colorTokens, components };
+  return { colorTokens, components, cssClasses };
 }
