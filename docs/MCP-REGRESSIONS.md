@@ -57,3 +57,26 @@ variant exists; verify actual states. Browsers without CSS Typed OM may not
 report stylesheet auto margins, so older captures can still report gap drift.
 Complex transforms/containing blocks and nested JSX need rendered evidence.
 No deployment or whole-product Studio acceptance was performed here.
+
+## Hosting follow-up — 12 November 2026
+
+The fixes were committed and pushed in `0201afe`; `b614d5c` subsequently corrected
+the Node 22 CI runtime-rejection check. All five MCP CI jobs passed across
+Windows/Linux and Node 22/24, including clean consumer verification. The matching
+website commit is `ece4971`; its CI passed separately. Existing 11 November
+commits and their dates were preserved.
+
+The API and website were then promoted to their existing public Vercel URLs,
+with both projects linked to their Eidova GitHub repositories. Public MCP
+discovery and the website's 31-theme catalog proxy passed. The website's
+[production review](https://github.com/pranav256/eidova-website/blob/main/docs/production-review.json)
+records the rendered acceptance scope and documented rule exceptions.
+
+After session access was restored, the hosted MCP smoke and full production
+website browser review passed again. The website receipt covers 61 passing
+copy panels, recorded interaction checks and rendered spacing at 390/1440/1728
+in both appearances, retaining its documented search-padding exception. Local
+MCP/website typechecks and built stdio smoke also passed. Native guard and full
+workspace typecheck now pass; its existing CI workflow is registered and the
+selected remote preflight has been dispatched. Persistent team hosting and
+whole-product acceptance remain pending.
