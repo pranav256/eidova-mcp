@@ -17,6 +17,7 @@ test('pinned public fetch preserves redirect base and rejects unsafe redirects a
     paths.push(options.path);
     const reply=replies.shift();assert.ok(reply,'Unexpected network request');
     options.lookup('ignored',{},(_error:unknown,address:string)=>assert.equal(address,'8.8.8.8'));
+    options.lookup('ignored',{all:true},(_error:unknown,addresses:unknown)=>assert.deepEqual(addresses,[{address:'8.8.8.8',family:4}]));
     const request=new EventEmitter() as EventEmitter&{end():void;setTimeout():void;destroy(error:Error):void};
     request.setTimeout=()=>{};
     request.destroy=error=>request.emit('error',error);

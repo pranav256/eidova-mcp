@@ -113,7 +113,7 @@ app.all(/^\/api\/(?:projects|fragments|v1)\//,async (req,res)=> {
   const response=await apiDispatcher(new Projects(store,owner),new ProjectRulesStore(store,owner))(baseUrl()+req.originalUrl,{method:req.method,body:['GET','HEAD'].includes(req.method)?undefined:JSON.stringify(req.body)});
   res.status(response.status).type('application/json').send(await response.text());
 });
-app.get('/',(_req,res)=>res.json({name:'Eidova MCP',transport:'Streamable HTTP',endpoint:`${baseUrl()}/mcp`,website:'https://open-design-website.vercel.app',repository:'https://github.com/pranav256/open-design-mcp'}));
+app.get('/',(_req,res)=>res.json({name:'Eidova MCP',transport:'Streamable HTTP',endpoint:`${baseUrl()}/mcp`,website:'https://open-design-website.vercel.app',repository:'https://github.com/pranav256/eidova-mcp'}));
 app.get('/design-systems/:id',async (req,res)=> {
   const system=await systemWithComponents(req.params.id);
   if (!system) {res.status(404).json({error:'Design system not found'});return;}

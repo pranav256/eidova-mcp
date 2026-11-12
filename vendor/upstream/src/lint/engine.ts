@@ -505,7 +505,7 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
 
   function dynamicClassesOf(value: ts.JsxAttributeValue | undefined) {
     if (classes.dynamicClasses === false || !value || !ts.isJsxExpression(value) || !value.expression) return [];
-    return dynamicClassFindings(value.expression);
+    return dynamicClassFindings(value.expression, context?.cssClasses);
   }
 
   // A tag counts as a design-system component when it comes from a ui folder

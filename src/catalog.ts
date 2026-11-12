@@ -144,7 +144,9 @@ export async function systemWithComponents(id: string, options: {includeComponen
   const metadata = (await catalog()).find(s => s.id === id);
   if (!metadata) return null;
   const names = options.componentNames ?? metadata.components;
-  const components = options.includeComponents === false ? [] : await Promise.all(names.filter(n => metadata.components.includes(n)).map(async name => {
+  const unknown = names.filter(name => !metadata.components.includes(name));
+  if (unknown.length) throw new Error(`Unknown components in ${id}: ${unknown.join(', ')}. Read this theme's designContext for available names.`);
+  const components = options.includeComponents === false ? [] : await Promise.all(names.map(async name => {
     const item = await sourceItem(id, name);
     return { id: `${id}/${name}`, name, description: item.description ?? `${metadata.title} ${name}`, code: options.includeComponentCode === false ? '' : (item.files ?? []).map(f => f.content).join('\n') };
   }));

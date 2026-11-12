@@ -31,6 +31,15 @@ test('core discovery is small, typed, read-only and preserves executable validat
     assert.match(String(details.viewUrl),/specimen=minimal-light/);
     assert.doesNotMatch(String(details.installCommand),/ -o\b/);
     assert.equal((await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',component:'missing-component'}})).isError,true);
+    const table=await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'lumen-dark',components:['table']}});
+    assert.ok(!table.isError);
+    const tableKit=table.structuredContent as {componentFiles:{path:string;content:string}[];installCommand:string};
+    assert.ok(tableKit.componentFiles.some(file=>file.path.endsWith('/table.tsx')));
+    assert.match(tableKit.installCommand,/\/table\.json/);
+    assert.doesNotMatch(tableKit.installCommand,/\/all\.json/);
+    for (const selection of [{components:[]},{component:['button','missing-component']},{component:'button',components:['table']}]) {
+      assert.equal((await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',...selection}})).isError,true);
+    }
     assert.equal((await client.callTool({name:'find-design-system',arguments:{query:' ',limit:99}})).isError,true);
     const resource=await client.readResource({uri:'design://principles/ux/forms'});assert.match(JSON.stringify(resource),/label/i);
     const rules=await getReviewRules();const rule=await client.readResource({uri:'design://review-rules/'+encodeURIComponent(rules[0].id)});assert.match(JSON.stringify(rule),/content/);

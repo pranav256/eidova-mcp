@@ -869,5 +869,64 @@
     "vendor/upstream/src/mcp-debug-log.ts",
     "vendor/upstream/src/terms.ts"
   ],
-  "retentionNote": "Original files records describe the complete source-map recovery. Only the 146 modules reached by the build entry or retained tests remain in the active checkout; unused modules are preserved in Git history and the original source map."
+  "retentionNote": "Original files records describe the complete source-map recovery. Only the 146 modules reached by the build entry or retained tests remain in the active checkout; unused modules are preserved in Git history and the original source map.",
+  "localModifications": {
+    "date": "2026-11-12",
+    "description": "Eidova fixes to heading/link copy extraction, reference density, ordinary uppercase words, DOM overflow/text/auto-margin evidence and supplied CSS review. Original files[].sha256 values retain the recovered upstream hashes.",
+    "hashEncoding": "UTF-8 with LF line endings",
+    "files": [
+      {
+        "path": "vendor/upstream/src/inspection/capture-script.ts",
+        "sha256": "e94faf3eb145d47dfe5f4da0aaddc8c4255dd6c68cb9129d673bf93cf4c37731"
+      },
+      {
+        "path": "vendor/upstream/src/inspection/spacing.ts",
+        "sha256": "238eb9a3902f76127a3d747ffcb5cdcf2b13921cbfa260cbb5966e676ba34b68"
+      },
+      {
+        "path": "vendor/upstream/src/lint/class-contract-rules.ts",
+        "sha256": "ed397c3c62ec3c2b313dfd46cb56907afd71b6c97b97c963d085dd6a4a9d87d8"
+      },
+      {
+        "path": "vendor/upstream/src/lint/engine.ts",
+        "sha256": "b7104370c2f9451733def9840df639f08b99306836ecb25106ac6c150f7401d7"
+      },
+      {
+        "path": "vendor/upstream/src/lint/project-context.ts",
+        "sha256": "4d2081765d386eee69533fd5cf82f83d1e7b0e6dd13c6ea53e38fc70d465d3f1"
+      },
+      {
+        "path": "vendor/upstream/src/lint/template-rules.ts",
+        "sha256": "2f7c7add62330d49e6fb8369601e9a730040cdfc2db8bc82829ef489dca576db"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/comprehension/analyze.ts",
+        "sha256": "7020c05375d533f35a1ed8b882aa1675b7fef3d6af2607c25371713e4fc51c43"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/comprehension/extract.ts",
+        "sha256": "a30abce90a40268fdc9adfdf2b52ee8a018a23c8f33e76e15ef89f438726dd77"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/comprehension/format.ts",
+        "sha256": "d6e87c65979b8d5473570be6c8762360d367c50a827bc01e660c4c9eee3d7512"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/comprehension/lexicon.ts",
+        "sha256": "5834f94959346df031afc79b03443e09d4d63a2e606520b4b251412bda2986f9"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/tools/comprehension-tools.ts",
+        "sha256": "e29ad8631f902a7ddaeb178d1fdc41e49fcc08a2e71a5d2d5c1446dca3a8e033"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/tools/extract-tools.ts",
+        "sha256": "aa3e2f6494bc64286b78dc3e8199cae1c11beef2ec58a92189c92ef6ae5e0573"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/tools/inspection-tools.ts",
+        "sha256": "2fbabfd27f88be69b922b64e44b7b082ace7f671109263cbc63826ca51a560de"
+      }
+    ]
+  }
 }

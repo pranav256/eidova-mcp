@@ -11,6 +11,11 @@
         "small corners",
         "fine borders"
       ],
+      "useCases": [
+        "Dense dashboard tools",
+        "Developer interfaces"
+      ],
+      "tradeoff": "Compact controls need careful touch spacing.",
       "variants": [
         "linear-quality",
         "precision-light",
@@ -31,6 +36,11 @@
         "reading-led spacing",
         "rounded surfaces"
       ],
+      "useCases": [
+        "Reading and publishing",
+        "Content interfaces"
+      ],
+      "tradeoff": "Serif headings are less suited to dense numeric controls.",
       "variants": [
         "notion"
       ]
@@ -45,6 +55,11 @@
         "open card treatment",
         "large corners"
       ],
+      "useCases": [
+        "Consumer forms",
+        "Commerce and ecommerce"
+      ],
+      "tradeoff": "Roomy controls show fewer records at once.",
       "variants": [
         "airbnb",
         "apple"
@@ -60,6 +75,11 @@
         "layered shadows",
         "raised controls"
       ],
+      "useCases": [
+        "Calm forms",
+        "Interfaces with physical feedback"
+      ],
+      "tradeoff": "Shadows need consistent surface contrast. Optional audio may be unavailable.",
       "variants": [
         "pillow-light",
         "inset-dark",
@@ -77,6 +97,11 @@
         "strong borders",
         "geometric font"
       ],
+      "useCases": [
+        "Technical tools",
+        "Instrument interfaces"
+      ],
+      "tradeoff": "Keep decorative Doto type in titles, with the existing body fonts for reading.",
       "variants": [
         "tv-style"
       ]
@@ -91,6 +116,11 @@
         "soft shadows",
         "large corners"
       ],
+      "useCases": [
+        "Layered interfaces",
+        "Overlays with visible background context"
+      ],
+      "tradeoff": "Contrast depends on the backdrop; blur adds rendering cost.",
       "variants": [
         "midnight-glass",
         "cinematic-dark",
@@ -107,6 +137,11 @@
         "subtle elevation",
         "medium corners"
       ],
+      "useCases": [
+        "Existing brands",
+        "Unobtrusive settings and forms"
+      ],
+      "tradeoff": "Quiet surfaces provide less visual emphasis by default.",
       "variants": [
         "neutral-monochrome"
       ]
@@ -121,6 +156,11 @@
         "layered surfaces",
         "pronounced elevation"
       ],
+      "useCases": [
+        "Prominent primary actions",
+        "Expressive interfaces"
+      ],
+      "tradeoff": "Keep status colors distinct from the primary action color.",
       "variants": [
         "dark-orange",
         "metal-fx-chromatic",

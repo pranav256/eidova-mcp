@@ -26,6 +26,11 @@ export const KNOWN_ACRONYMS = new Set([
   "AI", "CEO", "DIY", "GPS", "HD", "SMS", "URL",
 ]);
 
+/** Common short words remain words when a heading uses uppercase typography. */
+export const UPPERCASE_WORDS = new Set(
+  'about above after again all also an and any are as at back be been before best both but by can clip clips copy could day do does each end every find first for free from full get give go good great had has have help here how if in into is it its just keep last left less let like long look made make many may me more most much my need new no nor not now of off on one only open or other our out own page parts people price read right same save see set short should show side so some start still take text than that the their them then there these they thing this time to too top two up use user users video view want was way we well were what when which who why will with work would yes you your'.split(' '),
+);
+
 /**
  * Button labels that survive the screenshot test only because the reader
  * already knows the flow. None of them say what happens next.

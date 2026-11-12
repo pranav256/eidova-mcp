@@ -48,6 +48,7 @@ const styleSchema = z.object({
   columnGap: finiteNumber.optional(),
   padding: edgesSchema.optional(),
   margin: edgesSchema.optional(),
+  autoMargins: z.array(z.enum(["top", "right", "bottom", "left"])).max(4).optional(),
   overflowX: z.string().max(60).optional(),
   overflowY: z.string().max(60).optional(),
   textOverflow: z.string().max(60).optional(),

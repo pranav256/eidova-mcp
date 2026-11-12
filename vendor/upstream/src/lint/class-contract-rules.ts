@@ -168,7 +168,7 @@ function templateFragments(template: ts.TemplateExpression): string[] {
  * Tailwind never sees the finished class, so it generates no CSS for it, and
  * no other check can read it. A whole class chosen by a condition is fine.
  */
-export function dynamicClassFindings(expression: ts.Expression): ClassFinding[] {
+export function dynamicClassFindings(expression: ts.Expression, cssClasses: Set<string> = new Set()): ClassFinding[] {
   const fragments: string[] = [];
   const visit = (node: ts.Node): void => {
     if (ts.isTemplateExpression(node)) fragments.push(...templateFragments(node));
@@ -181,11 +181,16 @@ export function dynamicClassFindings(expression: ts.Expression): ClassFinding[] 
     ts.forEachChild(node, visit);
   };
   visit(expression);
-  if (fragments.length === 0) return [];
+  const unresolved = fragments.filter(fragment => {
+    const [prefix, suffix = ""] = fragment.split(/\$\{…\}| \+ …/);
+    // shortcut: selector families do not prove every runtime value; verify rendered variants.
+    return ![...cssClasses].some(name => name.startsWith(prefix) && name.endsWith(suffix));
+  });
+  if (unresolved.length === 0) return [];
   return [{
     severity: "moderate",
     ruleId: "class/dynamic",
-    message: `${quoted(fragments)} builds a class name from a variable, so Tailwind never generates it.`,
+    message: `${quoted(unresolved)} builds a class name from a variable, so Tailwind never generates it.`,
     fix: "Map each value to a complete class in a lookup object, or use a component variant.",
   }];
 }

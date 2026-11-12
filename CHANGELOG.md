@@ -2,6 +2,12 @@
 
 ## 0.2.0 — unreleased
 
+- Updated canonical Eidova repository metadata and deployment documentation. Archived local scratch evidence with hashes and removed obsolete consumer build output before delivery; runtime state and maintained project dependencies remain intact.
+- Fixed Node 24 public-URL extraction and MCP error flags while retaining validated, pinned DNS and fetch limits.
+- Accepted the `components` alias for scoped React kits; rejected empty, conflicting and partly unknown selections instead of returning incomplete or full kits.
+- Corrected heading/link copy extraction, ordinary uppercase vocabulary, scroll-container overflow, table text alignment and auto-margin evidence. Added explicit reference-page density budgets while retaining body language/accessibility checks.
+- Source review recognizes token declarations and authored CSS class families, including nested media rules; raw usage and unresolved dynamic utilities remain findings. Recovered upstream hashes and local source modifications are recorded separately.
+
 - Fixed native teammate mirror authorization: exact shared-resource reads/comments work while creator-only writes and revocation remain enforced. Separated cross-repository checks from the standalone MCP test suite.
 - Wired own-backend native membership, exact project/tool authority, creator-only policy, journaled content sync, anchored comments, presence and run revocation; adapters are tested against real SQLite/HTTP. Native guard/typecheck/build and real-engine project/catalog checks now pass locally.
 - Closed native workspace-key inheritance and metadata gaps; disabled inherited upstream telemetry, Vela commands/cloud routes and managed AMR in Eidova mode. Fixed plain-Node `studio:check --backend` and required an explicit native data root.

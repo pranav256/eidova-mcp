@@ -294,7 +294,10 @@ export function lintStylesheet(input: LintInput, config: LintConfig): Finding[] 
   const findings: Finding[] = [];
   const lines = lineIndex(input.content);
   if (config.rules.semanticTokens?.enabled !== false) {
-    for (const match of input.content.matchAll(COLOR)) {
+    // Token declarations define the palette; only literal usage bypasses it.
+    const usage = maskBlockComments(input.content, value => value.replace(/[^\r\n]/g, " "))
+      .replace(/--[\w-]+\s*:[^;{}]+/g, value => value.replace(/[^\r\n]/g, " "));
+    for (const match of usage.matchAll(COLOR)) {
       findings.push(sourceFinding(input, lines, lines.lineAt(match.index ?? 0), {
         severity: "moderate",
         ruleId: "token/hardcoded-color",

@@ -12,10 +12,12 @@ neither endorsement nor rights to third-party trademarks are implied.
   commit 175e7ba49bcf83857abc32933686b5aa3abb197e
   Copyright (c) 2026 Marvin Kaunda. See assets/LICENSE and assets/UPSTREAM.json.
 - Shared runtime: better-design@0.49.1 published npm source map
-  Copyright (c) 2026 Marvin Kaunda. See vendor/upstream/LICENSE and provenance.json.
+  Copyright (c) 2026 Marvin Kaunda. See vendor/upstream/LICENSE and vendor/upstream/provenance.json.
 
-The original recovered source is retained under vendor/upstream/src; the build
-adapter localizes network endpoints and removes hosted filesystem execution.
+Recovered source is retained under vendor/upstream/src with local review fixes.
+vendor/upstream/provenance.json retains the original recovered hashes and records
+the modified files separately. The build adapter localizes network endpoints
+and removes hosted filesystem execution.
 Original Eidova guidance is MIT licensed. Imported content retains its own
 rights and provenance. This project is independent and unaffiliated with Better Design.
 Lucide icons are provided by @iconify-json/lucide under the ISC license.
