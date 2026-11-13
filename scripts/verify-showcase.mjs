@@ -30,7 +30,7 @@ try {
   assert.equal(capabilities.library.total, data.library.total);
   assert.equal((await client.listTools()).tools.length, data.publicTools);
   await call('get-review-rules', { category: 'all' });
-  const files = await Promise.all(['Showcase.tsx','showcase.css','styles.css','editorial.css','App.tsx','main.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','components/CopyButton.tsx'].map(async file => ({ path: file, content: await readFile(path.join(website, 'src', file), 'utf8') })));
+  const files = await Promise.all(['Showcase.tsx','showcase.css','styles.css','clean.css','App.tsx','main.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','components/CopyButton.tsx'].map(async file => ({ path: file, content: await readFile(path.join(website, 'src', file), 'utf8') })));
   const source = await call('review-ui-code', { files });
   const inventory = await readdir(path.join(website, 'src/components/ui'));
   const findings = source.content.filter(block => block.type === 'text').map(block => block.text).join('\n').split('\n').filter(line => /^- \*\*(critical|serious)\*\*/.test(line));
@@ -73,8 +73,8 @@ try {
         for (const selector of ['.showcase-explain-grid article','.showcase-path']) for (const node of await page.locator(selector).all()) panels.push(await node.evaluate(node => ({ screen: node.querySelector('h3').textContent, headline: node.querySelector('h3').textContent, body: [...node.querySelectorAll('p')].map(node => node.textContent), actions: [], surface: 'reference' })));
       }
       const family = page.getByRole('combobox', { name: 'Design family', exact: true });
-      assert.equal(await family.inputValue(), 'editorial-dark');
-      assert.equal(await page.getByRole('combobox', { name: 'Palette appearance', exact: true }).inputValue(), 'dark');
+      assert.equal(await family.inputValue(), 'minimal-light');
+      assert.equal(await page.getByRole('combobox', { name: 'Palette appearance', exact: true }).inputValue(), 'light');
       await family.selectOption('linear');
       assert.equal(new URL(page.url()).searchParams.get('family'), 'linear');
       await page.locator('iframe[title="Precision interactive components"]').scrollIntoViewIfNeeded();
@@ -200,7 +200,7 @@ try {
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Give your agent the whole toolkit.', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Better UI starts here.', exact: true }).waitFor();
   assert.equal(await page.getByRole('link', { name: 'Try the showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Themes', exact: true }).getAttribute('href'), '#themes');

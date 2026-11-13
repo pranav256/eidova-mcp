@@ -1,7 +1,7 @@
 # MCP website defaults
 
-For new website builds in this project, use the approved Form & Field Editorial Dark foundation unless the user supplies another brand or explicitly requests a different design. Select catalog ID `editorial-dark` with the actual React/Radix kit, Georgia display headings, bundled Inter body text, dark appearance, 1rem radius and generous editorial spacing. Use readable muted text and control borders. Preserve established designs in unrelated products and original library specimens.
+Use the clean modern Neutral foundation in [redesign 1311.md](https://github.com/pranav256/eidova-website/blob/main/redesign%201311.md). The user rejected the earlier Editorial default. Select the actual minimal-light React/Radix kit, Inter typography and light appearance by default, preserving explicit visitor appearance choices. This also applies to future MCP website builds unless another brand is supplied. Keep unrelated products and original specimens faithful to their own systems.
 
-The complete approved recipe is versioned in the sibling website repository: [redesign 1311.md](https://github.com/pranav256/eidova-website/blob/main/redesign%201311.md). Local MCP team rules also contain this default; do not publish private workspace state or capability keys.
+Start UI builds with find-design-system and retrieve the actual selected kit. Load get-ui-principle before styling and get-ux-principle before behavior. Preserve routes, drafts, error recovery, licenses and existing working changes. Before delivery run get-review-rules, review-ui-code, check-comprehension and inspect-spacing on rendered DOM, fixing critical and serious findings. Follow the dashboard review workflow for dashboards.
 
-Follow [the MCP workflow](content/workflow.md): find-design-system, actual kit retrieval, UI principles before styling, UX principles before behavior, then code/copy/rendered-spacing review. Fix critical and serious findings and follow the dashboard review workflow when applicable. Preserve existing working changes and behavior.
+Local MCP team rules contain this preference; never publish private workspace state or capability keys.
