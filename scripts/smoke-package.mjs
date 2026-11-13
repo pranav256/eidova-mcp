@@ -11,7 +11,8 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const directory=await mkdtemp(path.join(os.tmpdir(),'Eidova Package '));
 const npm=process.env.npm_execpath;assert.ok(npm,'Run through npm run smoke:package.');
 try {
-  const report=JSON.parse(execFileSync(process.execPath,[npm,'pack','--json','--ignore-scripts','--pack-destination',directory],{cwd:root,encoding:'utf8'}));
+  // The full library's pack manifest exceeds Node's default 1 MiB buffer.
+  const report=JSON.parse(execFileSync(process.execPath,[npm,'pack','--json','--ignore-scripts','--pack-destination',directory],{cwd:root,encoding:'utf8',maxBuffer:8*1024*1024}));
   const entries=Array.isArray(report)?report:Object.values(report);
   assert.equal(entries.length,1,'Expected one packed package.');
   const packed=entries[0];
@@ -21,7 +22,7 @@ try {
   const packedPaths=new Set(packed.files.map(file=>file.path));
   assert.ok(packedPaths.has('vendor/upstream/provenance.json'));
   assert.ok(packedPaths.has('content/open-design/LICENSE'));
-  for(const entry of bundle.entries)for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${entry.kind}/${entry.id}/${file.path}`),`Missing bundled file: ${entry.id}/${file.path}`);
+  for(const entry of bundle.entries)for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${entry.sourcePath??entry.kind+'/'+entry.id}/${file.path}`),`Missing bundled file: ${entry.id}/${file.path}`);
   for(const notice of ['LICENSE','NOTICE','assets/LICENSE','assets/TABLER-LICENSE','vendor/upstream/LICENSE'])assert.ok(packed.files.some(file=>file.path===notice),`Missing notice: ${notice}`);
   for(const document of ['README.md','CHANGELOG.md','SECURITY.md','server.json','docs/CLIENTS.md','docs/BENCHMARK.md','docs/DESIGN-FAMILIES.md','docs/DTCG.md','docs/RELEASE-CANDIDATE.md','docs/SOL-IMPLEMENTATION-PLAN.md'])assert.ok(packed.files.some(file=>file.path===document),`Missing release document: ${document}`);
   assert.ok(packed.files.every(file=>!/(^|\/)(\.work|\.eidova|\.open-design|private-captures|\.env|node_modules)(\/|$)/.test(file.path)));
@@ -46,6 +47,11 @@ try {
     assert.ok(!(await client.callTool({name:'search-resources',arguments:{query:'linear'}})).isError);
     assert.match(JSON.stringify(await client.callTool({name:'read-resource',arguments:{uri:'design://open-design/design-systems/linear-app/files/DESIGN.md'}})),/Linear/);
     assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/design-systems/linear-app/files/DESIGN.md'})),/Linear/);
+    const capabilities=JSON.parse((await client.callTool({name:'get-capabilities',arguments:{}})).content[0].text);
+    assert.equal(capabilities.library.total,920);
+    assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/design-templates/aster-atelier/files/example.html'})),/Aster/);
+    const font=await client.callTool({name:'read-resource',arguments:{uri:'design://open-design/plugins/video-templates-frame-build-minimal/files/source/fonts/f6e772e776f666632.woff2'}});
+    assert.equal(JSON.parse(font.content[0].text).mimeType,'font/woff2');
   } finally {await client.close();}
   console.log(JSON.stringify({version,files:packed.files.length,packedBytes:packed.size,unpackedBytes:packed.unpackedSize,scope:'tarball install, assets, diagnostics and stdio core from a path containing spaces'}));
 } finally {assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});}

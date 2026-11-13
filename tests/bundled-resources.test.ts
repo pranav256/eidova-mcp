@@ -9,11 +9,28 @@ import { resourcePath } from '../src/resources.js';
 import { createServer } from '../src/mcp.js';
 import { app } from '../src/app.js';
 
+test('the complete OpenDesign library includes templates, plugins and their original assets', async () => {
+  const entries=await bundledEntries();
+  assert.equal(entries.length,920);
+  for(const [kind,count] of Object.entries({'design-systems':152,skills:169,'design-templates':115,plugins:479,templates:3,catalogs:2})) {
+    assert.equal(entries.filter(entry=>String(entry.kind)===kind).length,count,kind);
+    assert.equal((await searchResources('',kind,20)).total,count,kind);
+  }
+  const template=entries.find(entry=>String(entry.kind)==='design-templates'&&entry.id==='aster-atelier');
+  assert.ok(template?.files.some(file=>file.path==='example.html'));
+  const image=entries.find(entry=>String(entry.kind)==='plugins'&&entry.id==='image-templates-3d-stone-staircase-evolution-infographic');
+  assert.equal(image?.license,'CC-BY-4.0');
+  assert.ok(image.files.some(file=>file.path==='template.json'));
+  const original=await bundledFile('design-templates','open-design-landing','assets/hero.png');
+  assert.ok(original && original.bytes.length>1024*1024);
+  assert.equal((await searchResources('infographic','plugins')).matches.every(entry=>entry.kind==='plugins'),true);
+});
+
 test('all imported files retain hashes, entrypoints and retrievable license notices', async () => {
   const entries=await bundledEntries();
   assert.equal(entries.filter(entry=>entry.kind==='design-systems').length,152);
   assert.equal(entries.filter(entry=>entry.kind==='skills').length,169);
-  assert.equal(new Set(entries.map(entry=>entry.kind+'/'+entry.id)).size,321);
+  assert.equal(new Set(entries.map(entry=>entry.kind+'/'+entry.id)).size,920);
   assert.match(await readFile(resourcePath('content/open-design/LICENSE'),'utf8'),/Apache License/);
   for(const entry of entries) {
     assert.ok(entry.name && entry.description);
@@ -23,9 +40,10 @@ test('all imported files retain hashes, entrypoints and retrievable license noti
   }
   const first=await searchResources('',undefined,20);
   const second=await searchResources('',undefined,20,20);
-  assert.equal(first.total,321);assert.equal(first.nextOffset,20);
+  assert.equal(first.total,920);assert.equal(first.nextOffset,20);
   assert.ok(!second.matches.some(entry=>first.matches.some(previous=>previous.uri===entry.uri)));
   assert.equal((await searchResources('linear','design-systems')).matches[0].id,'linear-app');
+  assert.equal((await searchResources('linear')).matches[0].id,'linear-app');
   assert.equal((await searchResources('not-a-real-resource-12345')).total,0);
   assert.equal((await searchResources('animation','skills')).matches.every(entry=>entry.kind==='skills'),true);
   for(const file of ['../../LICENSE','../linear-app/DESIGN.md','%2e%2e/LICENSE','DESIGN.md/../tokens.css','C:\\Windows\\win.ini']) assert.equal(await bundledFile('design-systems','linear-app',file),null);
@@ -41,6 +59,9 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
   const origin='http://127.0.0.1:'+(listener.address() as {port:number}).port;
   try {
     await server.connect(b);await client.connect(a);
+    const capabilities=JSON.parse(((await client.callTool({name:'get-capabilities',arguments:{}})).content as {text:string}[])[0].text);
+    assert.equal(capabilities.library.total,920);
+    assert.equal(capabilities.library.kinds['design-templates'],115);
     const search=await client.callTool({name:'search-resources',arguments:{query:'linear',kind:'design-systems'}});
     assert.ok(!search.isError);
     assert.match(JSON.stringify(search),/linear-app/);
@@ -60,7 +81,7 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
     assert.equal(reassembled,(await bundledFile('design-systems','airbnb','DESIGN-zh.md'))!.bytes.toString('utf8'));
     for(const uri of ['file:///etc/passwd','https://example.com','design://open-design/skills/missing','design://open-design/design-systems/linear-app/files/%2E%2E%2FLICENSE','design://open-design/design-systems/linear-app/files/%ZZ'])assert.ok((await client.callTool({name:'read-resource',arguments:{uri}})).isError,uri);
     for(const extra of [{offset:-1},{offset:10000000},{limit:24001}])assert.ok((await client.callTool({name:'read-resource',arguments:{uri:translatedUri,...extra}})).isError);
-    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/open-design\/(skills|design-systems)\//.test(resource.uri)).length,321);
+    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/open-design\/[^/]+\//.test(resource.uri)).length,920);
     assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/license'})),/Apache License/);
     const entry=(await bundledEntries()).find(entry=>entry.id==='linear-app')!;
     const manifest=await client.readResource({uri:'design://open-design/design-systems/linear-app'});
@@ -80,6 +101,34 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
     const binary=await client.readResource({uri:fileUri(binaryEntry,binaryName)});
     assert.equal((binary.contents[0] as {blob:string}).blob,(await bundledFile(binaryEntry.kind,binaryEntry.id,binaryName))!.bytes.toString('base64'));
     const image=await readTool(fileUri(binaryEntry,binaryName));assert.equal(image.binary,true);assert.ok(image.url);assert.equal(image.text,undefined);
+    const plugin=(await bundledEntries()).find(entry=>entry.kind==='plugins'&&entry.files.some(file=>file.path.endsWith('.woff2')))!;
+    const fontName=plugin.files.find(file=>file.path.endsWith('.woff2'))!.path;
+    const font=await client.readResource({uri:fileUri(plugin,fontName)});
+    assert.equal(font.contents[0].mimeType,'font/woff2');
+    assert.equal((await readTool(fileUri(plugin,fontName))).mimeType,'font/woff2');
+    for(const kind of ['design-templates','plugins','templates','catalogs']) {
+      assert.ok(!(await client.callTool({name:'search-resources',arguments:{kind}})).isError,kind);
+      assert.equal((await fetch(origin+'/api/resources?kind='+kind)).status,200);
+    }
+    const templateUri='design://open-design/design-templates/aster-atelier/files/example.html';
+    assert.match((await readTool(templateUri)).text,/<!doctype html>/i);
+    const preview=await fetch(origin+'/api/resources/design-templates/aster-atelier/preview?path=example.html');
+    assert.equal(preview.status,200);
+    assert.match(preview.headers.get('content-type')!,/^text\/html/);
+    assert.match(preview.headers.get('content-security-policy')!,/sandbox allow-scripts/);
+    assert.doesNotMatch(preview.headers.get('content-security-policy')!,/allow-same-origin/);
+    assert.match(preview.headers.get('content-security-policy')!,/connect-src 'none'; form-action 'none'/);
+    assert.equal(preview.headers.get('referrer-policy'),'no-referrer');
+    assert.equal(preview.headers.get('content-disposition'),null);
+    const previewHtml=await preview.text();
+    assert.match(previewHtml,/<base href="\/api\/resource-previews\/design-templates\/aster-atelier\/">/);
+    assert.match(previewHtml,/parent.postMessage\(\{type:"eidova-preview-escape"\}/);
+    const stylesheet=await fetch(origin+'/api/resource-previews/design-systems/linear-app/tokens.css');
+    assert.equal(stylesheet.status,200);assert.match(stylesheet.headers.get('content-type')!,/^text\/css/);
+    assert.deepEqual(Buffer.from(await stylesheet.arrayBuffer()),(await bundledFile('design-systems','linear-app','tokens.css'))!.bytes);
+    for(const path of ['path=SKILL.md','path=..%2Fexample.html','path=missing.html'])assert.equal((await fetch(origin+'/api/resources/design-templates/aster-atelier/preview?'+path)).status,404);
+    assert.equal((await fetch(origin+'/api/resource-previews/LICENSE')).status,404);
+    assert.equal((await fetch(origin+'/api/resource-previews/design-templates/not-present/example.html')).status,404);
     const license=await fetch(origin+'/api/resources/license');assert.equal(license.status,200);assert.match(license.headers.get('content-disposition')!,/attachment/);assert.match(await license.text(),/Apache License/);
     for(const query of ['path=..%2F..%2FLICENSE','path=missing.html']) {
       const response=await fetch(origin+'/api/resources/design-systems/linear-app/file?'+query);
