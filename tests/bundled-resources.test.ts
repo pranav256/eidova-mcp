@@ -9,6 +9,13 @@ import { resourcePath } from '../src/resources.js';
 import { createServer } from '../src/mcp.js';
 import { app } from '../src/app.js';
 
+test('Vercel API routes preserve the resource path query', async () => {
+  const config=JSON.parse(await readFile(new URL('../vercel.json',import.meta.url),'utf8'));
+  const route=config.rewrites.find((route:{source:string})=>route.source.startsWith('/api/:'));
+  assert.ok(route);
+  assert.doesNotMatch(route.source,/:path\*/, 'A Vercel wildcard must not replace the filename path query.');
+});
+
 test('the complete OpenDesign library includes templates, plugins and their original assets', async () => {
   const entries=await bundledEntries();
   assert.equal(entries.length,920);

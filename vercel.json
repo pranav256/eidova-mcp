@@ -35,7 +35,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/api/:path*",
+      "source": "/api/:route*",
       "destination": "/api/index"
     },
     {
