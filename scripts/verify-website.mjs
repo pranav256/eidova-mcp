@@ -33,7 +33,7 @@ await client.connect(process.env.MCP_PRIVATE_ARCHIVE
 const browser = await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || (process.platform==='win32'?'msedge':undefined),headless:true});
 const states = [], expandedStates = [], handoffStates = [], panels = [], contrasts = [], errors = [];
 const knownTerms = ['MCP','UI','HTTP','JSON','MIT','React','Geist','mcpServers','registry','token','tokens','API','CSS','IBM','SF','FX','Sans','Mono','DM','workspace','session','VS'];
-const count = async page => { await page.waitForFunction(expected => document.querySelectorAll('.theme-card').length===expected,families.length); };
+const count = async page => { await page.waitForFunction(expected => document.querySelectorAll('.theme-card').length===expected,31); };
 async function inspectStates(name,captured) {
   const parts=[];const summary={critical:0,serious:0,moderate:0,total:0};
   for(let index=0;index<captured.length;index+=2) {
@@ -50,20 +50,22 @@ async function inspectStates(name,captured) {
 async function verifyBehavior(page) {
   assert.equal(await page.locator('.connection-section #connect').count(),1);
   assert.equal(await page.locator('.hero iframe, .theme-session, .apply-theme').count(),0);
-  assert.equal(await page.locator('.theme-card-preview img').count(),families.length);
+  assert.equal(await page.locator('.theme-card-preview img').count(),31);
   for(const image of await page.locator('.theme-card-preview img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(node=>node.decode());assert.ok(await image.evaluate(node=>node.naturalWidth>=700));}
   const footer=page.getByRole('navigation',{name:'Footer navigation'});
   assert.match(await footer.getByRole('link',{name:'Docs',exact:true}).getAttribute('href'),/docs\/CLIENTS\.md$/);
   const health=await page.request.get(reviewServiceUrl(await footer.getByRole('link',{name:'Status',exact:true}).getAttribute('href')));
   assert.equal(health.status(),200);assert.equal((await health.json()).version,websiteVersion);
   assert.match(await page.locator('.site-footer > p').textContent(),new RegExp('v'+websiteVersion.replaceAll('.','\\.')));
-  const preview=page.getByRole('button',{name:'View components: Precision',exact:true});
+  const preview=page.getByRole('button',{name:'Preview theme: Linear',exact:true});
   await preview.focus();await page.keyboard.press('Enter');
-  await page.getByRole('heading',{name:'Precision components',exact:true}).waitFor();
+  await page.getByRole('heading',{name:'Linear preview',exact:true}).waitFor();
   assert.equal(await page.evaluate(()=>document.activeElement.id),'component-preview-title');
   const specimen=page.frameLocator('.specimen-frame');await specimen.getByRole('textbox',{name:'Workspace name',exact:true}).waitFor();
-  const dialog=page.getByRole('dialog',{name:'Precision components',exact:true});assert.equal(await dialog.evaluate(node=>node.open),true);
+  const dialog=page.getByRole('dialog',{name:'Linear preview',exact:true});assert.equal(await dialog.evaluate(node=>node.open),true);
   panels.push(await dialog.evaluate(node=>({screen:'Separate component viewer',headline:node.querySelector('h2').textContent,body:[...node.querySelectorAll('.section-heading p')].map(item=>item.textContent),actions:[...node.querySelectorAll('.section-heading a,.section-heading button')].map(item=>item.textContent.trim())})));
+  assert.equal(await page.locator('.theme-handoff').isVisible(),false);
+  await page.getByRole('button',{name:'Use theme',exact:true}).click();
   const handoff=page.locator('.theme-handoff');
   await handoff.getByRole('button',{name:'Copy agent prompt',exact:true}).click();
   await handoff.getByRole('status').filter({hasText:'Copied to clipboard.'}).waitFor();
@@ -94,7 +96,7 @@ async function verifyBehavior(page) {
   assert.equal(await page.evaluate(()=>document.activeElement.id),'theme-search');
   await search.fill('minimal light');
   assert.equal(await page.locator('.theme-card').count(),1);
-  assert.equal(await page.locator('.theme-card h3').textContent(),'Neutral');
+  assert.equal(await page.locator('.theme-card h3').textContent(),'Minimal Light');
   await search.fill('no-match-9348');
   await page.getByRole('button',{name:'Clear search and filters'}).click();await count(page);
   for(const scheme of ['Dark','Light']){
@@ -106,9 +108,7 @@ async function verifyBehavior(page) {
     assert.equal(await page.getByRole('button',{name:scheme+' base',exact:true}).getAttribute('aria-pressed'),'true');
   }
   await page.getByRole('button',{name:'All themes',exact:true}).click();await count(page);
-  await page.getByRole('button',{name:'Show all 31 themes'}).click();
   assert.equal(await page.locator('.theme-card').count(),31);
-  await page.getByRole('button',{name:'Show fewer themes'}).click();await count(page);
   await page.getByRole('tab',{name:'Codex',exact:true}).focus();
   await page.keyboard.press('ArrowRight');assert.equal(await page.getByRole('tab',{name:'Claude Code',exact:true}).getAttribute('aria-selected'),'true');
   await page.keyboard.press('End');assert.equal(await page.getByRole('tab',{name:'Server URL',exact:true}).getAttribute('aria-selected'),'true');
@@ -157,7 +157,7 @@ async function verifyBehavior(page) {
 try {
   const rules = await client.callTool({name:'get-review-rules',arguments:{category:'all',context:'Review Eidova website redesign using its own MCP'}});
   await save('rules',rules);
-  const paths = ['App.tsx','main.tsx','theme.ts','theme.css','editorial.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
+  const paths = ['App.tsx','main.tsx','theme.ts','theme.css','clean.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
   const files = await Promise.all(paths.map(async p => ({path:p,content:await readFile(path.join(website,'src',p),'utf8')})));
   const source = await client.callTool({name:'review-ui-code',arguments:{files}}); await save('source',source);
   assert.ok(!source.isError);
@@ -172,10 +172,10 @@ try {
     assert.equal((await page.goto(origin,{waitUntil:'networkidle'})).status(),200);
     await count(page); await page.evaluate(() => document.fonts.ready);
     assert.ok(await page.evaluate(()=>document.fonts.check('400 16px Inter')));
-    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Georgia/);
-    assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
-    for (const mode of ['dark','light']) {
-      if(mode==='light') { await page.getByRole('button',{name:'Switch to light mode'}).click(); await page.reload({waitUntil:'networkidle'}); await count(page); }
+    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Inter/);
+    assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+    for (const mode of ['light','dark']) {
+      if(mode==='dark') { await page.getByRole('button',{name:'Switch to dark mode'}).click(); await page.reload({waitUntil:'networkidle'}); await count(page); }
       assert.equal(await page.locator('html').getAttribute('data-theme'),mode);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
       for(const image of await page.locator('.theme-card-preview img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(node=>node.decode());}
@@ -193,9 +193,12 @@ try {
         const root = getComputedStyle(document.documentElement);
         return {width:innerWidth,mode:document.documentElement.dataset.theme,pairs:Object.fromEntries([['foreground','background'],['muted-foreground','card'],['primary-foreground','primary']].map(([a,b])=>[a,ratio(root.getPropertyValue('--'+a),root.getPropertyValue('--'+b))]))};
       }));
-      await page.getByRole('button',{name:'View components: Precision',exact:true}).click();
+      await page.getByRole('button',{name:'Preview theme: Linear',exact:true}).click();
       await page.frameLocator('.specimen-frame').getByRole('textbox',{name:'Workspace name',exact:true}).waitFor();
       await page.evaluate(()=>document.fonts.ready);
+      const previewState=await page.evaluate(script);previewState.name=width+'px '+mode+' wide preview';handoffStates.push(previewState);
+      await page.screenshot({path:path.join(dir,width+'-'+mode+'-wide-preview.png')});
+      await page.getByRole('button',{name:'Use theme',exact:true}).click();
       for(const expanded of [false,true]) {
         if(expanded) await page.locator('.handoff-prompt summary').click();
         await page.locator('.theme-handoff').scrollIntoViewIfNeeded();
@@ -206,11 +209,9 @@ try {
         assert.deepEqual(contrast.filter(item=>item.ratio<item.minimum),[]);
       }
       await page.getByRole('button',{name:'Close preview',exact:true}).click();
-      await page.getByRole('button',{name:'Show all 31 themes'}).click();
       assert.equal(await page.locator('.theme-card').count(),31);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
       const expanded=await page.evaluate(script);expanded.name=`${width}px ${mode} all themes`;expandedStates.push(expanded);
-      await page.getByRole('button',{name:'Show fewer themes'}).click();
     }
     if(width===390) {
       const read = async (selector,heading) => page.locator(selector).evaluate((e,h)=>{
@@ -222,11 +223,9 @@ try {
       panels.push({screen:'Installation guide',headline:await page.locator('.installation-heading h2').textContent(),body:await page.locator('.installation-heading p').allTextContents(),actions:[]});
       panels.push({screen:'Getting started steps',headline:await page.locator('.setup-steps strong').first().textContent(),body:await page.locator('.setup-steps p,strong').allTextContents(),actions:[]});
       panels.push({screen:'First-task examples',headline:await page.locator('.first-tasks summary').textContent(),body:await page.locator('.first-tasks li').allTextContents(),actions:[]});
-      await page.getByRole('button',{name:'Show all 31 themes'}).click();
       for (const sel of ['.workflow-item','.theme-card-info']) for(let i=0;i<await page.locator(sel).count();i++){
         const e=page.locator(sel).nth(i); panels.push({screen:sel+' '+i,...await e.evaluate(e=>({headline:e.querySelector('h3').textContent,body:[...e.querySelectorAll('p,code,.scheme-label')].map(n=>n.textContent),actions:[...e.querySelectorAll('a,button')].map(n=>n.textContent.replace(/[↗]/g,'').trim())}))});
       }
-      await page.getByRole('button',{name:'Show fewer themes'}).click();
       for(let i=0;i<clients.length;i++){
         await page.getByRole('tab',{name:clients[i],exact:true}).click();
         panels.push({screen:clients[i]+' setup',headline:clients[i],body:await page.locator('.client-panel p').allTextContents(),actions:await page.locator('.copy-action button').allTextContents()});
@@ -237,10 +236,12 @@ try {
       await verifyBehavior(page);
       for(const family of families) {
         await page.goto(origin+'/?preview='+family.representative,{waitUntil:'networkidle'});
+        await page.getByRole('button',{name:'Use theme',exact:true}).click();
         await page.getByRole('heading',{name:'Use '+family.representative.split('-').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '),exact:true}).waitFor();
         panels.push(await page.locator('.theme-handoff').evaluate(node=>({screen:node.querySelector('h3').textContent,headline:node.querySelector('h3').textContent,body:[...node.querySelectorAll('dt,dd')].map(item=>item.textContent),actions:['Copy agent prompt','Project instructions']})));
       }
       await page.goto(origin+'/?preview=metal-fx-silver',{waitUntil:'networkidle'});
+      await page.getByRole('button',{name:'Use theme',exact:true}).click();
       await page.getByRole('heading',{name:'Use Metal Fx Silver',exact:true}).waitFor();
       await page.locator('.handoff-prompt summary').click();
       assert.match(await page.getByRole('textbox',{name:'Agent prompt'}).inputValue(),/designSystemId "metal-fx-silver"/);
@@ -267,7 +268,7 @@ try {
   const failures=reviews.filter(r=>r.result.structuredContent?.verdict!=='pass');
   console.log('COPY',JSON.stringify(failures.map(r=>({screen:r.panel.screen,result:r.result.structuredContent}))));
   assert.deepEqual(errors,[]);
-  const summary={origin,widths:[390,1440,1728],schemes:['dark','light'],sourcePassed:true,handoffSpacing:handoffSpacing.summary,spacing:spacing.summary,expandedSpacing:expandedSpacing.summary,setupSpacing:setupSpacing.summary,comprehensionPanels:panels.length,comprehensionFailures:failures.length,contrasts,galleryCaptures:gallery.captures.length,galleryImageBytes:gallery.captures.reduce((sum,item)=>sum+item.bytes,0),baselineCopyCompared:Boolean(process.env.WEBSITE_BASELINE_DIR),pageErrors:errors,behavior:['exact-theme agent prompt and DESIGN.md browser download','all eight family handoff panels','installation with six client formats','separate modal preview, keyboard Escape, focus return and sample reset','source-bound gallery images','search and URL persistence','multiword search','no-match recovery','appearance filters and persistence','expand/collapse 31 themes','keyboard tabs','core/full options','clipboard success and denial','registry link','catalog failure, invalid response, retry and timeout','reduced motion','keyboard skip link']};await save('summary',summary);
+  const summary={origin,widths:[390,1440,1728],schemes:['dark','light'],sourcePassed:true,handoffSpacing:handoffSpacing.summary,spacing:spacing.summary,expandedSpacing:expandedSpacing.summary,setupSpacing:setupSpacing.summary,comprehensionPanels:panels.length,comprehensionFailures:failures.length,contrasts,galleryCaptures:gallery.captures.length,galleryImageBytes:gallery.captures.reduce((sum,item)=>sum+item.bytes,0),baselineCopyCompared:Boolean(process.env.WEBSITE_BASELINE_DIR),pageErrors:errors,behavior:['exact-theme agent prompt and DESIGN.md browser download','all eight family handoff panels','installation with six client formats','separate modal preview, keyboard Escape, focus return and sample reset','source-bound gallery images','search and URL persistence','multiword search','no-match recovery','appearance filters and persistence','all 31 themes visible without expansion','keyboard tabs','core/full options','clipboard success and denial','registry link','catalog failure, invalid response, retry and timeout','reduced motion','keyboard skip link']};await save('summary',summary);
   for(const review of [spacing,expandedSpacing,setupSpacing,handoffSpacing])assert.deepEqual(review.blockers,[]);
   assert.equal(failures.length,0);
   assert.ok(contrasts.every(c=>Object.values(c.pairs).every(r=>r>=4.5)));
