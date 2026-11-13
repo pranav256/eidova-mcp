@@ -17,7 +17,7 @@ const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || (
 const states=[],panels=[],errors=[],contrasts=[];
 try {
   const rules=await client.callTool({name:'get-review-rules',arguments:{category:'all'}});assert.ok(!rules.isError);
-  const files=await Promise.all(['App.tsx','ResourceLibrary.tsx','components/CopyButton.tsx','styles.css','theme.css','main.tsx'].map(async file=>({path:file,content:await readFile(path.join(website,'src',file),'utf8')})));
+  const files=await Promise.all(['App.tsx','ResourceLibrary.tsx','components/CopyButton.tsx','styles.css','theme.css','editorial.css','main.tsx'].map(async file=>({path:file,content:await readFile(path.join(website,'src',file),'utf8')})));
   const source=await client.callTool({name:'review-ui-code',arguments:{files}});assert.ok(!source.isError);
   const componentInventory=await readdir(path.join(website,'src/components/ui'));
   const sourceFindings=source.content.filter(item=>item.type==='text').map(item=>item.text).join('\n').split('\n').filter(line=>/^- \*\*(critical|serious)\*\*/.test(line));
@@ -30,7 +30,7 @@ try {
     const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce',colorScheme:'dark',permissions:['clipboard-read','clipboard-write']});
     const page=await context.newPage();page.on('pageerror',error=>errors.push(error.message));
     await page.goto(origin,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
-    assert.ok(await page.evaluate(()=>document.fonts.check('500 16px Geist')));
+    assert.ok(await page.evaluate(()=>document.fonts.check('500 16px Inter')));
     const section=page.locator('#resources');
     for(const mode of ['dark','light']) {
       if(mode==='light')await page.getByRole('button',{name:'Switch to light mode'}).click();

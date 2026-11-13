@@ -13,6 +13,8 @@ const dir = path.resolve(process.argv[2] || '.work/verification/website');
 const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website');
 const endpoint = process.env.WEBSITE_EXPECTED_MCP_URL || 'https://open-design-mcp-liard.vercel.app/mcp';
 const coreEndpoint=endpoint.replace(/\/core\/?$/,'').replace(/\/$/,'')+'/core';
+// Review the matching local service when supplied; keep hosted link assertions intact.
+const reviewServiceUrl = url => process.env.MCP_REVIEW_URL ? new URL(new URL(url).pathname, process.env.MCP_REVIEW_URL).href : url;
 const families=JSON.parse(await readFile(path.join(website,'src/design-families.json'),'utf8'));
 const gallery=JSON.parse(await readFile(path.join(website,'src/family-preview-manifest.json'),'utf8'));
 assert.equal(gallery.sourceManifestSha256,createHash('sha256').update(await readFile(path.join(website,'src/previews/manifest.json'))).digest('hex'));
@@ -46,13 +48,13 @@ async function inspectStates(name,captured) {
   const result={summary,parts,blockers,exceptions:exceptions.length?{count:exceptions.length,reason:'Theme search reserves 40px for its leading icon and 64px for the wider trailing Clear button.'}:null};await save(name,result);return result;
 }
 async function verifyBehavior(page) {
-  assert.equal(await page.locator('.hero #connect').count(),1);
+  assert.equal(await page.locator('.connection-section #connect').count(),1);
   assert.equal(await page.locator('.hero iframe, .theme-session, .apply-theme').count(),0);
   assert.equal(await page.locator('.theme-card-preview img').count(),families.length);
   for(const image of await page.locator('.theme-card-preview img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(node=>node.decode());assert.ok(await image.evaluate(node=>node.naturalWidth>=700));}
   const footer=page.getByRole('navigation',{name:'Footer navigation'});
   assert.match(await footer.getByRole('link',{name:'Docs',exact:true}).getAttribute('href'),/docs\/CLIENTS\.md$/);
-  const health=await page.request.get(await footer.getByRole('link',{name:'Status',exact:true}).getAttribute('href'));
+  const health=await page.request.get(reviewServiceUrl(await footer.getByRole('link',{name:'Status',exact:true}).getAttribute('href')));
   assert.equal(health.status(),200);assert.equal((await health.json()).version,websiteVersion);
   assert.match(await page.locator('.site-footer > p').textContent(),new RegExp('v'+websiteVersion.replaceAll('.','\\.')));
   const preview=page.getByRole('button',{name:'View components: Precision',exact:true});
@@ -134,7 +136,7 @@ async function verifyBehavior(page) {
   await page.locator('.copy-feedback').filter({hasText:'Select the text and copy it manually.'}).waitFor();
   await page.evaluate(()=>{if(window.__copy)Object.defineProperty(navigator.clipboard,'writeText',window.__copy);else delete navigator.clipboard.writeText;});
   const tokensUrl=await page.locator('.theme-token-link').first().getAttribute('href');
-  const tokenResponse=await page.request.get(tokensUrl);assert.equal(tokenResponse.status(),200);
+  const tokenResponse=await page.request.get(reviewServiceUrl(tokensUrl));assert.equal(tokenResponse.status(),200);
   assert.ok((await tokenResponse.json()).cssVars);
   await page.route('**/api/catalog',route=>route.fulfill({status:503,body:'{}'}));
   await page.reload();await page.getByRole('alert').waitFor();
@@ -155,7 +157,7 @@ async function verifyBehavior(page) {
 try {
   const rules = await client.callTool({name:'get-review-rules',arguments:{category:'all',context:'Review Eidova website redesign using its own MCP'}});
   await save('rules',rules);
-  const paths = ['App.tsx','main.tsx','theme.ts','theme.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
+  const paths = ['App.tsx','main.tsx','theme.ts','theme.css','editorial.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
   const files = await Promise.all(paths.map(async p => ({path:p,content:await readFile(path.join(website,'src',p),'utf8')})));
   const source = await client.callTool({name:'review-ui-code',arguments:{files}}); await save('source',source);
   assert.ok(!source.isError);
@@ -169,8 +171,8 @@ try {
     const page = await context.newPage(); page.on('pageerror',e=>errors.push(e.message));
     assert.equal((await page.goto(origin,{waitUntil:'networkidle'})).status(),200);
     await count(page); await page.evaluate(() => document.fonts.ready);
-    assert.ok(await page.evaluate(()=>document.fonts.check('600 16px Geist')));
-    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Geist/);
+    assert.ok(await page.evaluate(()=>document.fonts.check('400 16px Inter')));
+    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Georgia/);
     assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
     for (const mode of ['dark','light']) {
       if(mode==='light') { await page.getByRole('button',{name:'Switch to light mode'}).click(); await page.reload({waitUntil:'networkidle'}); await count(page); }
@@ -216,7 +218,7 @@ try {
         // Navigation labels are readable context; actions are choices within a task.
         return {headline:text(e.querySelector(h)),body:[...e.querySelectorAll('p,label,code,strong,.scheme-label,nav a')].map(text).filter(Boolean),actions:[...e.querySelectorAll('a,button')].filter(x=>!x.closest('nav')&&!x.classList.contains('wordmark')&&!x.hasAttribute('aria-pressed')&&!x.hasAttribute('role')).map(text).filter(Boolean)};
       },heading);
-      for(const [sel,h] of [['.hero-copy','h1'],['.themes > .section-heading','h2'],['.workflow .section-heading','h2'],['.connect-copy','h2'],['.ownership','h2'],['.site-footer','.wordmark']]) panels.push({screen:sel,...await read(sel,h)});
+      for(const [sel,h] of [['.hero-copy','h1'],['.connection-copy','h2'],['.themes > .section-heading','h2'],['.workflow .section-heading','h2'],['.connect-copy','h2'],['.ownership','h2'],['.site-footer','.wordmark']]) panels.push({screen:sel,...await read(sel,h)});
       panels.push({screen:'Installation guide',headline:await page.locator('.installation-heading h2').textContent(),body:await page.locator('.installation-heading p').allTextContents(),actions:[]});
       panels.push({screen:'Getting started steps',headline:await page.locator('.setup-steps strong').first().textContent(),body:await page.locator('.setup-steps p,strong').allTextContents(),actions:[]});
       panels.push({screen:'First-task examples',headline:await page.locator('.first-tasks summary').textContent(),body:await page.locator('.first-tasks li').allTextContents(),actions:[]});
@@ -265,7 +267,7 @@ try {
   const failures=reviews.filter(r=>r.result.structuredContent?.verdict!=='pass');
   console.log('COPY',JSON.stringify(failures.map(r=>({screen:r.panel.screen,result:r.result.structuredContent}))));
   assert.deepEqual(errors,[]);
-  const summary={origin,widths:[390,1440,1728],schemes:['dark','light'],sourcePassed:true,handoffSpacing:handoffSpacing.summary,spacing:spacing.summary,expandedSpacing:expandedSpacing.summary,setupSpacing:setupSpacing.summary,comprehensionPanels:panels.length,comprehensionFailures:failures.length,contrasts,galleryCaptures:gallery.captures.length,galleryImageBytes:gallery.captures.reduce((sum,item)=>sum+item.bytes,0),baselineCopyCompared:Boolean(process.env.WEBSITE_BASELINE_DIR),pageErrors:errors,behavior:['exact-theme agent prompt and DESIGN.md browser download','all eight family handoff panels','installation in the hero with six client formats','separate modal preview, keyboard Escape, focus return and sample reset','source-bound gallery images','search and URL persistence','multiword search','no-match recovery','appearance filters and persistence','expand/collapse 31 themes','keyboard tabs','core/full options','clipboard success and denial','registry link','catalog failure, invalid response, retry and timeout','reduced motion','keyboard skip link']};await save('summary',summary);
+  const summary={origin,widths:[390,1440,1728],schemes:['dark','light'],sourcePassed:true,handoffSpacing:handoffSpacing.summary,spacing:spacing.summary,expandedSpacing:expandedSpacing.summary,setupSpacing:setupSpacing.summary,comprehensionPanels:panels.length,comprehensionFailures:failures.length,contrasts,galleryCaptures:gallery.captures.length,galleryImageBytes:gallery.captures.reduce((sum,item)=>sum+item.bytes,0),baselineCopyCompared:Boolean(process.env.WEBSITE_BASELINE_DIR),pageErrors:errors,behavior:['exact-theme agent prompt and DESIGN.md browser download','all eight family handoff panels','installation with six client formats','separate modal preview, keyboard Escape, focus return and sample reset','source-bound gallery images','search and URL persistence','multiword search','no-match recovery','appearance filters and persistence','expand/collapse 31 themes','keyboard tabs','core/full options','clipboard success and denial','registry link','catalog failure, invalid response, retry and timeout','reduced motion','keyboard skip link']};await save('summary',summary);
   for(const review of [spacing,expandedSpacing,setupSpacing,handoffSpacing])assert.deepEqual(review.blockers,[]);
   assert.equal(failures.length,0);
   assert.ok(contrasts.every(c=>Object.values(c.pairs).every(r=>r>=4.5)));
