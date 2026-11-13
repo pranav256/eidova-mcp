@@ -16,6 +16,14 @@ test('Vercel API routes preserve the resource path query', async () => {
   assert.doesNotMatch(route.source,/:path\*/, 'A Vercel wildcard must not replace the filename path query.');
 });
 
+test('Vercel excludes workspace files only at the repository root', async () => {
+  const rules=(await readFile(new URL('../.vercelignore',import.meta.url),'utf8')).split(/\r?\n/).filter(line=>line.trim()&&!line.startsWith('#'));
+  for(const rule of rules) {
+    assert.ok(rule.startsWith('/'), `${rule} would also exclude matching resource folders.`);
+    assert.ok(!rule.startsWith('/content'), 'Bundled resource files must remain in the deployment.');
+  }
+});
+
 test('the complete OpenDesign library includes templates, plugins and their original assets', async () => {
   const entries=await bundledEntries();
   assert.equal(entries.length,920);
