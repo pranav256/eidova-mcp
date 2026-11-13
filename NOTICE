@@ -5,7 +5,7 @@ commit b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f.
 Copyright 2026 Open Design contributors. Apache-2.0 except per-package overrides.
 Original files are unmodified; Eidova adds index.json and discovery adapters.
 See content/open-design/LICENSE and each entry's licensePaths in index.json for
-retained MIT/Apache notices and authors. Brand names identify references only;
+retained MIT, Apache-2.0, CC-BY-4.0 and font OFL notices and authors. Brand names identify references only;
 neither endorsement nor rights to third-party trademarks are implied.
 
 - Component registry: https://github.com/marvkr/better-design

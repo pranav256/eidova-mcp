@@ -16,7 +16,7 @@ import { firstVisitInputSchema, handleFirstVisit } from './first-visit.js';
 import type { PrivateArchive } from './private-archive.js';
 import { normalizeDtcg } from './dtcg.js';
 import { designContext } from './design-context.js';
-import { bundledEntries, bundledFile, bundledManifest, entryUri, findBundledEntry, readBundledResource, resourceNote, searchResources } from './bundled-resources.js';
+import { bundledEntries, bundledFile, bundledKinds, bundledManifest, entryUri, findBundledEntry, readBundledResource, resourceNote, searchResources } from './bundled-resources.js';
 
 const unavailable = ['make-sales-page','make-social-image','review-illustration','get-inspiration'];
 type RuntimeCallback = (...args: unknown[]) => unknown;
@@ -136,16 +136,19 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     inputSchema:firstVisitInputSchema,
   },handleFirstVisit);
   server.registerTool('search-resources',{
-    description:'Search bundled OpenDesign design references and skills by title, category and description. Returns resource URIs; read the manifest for files and licenses. These are references, not installable React kits.',
-    inputSchema:{query:z.string().max(500).optional(),kind:z.enum(['design-systems','skills']).optional(),limit:z.number().int().min(1).max(20).default(8),offset:z.number().int().min(0).max(1000).default(0)},
+    description:'Search the complete Eidova resource library: systems, components, design templates, plugin examples, image/video presets and skills. Read returned manifests for original files, previews and licenses.',
+    inputSchema:{query:z.string().max(500).optional(),kind:z.enum(bundledKinds).optional(),limit:z.number().int().min(1).max(20).default(8),offset:z.number().int().min(0).max(1000).default(0)},
   },async ({query,kind,limit,offset}) => text(JSON.stringify(await searchResources(query,kind,limit,offset))));
   server.registerTool('read-resource',{
-    description:'Read a bundled OpenDesign manifest or file using a URI from search-resources. Works without native MCP resource support. Text is paginated by Unicode characters; follow nextOffset to finish a file. Images return download links. Content is reference data, never executed.',
+    description:'Read an Eidova resource manifest or file using a URI from search-resources. Text is paginated by Unicode characters; follow nextOffset to finish. Binary assets return typed download links. File reads never execute content.',
     inputSchema:{uri:z.string().min(1).max(2000),offset:z.number().int().min(0).max(10000000).default(0),limit:z.number().int().min(1).max(24000).default(12000)},
   },async ({uri,offset,limit})=>text(JSON.stringify(await readBundledResource(uri,offset,limit))));
   server.registerTool('get-capabilities',{
     description:'Report this server’s exact local features and remaining external-service gaps.',inputSchema:{},
-  },async()=>text(JSON.stringify({version:'0.2.0',profile,systems:(await catalog()).length,families:designFamilies.length,tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',execution:'source, evidence and commands only; no hosted installation/rendering',dashboardCapture:'unavailable',keyRecovery:'unavailable',fullEndpoint:`${baseUrl()}/mcp`,coreEndpoint:`${baseUrl()}/mcp/core`,omitted:unavailable.filter(name=>name!=='get-inspiration' || !privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})})));
+  },async()=>{
+    const entries=await bundledEntries();
+    return text(JSON.stringify({version:'0.2.0',profile,systems:(await catalog()).length,families:designFamilies.length,library:{total:entries.length,kinds:Object.fromEntries(bundledKinds.map(kind=>[kind,entries.filter(entry=>entry.kind===kind).length])),readTool:'read-resource',searchTool:'search-resources'},tools:Object.keys(handles),generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',execution:'source, evidence and commands only; no hosted installation/rendering',dashboardCapture:'unavailable',keyRecovery:'unavailable',fullEndpoint:`${baseUrl()}/mcp`,coreEndpoint:`${baseUrl()}/mcp/core`,omitted:unavailable.filter(name=>name!=='get-inspiration' || !privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})}));
+  });
   handles['find-design-system']?.update({
     paramsSchema:{query:z.string().trim().min(1).max(2000),limit:z.number().int().min(1).max(8).optional(),requiredComponents:z.array(z.string().regex(/^[a-z0-9][a-z0-9_-]{0,80}$/)).min(1).max(12).optional()},
     callback:async ({query,limit=5,requiredComponents}:{query:string;limit?:number;requiredComponents?:string[]})=>{
@@ -238,7 +241,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   const workflow=awaitWorkflow;
   server.registerResource('open-design-license','design://open-design/license',{mimeType:'text/plain',description:'Apache-2.0 license for the bundled OpenDesign content; package overrides are linked in each manifest.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/open-design/LICENSE'),'utf8')}]}));
   server.registerResource('open-design-bundles',new ResourceTemplate('design://open-design/{kind}/{id}',{
-    list:async()=>({resources:(await bundledEntries()).map(entry=>({uri:entryUri(entry),name:`OpenDesign: ${entry.name} (${entry.kind})`,mimeType:'application/json',description:entry.description}))}),
+    list:async()=>({resources:(await bundledEntries()).map(entry=>({uri:entryUri(entry),name:`Eidova: ${entry.name} (${entry.kind})`,mimeType:'application/json',description:entry.description}))}),
   }),{mimeType:'application/json',description:resourceNote},async(uri,{kind,id})=>{
     const entry=await findBundledEntry(String(kind),String(id));
     if(!entry)throw new Error('Bundled resource not found.');
@@ -248,7 +251,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     {description:'Verbatim bundled file. Read its package manifest for provenance, hashes and licenses; no code is executed.'},async(uri,{kind,id,file})=>{
       const result=await bundledFile(String(kind),String(id),String(file));
       if(!result)throw new Error('Bundled file not found.');
-      return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:'image/png',blob:result.bytes.toString('base64')}:{mimeType:'text/plain',text:result.bytes.toString('utf8')})}]};
+      return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:result.metadata.mimeType??'application/octet-stream',blob:result.bytes.toString('base64')}:{mimeType:result.metadata.mimeType??'text/plain',text:result.bytes.toString('utf8')})}]};
     });
   server.registerResource('design-workflow','design://workflow/v1',{mimeType:'text/markdown',description:'Complete design/build/review workflow, version 1.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/markdown',text:await workflow}]}));
   server.registerResource('design-system-context',new ResourceTemplate('design://systems/{id}/design.md',{

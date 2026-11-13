@@ -13,7 +13,7 @@ import { ProjectRulesStore } from './project-rules-store.js';
 import { designContext } from './design-context.js';
 import { readFile } from 'node:fs/promises';
 import { resourcePath } from './resources.js';
-import { bundledFile, bundledManifest, findBundledEntry, searchResources } from './bundled-resources.js';
+import { bundledFile, bundledKinds, bundledManifest, bundledPreviewFile, findBundledEntry, searchResources } from './bundled-resources.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -48,7 +48,7 @@ app.get('/health',(_req,res)=>res.json({status:'ok',name:'Eidova MCP',version:'0
 app.get('/api/catalog',async (_req,res)=>{res.setHeader('Cache-Control','public,max-age=300');res.json(await catalog());});
 app.get('/api/resources',async (req,res)=>{
   const {query='',kind,offset='0'}=req.query;
-  if(typeof query!=='string'||query.length>500||kind!==undefined&&!['design-systems','skills'].includes(String(kind))||typeof kind==='object'||typeof offset!=='string'||!/^\d{1,4}$/.test(offset)||Number(offset)>1000){res.status(400).json({error:'Use query text, kind design-systems or skills, and an offset from 0 to 1000.'});return;}
+  if(typeof query!=='string'||query.length>500||kind!==undefined&&!(bundledKinds as readonly string[]).includes(String(kind))||typeof kind==='object'||typeof offset!=='string'||!/^\d{1,4}$/.test(offset)||Number(offset)>1000){res.status(400).json({error:'Use query text, a resource kind from the catalog, and an offset from 0 to 1000.'});return;}
   res.setHeader('Cache-Control','public,max-age=300');res.json(await searchResources(query,kind as string|undefined,20,Number(offset)));
 });
 app.get('/api/resources/:kind/:id',async (req,res)=>{
@@ -68,6 +68,31 @@ app.get('/api/resources/:kind/:id/file',async (req,res)=>{
   res.setHeader('Content-Security-Policy',"sandbox; default-src 'none'");
   res.attachment(req.query.path.split('/').at(-1)!);
   res.type('application/octet-stream').send(file.bytes);
+});
+app.get('/api/resources/:kind/:id/preview',async (req,res)=>{
+  if(typeof req.query.path!=='string'){res.status(400).json({error:'Choose an HTML file from the resource manifest'});return;}
+  const entry=await findBundledEntry(req.params.kind,req.params.id);
+  const file=entry?.files.find(file=>file.path===req.query.path&&file.mimeType==='text/html');
+  if(!entry||!file){res.status(404).json({error:'HTML preview not found'});return;}
+  const path=`${entry.sourcePath??entry.kind+'/'+entry.id}/${file.path}`;
+  res.redirect('/api/resource-previews/'+path.split('/').map(encodeURIComponent).join('/'));
+});
+app.get('/api/resource-previews/*file',async (req,res)=>{
+  const path=Array.isArray(req.params.file)?req.params.file.join('/'):req.params.file;
+  const file=await bundledPreviewFile(path);
+  if(!file){res.status(404).json({error:'Preview asset not found'});return;}
+  // Opaque previews cannot read the host's workspace keys or submit network actions.
+  res.setHeader('Content-Security-Policy',"sandbox allow-scripts; default-src 'none'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; media-src 'self' data: blob: https:; connect-src 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; base-uri 'self'");
+  res.setHeader('Referrer-Policy','no-referrer');
+  res.setHeader('Cache-Control','public,max-age=300');
+  const mimeType=file.metadata.mimeType??'application/octet-stream';
+  if(mimeType==='text/html') {
+    const directory=path.split('/').slice(0,-1).map(encodeURIComponent).join('/');
+    const base=`<base href="/api/resource-previews/${directory}/">`;
+    const escape='<script>addEventListener("keydown",event=>{if(event.key==="Escape"&&!document.querySelector("dialog[open]"))setTimeout(()=>{if(!event.defaultPrevented)parent.postMessage({type:"eidova-preview-escape"},"*");},0);});</script>';
+    const html=file.bytes.toString('utf8').replace(/<base\b[^>]*>/gi,'');
+    res.type(mimeType).send(/<head\b[^>]*>/i.test(html)?html.replace(/<head\b[^>]*>/i,head=>head+base+escape):base+escape+html);
+  } else res.type(mimeType).send(file.bytes);
 });
 app.get('/api/design-systems/:id/design.md',async (req,res)=> {
   const markdown=await designContext(req.params.id);

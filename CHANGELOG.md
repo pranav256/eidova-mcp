@@ -2,6 +2,7 @@
 
 ## 0.2.0 — unreleased
 
+- Completed the OpenDesign library import: 920 packages and 7,177 original files, including all design templates, official plugin designs, local fonts/media, framework templates and attribution catalogs. Added type-correct binary reads, full-library filters, safe HTML/media previews and recovery; original file downloads stay byte exact.
 - Updated canonical Eidova repository metadata and deployment documentation. Archived local scratch evidence with hashes and removed obsolete consumer build output before delivery; runtime state and maintained project dependencies remain intact.
 - Fixed Node 24 public-URL extraction and MCP error flags while retaining validated, pinned DNS and fetch limits.
 - Accepted the `components` alias for scoped React kits; rejected empty, conflicting and partly unknown selections instead of returning incomplete or full kits.

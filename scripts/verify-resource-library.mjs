@@ -9,7 +9,7 @@ import { measureTextContrast } from './browser-contrast.mjs';
 
 const origin=process.env.WEBSITE_REVIEW_URL || 'http://127.0.0.1:5173';
 const website=path.resolve(process.env.WEBSITE_SOURCE_DIR || '../eidova-website');
-const output=path.resolve('.work/resource-library-review');await mkdir(output,{recursive:true});
+const output=path.resolve(process.argv[2] || '.work/resource-library-review');await mkdir(output,{recursive:true});
 const save=(name,data)=>writeFile(path.join(output,name+'.json'),JSON.stringify(data,null,2));
 const client=new Client({name:'resource-library-review',version:'1'});
 await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'http://127.0.0.1:3000/mcp')));
@@ -35,8 +35,13 @@ try {
     for(const mode of ['dark','light']) {
       if(mode==='light')await page.getByRole('button',{name:'Switch to light mode'}).click();
       await section.getByRole('searchbox',{name:'Search resources'}).fill('');
-      await section.getByRole('button',{name:'All resources',exact:true}).click();
+      await section.getByLabel('Resource type',{exact:true}).selectOption('all');
       assert.equal(await section.locator('.resource-list > li').count(),8);
+      assert.match(await section.locator('.result-count').textContent(),/of 920 resources/);
+      assert.equal(await section.getByRole('heading',{name:'Explore the Eidova library.',exact:true}).count(),1);
+      await section.getByLabel('Resource type',{exact:true}).selectOption('catalogs');
+      assert.match(await section.locator('.result-count').textContent(),/of 2 resources/);
+      await section.getByLabel('Resource type',{exact:true}).selectOption('all');
       await section.scrollIntoViewIfNeeded();await page.mouse.move(0,0);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
       let state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} resource list`;states.push(state);
@@ -44,6 +49,7 @@ try {
       await section.getByRole('button',{name:'Show more resources'}).click();
       assert.equal(await section.locator('.resource-list > li').count(),24);
       const search=section.getByRole('searchbox',{name:'Search resources'});
+      await section.getByLabel('Resource type',{exact:true}).selectOption('design-systems');
       await search.fill('linear');
       assert.equal(await section.locator('.resource-list > li').count(),1);
       const disclosure=section.locator('.resource-list summary').first();await disclosure.focus();await page.keyboard.press('Enter');
@@ -56,7 +62,7 @@ try {
       await section.screenshot({path:path.join(output,`${width}-${mode}-open.png`)});
       contrasts.push({width,mode,failures:(await page.evaluate(measureTextContrast)).filter(item=>item.ratio<item.minimum)});
       if(width===390&&mode==='dark') {
-        panels.push(await section.evaluate(node=>({screen:'Resource library',headline:node.querySelector('h2').textContent,body:[node.querySelector('.section-heading p').textContent],actions:['Search resources','All resources','Design references','Skills']})));
+        panels.push(await section.evaluate(node=>({screen:'Resource library',headline:node.querySelector('h2').textContent,body:[node.querySelector('.section-heading p').textContent],actions:['Search resources','Resource type']})));
         panels.push(await section.locator('.resource-list > li').evaluate(node=>({screen:'Selected resource',headline:node.querySelector('h3').textContent,body:[...node.querySelectorAll('p')].filter(p=>p.checkVisibility()).map(p=>p.textContent),actions:[...node.querySelectorAll('a')].map(a=>a.textContent)})));
       }
       await section.locator('.resource-list details details summary').click();
@@ -93,17 +99,68 @@ try {
       state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} source details`;states.push(state);
       if(width===390&&mode==='dark')for(const selector of ['.resource-list details details','.resource-about'])panels.push(await section.locator(selector).evaluate(node=>({screen:node.querySelector('summary').textContent,headline:node.querySelector('summary').textContent,body:[...node.querySelectorAll('p')].map(p=>p.textContent),actions:[]})));
       await section.locator('.resource-about summary').click();
-      await section.getByRole('button',{name:'Skills',exact:true}).click();
+      await section.getByLabel('Resource type',{exact:true}).selectOption('skills');
       assert.equal(await section.locator('.resource-list > li').count(),0);
       await section.getByRole('button',{name:'Clear resource filters'}).click();assert.equal(await search.inputValue(),'');
       assert.equal(await search.evaluate(node=>node===document.activeElement),true);
-      await search.fill('frontend design');await section.getByRole('button',{name:'Skills',exact:true}).click();
+      await search.fill('frontend design');await section.getByLabel('Resource type',{exact:true}).selectOption('skills');
       const skill=section.locator('li').filter({has:page.getByRole('heading',{name:'frontend-design',exact:true})});
       await skill.locator('summary').first().click();assert.match(await skill.getByRole('link',{name:'Download SKILL.md'}).getAttribute('href'),/skills\/frontend-design/);
       await search.fill('no-such-resource-987');
       await section.getByRole('heading',{name:'No matching resources.'}).waitFor();
       if(width===390&&mode==='dark')panels.push({screen:'No matching resources',headline:'No matching resources.',body:['Try another name or clear the filters.'],actions:['Clear resource filters']});
       await section.getByRole('button',{name:'Clear resource filters'}).click();
+      await section.getByLabel('Resource type',{exact:true}).selectOption('templates');
+      assert.match(await section.locator('.result-count').textContent(),/of 118 resources/);
+      await search.fill('aster atelier');
+      const template=section.locator('li').filter({has:page.getByRole('heading',{name:'Aster Atelier',exact:true})});
+      await template.locator('summary').first().click();
+      await template.getByRole('button',{name:'Preview design',exact:true}).click();
+      const templateReader=page.getByRole('dialog',{name:'Aster Atelier files',exact:true});
+      const preview=templateReader.locator('iframe');await preview.waitFor({state:'visible'});
+      assert.equal(await preview.getAttribute('sandbox'),'allow-scripts');
+      const frame=await (await preview.elementHandle()).contentFrame();
+      await frame.waitForURL(/\/api\/resource-previews\//);await frame.waitForSelector('h1');
+      assert.equal(await frame.evaluate(()=>{try{void parent.document;return false;}catch{return true;}}),true);
+      await page.evaluate(()=>window.postMessage({type:'eidova-preview-escape'},'*'));
+      assert.equal(await templateReader.isVisible(),true);
+      state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} template preview`;states.push(state);
+      await templateReader.screenshot({path:path.join(output,`${width}-${mode}-template-preview.png`)});
+      assert.equal(await templateReader.evaluate(node=>node.scrollWidth<=node.clientWidth),true);
+      if(width===390&&mode==='dark')panels.push(await templateReader.locator('.resource-preview-controls').evaluate(node=>({screen:'Original design preview',headline:'Preview design',body:[...node.querySelectorAll('p')].map(p=>p.textContent),actions:[...node.querySelectorAll('button')].map(b=>b.textContent)})));
+      await templateReader.getByRole('button',{name:'Read source',exact:true}).click();
+      await templateReader.getByLabel('Contents of example.html').waitFor();
+      assert.equal(await templateReader.getByLabel('Contents of example.html').textContent(),await readFile('content/open-design/design-templates/aster-atelier/example.html','utf8'));
+      await templateReader.getByRole('button',{name:'Preview design',exact:true}).click();
+      await preview.waitFor({state:'visible'});
+      const restoredFrame=await (await preview.elementHandle()).contentFrame();
+      await restoredFrame.waitForURL(/\/api\/resource-previews\//);await restoredFrame.waitForSelector('h1');
+      await preview.focus();await page.keyboard.press('Escape');
+      await templateReader.waitFor({state:'detached'});
+      assert.equal(await template.getByRole('button',{name:'Preview design',exact:true}).evaluate(node=>node===document.activeElement),true);
+      await search.fill('open-design-landing');
+      const landing=section.locator('li').filter({has:page.getByRole('heading',{name:'open-design-landing',exact:true})});
+      await landing.locator('summary').first().click();await landing.getByRole('button',{name:'Read files'}).click();
+      const largeReader=page.getByRole('dialog');await largeReader.getByLabel('File',{exact:true}).selectOption('assets/hero.png');
+      await largeReader.locator('.resource-file-image').waitFor();await largeReader.locator('.resource-file-image').evaluate(node=>node.decode());
+      assert.ok(await largeReader.locator('.resource-file-image').evaluate(node=>node.naturalWidth>0));
+      const [largeDownload]=await Promise.all([page.waitForEvent('download'),largeReader.getByRole('link',{name:'Download file',exact:true}).click()]);
+      assert.deepEqual(await readFile(await largeDownload.path()),await readFile('content/open-design/design-templates/open-design-landing/assets/hero.png'));
+      await largeReader.getByRole('button',{name:'Close reader'}).click();
+      await search.fill('');await section.getByLabel('Resource type',{exact:true}).selectOption('plugins');
+      assert.match(await section.locator('.result-count').textContent(),/of 479 resources/);
+      await search.fill('frame build minimal');
+      const videoTemplate=section.locator('li').filter({has:page.getByRole('heading',{name:'Build Minimal Frame',exact:true})});
+      await videoTemplate.locator('summary').first().click();await videoTemplate.getByRole('button',{name:'Read files'}).click();
+      const videoReader=page.getByRole('dialog');await videoReader.getByLabel('File',{exact:true}).selectOption('preview.mp4');
+      await videoReader.locator('video').waitFor();
+      await page.waitForFunction(()=>{const video=document.querySelector('.resource-reader video');return video&&video.readyState>=1&&video.videoWidth>0;});
+      state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} video asset`;states.push(state);
+      await videoReader.screenshot({path:path.join(output,`${width}-${mode}-video-asset.png`)});
+      await videoReader.getByLabel('File',{exact:true}).selectOption('source/fonts/f6e772e776f666632.woff2');
+      await videoReader.getByText('Download this file to use it in your project.',{exact:true}).waitFor();
+      await videoReader.getByRole('button',{name:'Close reader'}).click();
+      await section.getByLabel('Resource type',{exact:true}).selectOption('all');await search.fill('');
     }
     if(width===390) {
       const search=section.getByRole('searchbox',{name:'Search resources'});
@@ -153,8 +210,22 @@ try {
       await reader.locator('.resource-file-image').waitFor();await reader.locator('.resource-file-image').evaluate(node=>node.decode());
       assert.ok(await reader.locator('.resource-file-image').evaluate(node=>node.naturalWidth>0));
       await reader.getByRole('button',{name:'Close reader'}).click();
+      await search.fill('aster atelier');await section.getByLabel('Resource type',{exact:true}).selectOption('templates');
+      await section.locator('.resource-list summary').first().click();
+      const previewUrl='**/api/resources/design-templates/aster-atelier/preview?path=example.html';
+      await page.route(previewUrl,route=>route.fulfill({status:503,body:'Unavailable'}));
+      await section.getByRole('button',{name:'Preview design',exact:true}).click();
+      const failedPreview=page.getByRole('dialog');
+      await failedPreview.getByText('This preview could not load. You can still read or download the original files.',{exact:true}).waitFor();
+      assert.equal(await failedPreview.getByLabel('File',{exact:true}).inputValue(),'example.html');
+      await page.unroute(previewUrl);await failedPreview.getByRole('button',{name:'Retry preview'}).click();
+      await failedPreview.locator('iframe').waitFor();await failedPreview.getByRole('button',{name:'Read source'}).click();
+      await failedPreview.getByLabel('Contents of example.html').waitFor();
+      await failedPreview.getByRole('button',{name:'Close reader'}).click();
+      await section.getByLabel('Resource type',{exact:true}).selectOption('all');
       panels.push({screen:'Resource load error',headline:'Resource files could not load.',body:[],actions:['Retry loading files']});
       panels.push({screen:'File load error',headline:'This file could not load.',body:['Your selection is kept.'],actions:['Retry loading file']});
+      panels.push({screen:'Preview load error',headline:'This preview could not load.',body:['You can still read or download the original files.'],actions:['Retry preview','Read source']});
     }
     await context.close();
   }
@@ -163,7 +234,7 @@ try {
   for(let i=0;i<states.length;i+=2){const result=await client.callTool({name:'inspect-spacing',arguments:{states:states.slice(i,i+2),detail:'full'}});assert.equal(result.structuredContent?.status,'completed');spacing.push(result);}
   await save('spacing',spacing);
   const comprehension=[];
-  for(const panel of panels)comprehension.push(await client.callTool({name:'check-comprehension',arguments:{...panel,knownTerms:['MCP','React','OpenDesign','Eidova','Apache','MIT','CSS','DESIGN.md','token','tokens','agent','search-resources']}}));
+  for(const panel of panels)comprehension.push(await client.callTool({name:'check-comprehension',arguments:{...panel,knownTerms:['MCP','React','OpenDesign','Eidova','Apache','MIT','CC-BY-4.0','OFL','HTML','CSS','DESIGN.md','token','tokens','agent','search-resources']}}));
   await save('comprehension',comprehension);
   const exceptions=spacing.flatMap(result=>result.structuredContent.findings).filter(finding=>finding.ruleId==='spacing/asymmetric-horizontal-inset'&&finding.elementIds.length===1&&finding.elementIds[0]==='#theme-search');
   const blockers=spacing.flatMap(result=>result.structuredContent.findings).filter(finding=>['critical','serious'].includes(finding.severity)&&!exceptions.includes(finding));
