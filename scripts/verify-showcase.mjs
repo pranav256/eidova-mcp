@@ -45,13 +45,15 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     for (const mode of ['light','dark']) {
       await page.goto(origin + '/showcase?mode=' + mode, { waitUntil: 'networkidle' });
-      await page.getByRole('heading', { name: 'Your agent’s design toolkit.', exact: true }).waitFor();
+      await page.getByRole('heading', { name: 'The toolkit. In your hands.', exact: true }).waitFor();
       await page.evaluate(() => document.fonts.ready);
       assert.ok(await page.evaluate(() => document.fonts.check('500 16px Inter')));
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       assert.ok(await page.evaluate(() => document.documentElement.scrollHeight > 8000));
       assert.equal(await page.locator('.showcase-family-card').count(), 8);
+      if (width === 390) await page.locator('.mobile-menu summary').click();
       assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('aria-current'), 'page');
+      if (width === 390) await page.locator('.mobile-menu summary').press('Escape');
       await page.getByRole('link', { name: 'Skip to showcase', exact: true }).focus();
       await page.keyboard.press('Enter');
       assert.equal(await page.locator('#showcase-main').evaluate(node => node === document.activeElement), true);
@@ -200,7 +202,7 @@ try {
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Ideas made tangible.', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Good design. Built in.', exact: true }).waitFor();
   assert.equal(await page.getByRole('link', { name: 'Try the toolkit', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Themes', exact: true }).getAttribute('href'), '#themes');

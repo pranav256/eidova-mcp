@@ -38,7 +38,7 @@ try {
       await section.getByLabel('Resource type',{exact:true}).selectOption('all');
       assert.equal(await section.locator('.resource-list > li').count(),16);
       assert.match(await section.locator('.result-count').textContent(),/of 784 resources/);
-      assert.equal(await section.getByRole('heading',{name:'Explore the Eidova library.',exact:true}).count(),1);
+      assert.equal(await section.getByRole('heading',{name:'Pick a starting point',exact:true}).count(),1);
       await section.getByLabel('Resource type',{exact:true}).selectOption('catalogs');
       assert.match(await section.locator('.result-count').textContent(),/of 2 resources/);
       await section.getByLabel('Resource type',{exact:true}).selectOption('all');
