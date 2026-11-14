@@ -29,7 +29,7 @@ try {
   for(const width of [390,1440,1728]) {
     const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce',colorScheme:'dark',permissions:['clipboard-read','clipboard-write']});
     const page=await context.newPage();page.on('pageerror',error=>errors.push(error.message));
-    await page.goto(origin,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
+    await page.goto(origin+'/?mode=light',{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
     assert.ok(await page.evaluate(()=>document.fonts.check('500 16px Inter')));
     const section=page.locator('#resources');
     for(const mode of ['light','dark']) {

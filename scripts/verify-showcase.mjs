@@ -45,7 +45,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     for (const mode of ['light','dark']) {
       await page.goto(origin + '/showcase?mode=' + mode, { waitUntil: 'networkidle' });
-      await page.getByRole('heading', { name: 'The toolkit. In your hands.', exact: true }).waitFor();
+      await page.getByRole('heading', { name: 'The toolkit, in your hands.', exact: true }).waitFor();
       await page.evaluate(() => document.fonts.ready);
       assert.ok(await page.evaluate(() => document.fonts.check('500 16px Inter')));
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
@@ -202,7 +202,7 @@ try {
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Good design. Built in.', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Design systems, in real code.', exact: true }).waitFor();
   assert.equal(await page.getByRole('link', { name: 'Try the toolkit', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Themes', exact: true }).getAttribute('href'), '#themes');
