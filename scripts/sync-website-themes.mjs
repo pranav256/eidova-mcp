@@ -16,6 +16,11 @@ for (const entry of entries) {
   const values = globals.cssVars?.light || globals.cssVars?.dark;
   assert.ok(values, `No palette for ${entry.name}`);
   const tokens = Object.fromEntries(Object.entries(values).map(([name,value])=>[name.startsWith('--')?name:'--'+name,value]).filter(([name])=>usedTokens.has(name)));
+  const css = globals.files.map(file=>file.content).join('\n');
+  const firstFont = css.match(/font-family\s*:\s*([^;]+)/)?.[1] || 'system-ui';
+  tokens['--font-sans'] = css.match(/--font-sans\s*:\s*([^;]+)/)?.[1] || css.match(/body\s*\{[^}]*font-family\s*:\s*([^;]+)/)?.[1] || firstFont;
+  tokens['--font-display'] = css.match(/--font-display\s*:\s*([^;]+)/)?.[1] || firstFont;
+  tokens['--font-mono'] = css.match(/--font-mono\s*:\s*([^;]+)/)?.[1] || '"JetBrains Mono Variable", monospace';
   const alternate = globals.cssVars?.dark;
   const darkTokens = alternate ? {...tokens,...Object.fromEntries(Object.entries(alternate).map(([name,value])=>[name.startsWith('--')?name:'--'+name,value]).filter(([name])=>usedTokens.has(name)))} : undefined;
   palettes[entry.name] = { title: entry.name.split('-').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '), tokens, darkTokens };
