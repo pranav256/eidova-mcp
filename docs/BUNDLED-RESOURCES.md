@@ -1,15 +1,17 @@
 # Eidova resource library
 
 Imported from https://github.com/nexu-io/open-design at `b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f`.
-The full reviewed library contains **920 packages**: 152 design systems, 115 design
-templates, 479 official plugin packages, 169 skills, three framework/live-artifact
-templates, and two source catalogs. It retains 7,177 files and 174,586,738 bytes
-before the generated index. Original checkout bytes are preserved,
+The curated library contains **784 packages**: 152 design systems, 115 design
+templates, 343 official plugin packages, 169 skills, three framework/live-artifact
+templates, and two source catalogs. Its 7,188 logical file records share 6,406 stored files (139,052,651 bytes, excluding root notices and the generated index).
+782 duplicate file copies were removed, saving 36,967,093 bytes. Original bytes are preserved,
 including companions, previews, scripts, images and license notices. The single repository `.gitignore` is omitted because npm excludes it; the index records that exclusion. Per-file SHA-256
 hashes, sizes and MIME types live in `content/open-design/index.json` and are checked
-on reads. `sourcePath` keeps each package at its original repository location.
+on reads. `sourcePath` preserves logical preview paths; `storagePath` points to shared bytes inside the bundle. Reads validate both paths and verify hashes and sizes.
 Plugin IDs include their source group to avoid collisions with the main systems
 and templates. Main design packages rank before compatibility plugins on tied searches.
+
+136 redundant system wrappers and one catalog-only pointer are excluded from search, resource lists and capability counts. Their manifests, files and previews remain readable through existing URIs and HTTP routes. Seven wrappers with distinct payloads remain in discovery. Unslop includes its complete references, scripts, CC BY 4.0 license and credits; its manifest records its own repository and pinned revision. Run `node scripts/curate-resources.mjs ../eidova-website` for idempotent curation; the source importer runs the same step.
 
 Root Apache-2.0 terms, package MIT/Apache/CC-BY-4.0 declarations, font OFL notices,
 and source attribution files remain available. Each plugin manifest and its original
@@ -56,7 +58,7 @@ The same content is available through native MCP `resources/read`:
 - `design://open-design/skills/frontend-design/files/SKILL.md`: original skill.
 - `design://open-design/license`: root Apache-2.0 license; entry manifests link overrides.
 
-All 920 manifests appear in `resources/list`; file bodies load only on demand. Binary
+All 784 manifests appear in `resources/list`; file bodies load only on demand. Binary
 files use correctly typed MCP base64 blobs, text files use text content. Returned instructions are
 reference data and do not override user permissions or existing project decisions.
 
@@ -81,17 +83,15 @@ Only indexed package/file paths are accepted. Downloads force attachment deliver
 `application/octet-stream`, `nosniff` and a sandbox CSP, including HTML and scripts.
 Missing files return uncached 404 responses without an attachment header.
 
-On the website, search **Resources**, expand **View resource**, and choose **Read
-files**. The dialog lists every bundled companion file, displays text literally
+On the website, choose **Preview design** or **Read files** directly. Sixteen results appear initially; **Show more resources** and **Show all resources** expose remaining matches. Optional metadata and an entrypoint download sit under **Details**. The dialog lists every bundled companion file, displays text literally
 (including HTML and scripts), previews images/audio/video, and downloads original bytes. It
 preserves selection on failure, offers retry, cancels stale requests and returns
 focus when closed. **Copy agent prompt** carries the selected resource URI into a
 tool-only MCP session; **Agent instructions** provides a manual copy fallback.
-Source and license links remain available alongside package-specific licenses in
-the file picker.
+License downloads remain available alongside package-specific notices in the file picker.
 
 **Preview design** opens the package's original HTML or publisher media. The importer
-discovers 524 local HTML previews, 46 image previews and 36 video previews. HTML uses
+discovers local HTML previews and image/video previews. HTML uses
 an opaque sandbox with scripts allowed, no host storage access, no network actions
 or form submission, and no child frames. `GET /api/resources/:kind/:id/preview?path=...`
 accepts only an indexed HTML file and redirects to `/api/resource-previews/...`.

@@ -163,8 +163,8 @@ try {
       assert.equal(await page.locator('.showcase-tool-grid > details').count(), data.publicTools);
       state = await page.evaluate(capture); state.name = `${width} ${mode} complete tool directory`; states.push(state);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-      assert.equal(await page.locator('#resources .resource-list > li').count(), 8);
-      assert.match(await page.locator('#resources .result-count').textContent(), /of 920 resources/);
+      assert.equal(await page.locator('#resources .resource-list > li').count(), 16);
+      assert.match(await page.locator('#resources .result-count').textContent(), /of 784 resources/);
     }
     await context.close(); console.log(`Verified ${width}px in both appearances.`);
   }
@@ -200,7 +200,7 @@ try {
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Better UI starts here.', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Design tools for coding agents.', exact: true }).waitFor();
   assert.equal(await page.getByRole('link', { name: 'Try the showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Themes', exact: true }).getAttribute('href'), '#themes');

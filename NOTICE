@@ -4,6 +4,9 @@ Bundled resource files under content/open-design are from nexu-io/open-design,
 commit b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f.
 Copyright 2026 Open Design contributors. Apache-2.0 except per-package overrides.
 Original files are unmodified; Eidova adds index.json and discovery adapters.
+Identical files share storage while retaining their logical paths, hashes and notices.
+Redundant design-system wrappers and a catalog-only pointer remain available through
+legacy links but are excluded from discovery.
 See content/open-design/LICENSE and each entry's licensePaths in index.json for
 retained MIT, Apache-2.0, CC-BY-4.0 and font OFL notices and authors. Brand names identify references only;
 neither endorsement nor rights to third-party trademarks are implied.
@@ -23,3 +26,9 @@ rights and provenance. This project is independent and unaffiliated with Better 
 Lucide icons are provided by @iconify-json/lucide under the ISC license.
 The embedded Tabler close SVG is MIT licensed, Copyright (c) 2020-2026 Paweł Kuna.
 See assets/TABLER-LICENSE and https://github.com/tabler/tabler-icons.
+
+Unslop by Damir Sokolovsky (@heydamir), https://heydamir.design/unslop,
+is bundled unmodified under CC BY 4.0 from https://github.com/heydamir/unslop,
+commit 97daa3eb365670ea3f87ed85356cbfcee18105a5. See
+content/open-design/skills/unslop/SKILL.md and its LICENSE. Required credits
+remain in the skill and reference files. No endorsement is implied.

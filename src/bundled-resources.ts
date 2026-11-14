@@ -4,20 +4,21 @@ import { resourcePath } from './resources.js';
 import { baseUrl } from './catalog.js';
 
 export const bundledKinds = ['design-systems','design-templates','plugins','templates','catalogs','skills'] as const;
-export type BundledEntry = {kind:typeof bundledKinds[number];id:string;sourcePath?:string;name:string;description:string;category:string;license:string;entrypoint:string;sourceUrl:string;preview?:{type:'html';path:string}|{type:'image'|'video';url:string};attributionUris?:string[];licensePaths:string[];files:{path:string;bytes:number;sha256:string;binary:boolean;mimeType?:string}[]};
-type Bundle = {repository:string;revision:string;entries:BundledEntry[]};
+export type BundledEntry = {kind:typeof bundledKinds[number];id:string;sourcePath?:string;repository?:string;revision?:string;name:string;description:string;category:string;license:string;entrypoint:string;sourceUrl:string;preview?:{type:'html';path:string}|{type:'image'|'video';url:string};attributionUris?:string[];licensePaths:string[];files:{path:string;storagePath?:string;bytes:number;sha256:string;binary:boolean;mimeType?:string}[]};
+type Bundle = {repository:string;revision:string;entries:BundledEntry[];legacyEntries?:BundledEntry[]};
 const bundle = readFile(resourcePath('content/open-design/index.json'), 'utf8').then(text => JSON.parse(text) as Bundle);
 export const resourceNote = 'Eidova bundled systems, components, templates, plugin manifests and assets. Read the manifest, entrypoint, build instructions and licenses; retrieve companion files as needed. Some packages link to external workflows or media. File reads return data, and HTML previews run in an isolated sandbox. Existing project rules and user permissions still apply.';
 export const entryUri = (entry:Pick<BundledEntry,'kind'|'id'>) => `design://open-design/${entry.kind}/${entry.id}`;
 export const fileUri = (entry:Pick<BundledEntry,'kind'|'id'>, file:string) => `${entryUri(entry)}/files/${file.split('/').map(encodeURIComponent).join('/')}`;
 const sourcePath = (entry:BundledEntry) => entry.sourcePath ?? `${entry.kind}/${entry.id}`;
-const previewFiles = bundle.then(({entries}) => new Map<string,{entry:BundledEntry;path:string}>(entries.flatMap(entry => entry.files.map(file => [`${sourcePath(entry)}/${file.path}`, {entry,path:file.path}] as const))));
+const allEntries = bundle.then(({entries,legacyEntries=[]}) => [...entries,...legacyEntries]);
+const previewFiles = allEntries.then(entries => new Map<string,{entry:BundledEntry;path:string}>(entries.flatMap(entry => entry.files.map(file => [`${sourcePath(entry)}/${file.path}`, {entry,path:file.path}] as const))));
 export async function bundledPreviewFile(path:string) {
   const match=(await previewFiles).get(path);
   return match ? bundledFile(match.entry.kind,match.entry.id,match.path) : null;
 }
 export async function bundledEntries() {return (await bundle).entries;}
-export async function findBundledEntry(kind:string, id:string) {return (await bundledEntries()).find(entry => entry.kind === kind && entry.id === id);}
+export async function findBundledEntry(kind:string, id:string) {return (await allEntries).find(entry => entry.kind === kind && entry.id === id);}
 export async function searchResources(query='', kind?:string, limit=8, offset=0) {
   const terms = query.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
   const entries = (await bundledEntries()).filter(entry => !kind || entry.kind === kind).map(entry => {
@@ -29,7 +30,8 @@ export async function searchResources(query='', kind?:string, limit=8, offset=0)
     matches:entries.slice(offset,offset+limit).map(({entry:{files,licensePaths,...entry}}) => ({...entry,fileCount:files.length,uri:entryUri(entry),entrypointUri:fileUri(entry,entry.entrypoint),next:{tool:'read-resource',arguments:{uri:entryUri(entry)}}}))};
 }
 export async function bundledManifest(entry:BundledEntry) {
-  const {repository,revision} = await bundle;
+  const catalog = await bundle;
+  const repository = entry.repository ?? catalog.repository, revision = entry.revision ?? catalog.revision;
   const endpoint=`${baseUrl()}/api/resources/${entry.kind}/${entry.id}`;
   return { ...entry, repository, revision, note:resourceNote,
     ...(entry.preview?.type==='html'?{preview:{...entry.preview,url:`${endpoint}/preview?path=${encodeURIComponent(entry.preview.path)}`}}:{}),
@@ -39,8 +41,10 @@ export async function bundledManifest(entry:BundledEntry) {
 export async function bundledFile(kind:string, id:string, file:string) {
   const entry = await findBundledEntry(kind,id);
   const metadata = entry?.files.find(item => item.path === file);
-  if (!metadata || file.split('/').some(part => part === '..' || !part) || file.includes('\\')) return null;
-  const bytes = await readFile(resourcePath(`content/open-design/${sourcePath(entry!)}/${file}`));
+  const safePath = (value:string) => !/[\\:\x00-\x1f]/.test(value) && !value.split('/').some(part => !part || part === '.' || part === '..');
+  const storagePath = metadata?.storagePath ?? `${entry ? sourcePath(entry) : ''}/${file}`;
+  if (!metadata || !safePath(file) || !safePath(storagePath)) return null;
+  const bytes = await readFile(resourcePath(`content/open-design/${storagePath}`));
   if (bytes.length !== metadata.bytes || createHash('sha256').update(bytes).digest('hex') !== metadata.sha256) throw new Error('Bundled resource integrity check failed.');
   return {bytes,metadata};
 }

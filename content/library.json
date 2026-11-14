@@ -12,7 +12,7 @@
         "blur test",
         "visual hierarchy"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose the information a visitor needs first, then place the task title, result or decision ahead of secondary detail. A navigation label does not replace a screen title.\n2. Use position, type size, weight and spacing to establish order. Reserve the strongest action treatment for the action that advances this task.\n3. Keep headings close to the content they name and use a larger gap between separate groups. If everything has equal emphasis, remove decoration before adding more.\n\nVerify: View the screen at reduced size and in grayscale. Explain its purpose and next action without reading every paragraph.",
+      "content": "1. Choose the information a visitor needs first, then place the task title, result or decision ahead of secondary detail. A navigation label does not replace a screen title.\n2. Use position, type size, weight and spacing to establish order. Reserve the strongest action treatment for the action that advances this task.\n3. Keep headings close to the content they name and use a larger gap between separate groups. If everything has equal emphasis, remove decoration before adding more.\n\nVerify: View the screen at reduced size and in grayscale. Explain its purpose and next action without reading every paragraph.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -28,7 +28,7 @@
         "alignment",
         "grouping"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Start with a small scale such as 4, 8, 12, 16, 24, 32 and 48 pixels. Treat the values as tokens, not a rule that every text baseline must land on a grid.\n2. Give related labels, controls and feedback smaller internal gaps than the gaps between sections. Align repeated content edges and control baselines.\n3. Use a constrained reading width for prose and a content-driven grid for comparisons. Reflow columns when labels or controls stop fitting, not because a device name demands a breakpoint.\n4. Measure rendered rectangles and computed spacing; source classes alone cannot establish alignment, overflow or browser font metrics.\n\nVerify: Check narrow and wide layouts with real content, long labels and text zoom. Record viewport widths with the evidence.",
+      "content": "1. Start with a small scale such as 4, 8, 12, 16, 24, 32 and 48 pixels. Treat the values as tokens, not a rule that every text baseline must land on a grid.\n2. Give related labels, controls and feedback smaller internal gaps than the gaps between sections. Align repeated content edges and control baselines.\n3. Use a constrained reading width for prose and a content-driven grid for comparisons. Reflow columns when labels or controls stop fitting, not because a device name demands a breakpoint.\n4. Measure rendered rectangles and computed spacing; source classes alone cannot establish alignment, overflow or browser font metrics.\n\nVerify: Check narrow and wide layouts with real content, long labels and text zoom. Record viewport widths with the evidence.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -42,7 +42,7 @@
         "type scale",
         "line-height"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use the product's existing font family and a limited set of sizes and weights. Include system fallbacks and verify the chosen font actually loads.\n2. Give body prose comfortable line height and line length; allow text to grow without clipping containers. Keep headings in a logical semantic order.\n3. Use tabular numerals for comparable quantities, show units beside values and avoid letter spacing that harms small text.\n4. Prefer natural wrapping. Do not hard-code a line break that becomes awkward in another language or at another viewport width.\n\nVerify: Read the interface with the fallback font, 200% text zoom, long translated labels and a narrow viewport.",
+      "content": "1. Use the product's existing font family and a limited set of sizes and weights. Include system fallbacks and verify the chosen font actually loads.\n2. Give body prose comfortable line height and line length; allow text to grow without clipping containers. Keep headings in a logical semantic order.\n3. Use tabular numerals for comparable quantities, show units beside values and avoid letter spacing that harms small text.\n4. Prefer natural wrapping. Do not hard-code a line break that becomes awkward in another language or at another viewport width.\n\nVerify: Read the interface with the fallback font, 200% text zoom, long translated labels and a narrow viewport.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -56,7 +56,7 @@
         "palette",
         "semantic colors"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Map colors to roles such as foreground, surface, border, action and danger. Use the existing token names rather than scattering brand hex values through components.\n2. For WCAG AA, ordinary text needs 4.5:1 contrast; qualifying large text needs 3:1. Required graphical control boundaries and focus indications generally need 3:1 against adjacent colors.\n3. Pair color-coded status with text or a meaningful symbol. Disabled styling must remain understandable even where contrast exceptions apply.\n4. Calculate contrast for the rendered foreground and composited background in each state. A palette swatch does not establish contrast on gradients, photos or translucent surfaces.\n\nVerify: Check actual light/dark, focus, selected, hover, error and loading pairs. Record uncertain backgrounds rather than inventing a passing ratio.",
+      "content": "1. Map colors to roles such as foreground, surface, border, action and danger. Use the existing token names rather than scattering brand hex values through components.\n2. For WCAG AA, ordinary text needs 4.5:1 contrast; qualifying large text needs 3:1. Required graphical control boundaries and focus indications generally need 3:1 against adjacent colors.\n3. Pair color-coded status with text or a meaningful symbol. Disabled styling must remain understandable even where contrast exceptions apply.\n4. Calculate contrast for the rendered foreground and composited background in each state. A palette swatch does not establish contrast on gradients, photos or translucent surfaces.\n\nVerify: Check actual light/dark, focus, selected, hover, error and loading pairs. Record uncertain backgrounds rather than inventing a passing ratio.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -71,7 +71,7 @@
         "surfaces",
         "glass"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use borders, surface changes and restrained shadows to distinguish a raised control, overlay or nested group. Keep one consistent light direction and elevation scale.\n2. Ensure sticky headers, menus and dialogs use deliberate stacking contexts. A large z-index cannot escape a parent's clipping or stacking context.\n3. Treat translucency as an effect requiring contrast tests against the content underneath. Provide a solid fallback when transparency or backdrop filters are unavailable.\n\nVerify: Open overlays near viewport edges and over varied content. Check clipping, focus visibility and text contrast without the decorative effect.",
+      "content": "1. Use borders, surface changes and restrained shadows to distinguish a raised control, overlay or nested group. Keep one consistent light direction and elevation scale.\n2. Ensure sticky headers, menus and dialogs use deliberate stacking contexts. A large z-index cannot escape a parent's clipping or stacking context.\n3. Treat translucency as an effect requiring contrast tests against the content underneath. Provide a solid fallback when transparency or backdrop filters are unavailable.\n\nVerify: Open overlays near viewport edges and over varied content. Check clipping, focus visibility and text contrast without the decorative effect.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -85,7 +85,7 @@
         "photos",
         "image treatment"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose imagery that explains the product or information. Keep required copy on a readable adjacent surface instead of relying on a wash over a detailed photograph.\n2. Reserve image dimensions to prevent layout shifts, choose an appropriate crop and deliver responsive sizes rather than an oversized original.\n3. Write alternative text for the image's purpose in context. Use an empty alt for decoration and provide a longer explanation when a chart or diagram carries essential data.\n\nVerify: Inspect the crop on narrow and wide screens and verify that the page remains understandable when images fail to load.",
+      "content": "1. Choose imagery that explains the product or information. Keep required copy on a readable adjacent surface instead of relying on a wash over a detailed photograph.\n2. Reserve image dimensions to prevent layout shifts, choose an appropriate crop and deliver responsive sizes rather than an oversized original.\n3. Write alternative text for the image's purpose in context. Use an empty alt for decoration and provide a longer explanation when a chart or diagram carries essential data.\n\nVerify: Inspect the crop on narrow and wide screens and verify that the page remains understandable when images fail to load.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -100,8 +100,8 @@
         "keyboard",
         "screen reader"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use native buttons, links, inputs and landmarks where they match the action. Give every interactive control an accessible name and associate input labels and errors programmatically.\n2. Keep focus visible, preserve logical keyboard order and avoid trapping focus except within a correctly managed modal. Return focus to a useful place when an overlay closes.\n3. Support reflow, text resizing, reduced motion and non-color status cues. Evaluate target size and spacing together, including applicable WCAG exceptions.\n4. Automated scans find some defects; they do not prove that a screen reader user can finish the task.\n\nVerify: Complete the main task by keyboard and screen reader, including errors, dialogs and asynchronously updated content.",
-      "sourceFile": "src/guidance.ts",
+      "content": "1. Use native buttons, links, inputs and landmarks where they match the action. Give each control an accessible name and associate labels and errors programmatically.\n2. Keep keyboard focus visible and in a logical order. WCAG 2.2 AA requires focused components not to be entirely obscured by authored content; aim for full visibility beneath sticky headers and inside overlays. Return focus usefully when a dialog closes.\n3. WCAG 2.2 AA target size is 24 by 24 CSS pixels, subject to spacing and other exceptions. Prefer 44 by 44 touch targets for frequent actions when space permits. Do not present 44 pixels as the AA minimum.\n4. Support reflow, text resizing, reduced motion and non-color status cues. Automated scans do not prove that a screen reader user can finish the task.\n\nVerify: Complete the main task by keyboard and screen reader. Check focus under sticky content, adjacent targets, zoom, errors and asynchronous updates.",
+      "sourceFile": "docs/DESIGN-RESEARCH.md",
       "chunkType": "parent"
     },
     {
@@ -114,7 +114,7 @@
         "component fidelity",
         "design system"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use the installed product components and their documented variants. Read composition examples before replacing a table, sidebar or dialog with isolated styled divs.\n2. Define normal, focused, selected, loading, empty, error and disabled behavior where relevant. A loading label must not erase context or permit accidental duplicate actions.\n3. Keep accessibility behavior inside reusable components while keeping task-specific copy and state in the feature that owns them.\n\nVerify: Render each reachable state with representative data and verify interaction as well as appearance.",
+      "content": "1. Use the installed product components and their documented variants. Read composition examples before replacing a table, sidebar or dialog with isolated styled divs.\n2. Define normal, focused, selected, loading, empty, error and disabled behavior where relevant. A loading label must not erase context or permit accidental duplicate actions.\n3. Keep accessibility behavior inside reusable components while keeping task-specific copy and state in the feature that owns them.\n\nVerify: Render each reachable state with representative data and verify interaction as well as appearance.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -128,8 +128,8 @@
         "consistency",
         "finish"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Fix alignment, clipping, inconsistent control heights and unstable content before adding decorative detail.\n2. Compare repeated components in normal and selected states. Borders, font weights and transforms must not unexpectedly move neighboring controls.\n3. Use realistic names, dates, empty values and record lengths. Check punctuation, units, plural forms and locale-sensitive formats.\n\nVerify: Inspect the same content at multiple widths, with the pointer over controls and with the keyboard focus visible.",
-      "sourceFile": "src/guidance.ts",
+      "content": "1. Inspect the actual screen before editing. List concrete defects in spacing, hierarchy, contrast, wording and interaction. Keep the product's established font, logo, palette and useful content.\n2. Read design://open-design/skills/unslop and its referenced files for a focused craft pass. Derive the direction from the product and apply only fixes supported by the audit and the user's authorization.\n3. Give navigation and controls quiet, consistent treatment. Put visual detail into real product content. Remove decoration that competes with the task; do not replace it with a different trend.\n4. Refine spacing, color, icons, copy, typography, layout, details, visuals and motion in order. Preserve keyboard access, errors and recovery throughout.\n\nVerify: Compare the before and after at the same widths. Explain which observed defect each change fixes and recheck the main task.",
+      "sourceFile": "docs/DESIGN-RESEARCH.md",
       "chunkType": "parent"
     },
     {
@@ -142,7 +142,7 @@
         "transitions",
         "reduced motion"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Animate the object that changed from a location related to the triggering action. Keep frequent tasks responsive and make transitions interruptible.\n2. Prefer transforms and opacity where they fit; measure performance instead of assuming every GPU-looking effect is cheap.\n3. Honor prefers-reduced-motion with a usable path that keeps content visible. Do not use motion as the only signal for completion or error.\n\nVerify: Repeat the action quickly, cancel midway and test reduced motion on a representative slow device.",
+      "content": "1. Animate the object that changed from a location related to the triggering action. Keep frequent tasks responsive and make transitions interruptible.\n2. Prefer transforms and opacity where they fit; measure performance instead of assuming every GPU-looking effect is cheap.\n3. Honor prefers-reduced-motion with a usable path that keeps content visible. Do not use motion as the only signal for completion or error.\n\nVerify: Repeat the action quickly, cancel midway and test reduced motion on a representative slow device.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -156,7 +156,7 @@
         "hero",
         "marketing page"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use a headline that states a supported benefit for a known audience. Keep the offer, important conditions and next action understandable without invented customer claims.\n2. Place copy beside the product image or demonstration. Preserve useful navigation, pricing, contact, privacy and footer links.\n3. Choose evidence such as actual screenshots, documented results and specific examples. A decorative mockup must not imply capabilities the product lacks.\n\nVerify: Ask a visitor to identify who the product is for, what it does, what it costs and what happens after the primary action.",
+      "content": "1. Use a headline that states a supported benefit for a known audience. Keep the offer, important conditions and next action understandable without invented customer claims.\n2. Place copy beside the product image or demonstration. Preserve useful navigation, pricing, contact, privacy and footer links.\n3. Choose evidence such as actual screenshots, documented results and specific examples. A decorative mockup must not imply capabilities the product lacks.\n\nVerify: Ask a visitor to identify who the product is for, what it does, what it costs and what happens after the primary action.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -170,7 +170,7 @@
         "ecommerce product page",
         "product detail"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Keep the product name, price, variant choice, availability and purchase action together. Surface delivery, returns and recurring-charge conditions before commitment.\n2. Show scale, important dimensions and relevant product details through photos and labeled specifications. Use actual variant imagery when the choice changes appearance.\n3. Keep purchase feedback consistent with cart contents and inventory. Explain an unavailable variant rather than silently changing the user's choice.\n\nVerify: Choose a variant, check the total and add it to the cart on a narrow screen using keyboard-accessible controls.",
+      "content": "1. Keep the product name, price, variant choice, availability and purchase action together. Surface delivery, returns and recurring-charge conditions before commitment.\n2. Show scale, important dimensions and relevant product details through photos and labeled specifications. Use actual variant imagery when the choice changes appearance.\n3. Keep purchase feedback consistent with cart contents and inventory. Explain an unavailable variant rather than silently changing the user's choice.\n\nVerify: Choose a variant, check the total and add it to the cart on a narrow screen using keyboard-accessible controls.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -184,7 +184,7 @@
         "photography",
         "image gallery"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Show the actual product from angles that answer buyer questions: scale, construction, use and variation. Do not invent certifications, labels or physical features.\n2. Keep lighting and color treatment consistent across peers so the gallery supports comparison. Include dimensions or a known reference where scale matters.\n3. Provide thumbnails and zoom that work with keyboard and touch. Keep critical specifications available as text rather than embedded only in an image.\n\nVerify: Check each variant's imagery, crop and accessible description against the actual product information.",
+      "content": "1. Show the actual product from angles that answer buyer questions: scale, construction, use and variation. Do not invent certifications, labels or physical features.\n2. Keep lighting and color treatment consistent across peers so the gallery supports comparison. Include dimensions or a known reference where scale matters.\n3. Provide thumbnails and zoom that work with keyboard and touch. Keep critical specifications available as text rather than embedded only in an image.\n\nVerify: Check each variant's imagery, crop and accessible description against the actual product information.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -198,7 +198,7 @@
         "inputs",
         "form errors"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Ask for information required for the immediate task, with visible labels and useful defaults. Explain formats, units and unfamiliar requirements before submission.\n2. Validate when the user can act on feedback; avoid treating every incomplete keystroke as an error. Keep entered values after a failed submission.\n3. Place a specific message beside the field and link a submission error summary to affected inputs. Announce status changes without moving focus unpredictably.\n\nVerify: Submit missing and invalid values, recover from a server error and complete the form with a keyboard.",
+      "content": "1. Ask for information required for the immediate task, with visible labels and useful defaults. Explain formats, units and unfamiliar requirements before submission.\n2. Validate when the user can act on feedback; avoid treating every incomplete keystroke as an error. Keep entered values after a failed submission.\n3. Place a specific message beside the field and link a submission error summary to affected inputs. Announce status changes without moving focus unpredictably.\n\nVerify: Submit missing and invalid values, recover from a server error and complete the form with a keyboard.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -212,7 +212,7 @@
         "routing",
         "breadcrumbs"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use consistent destination names, a visible current location and a predictable parent or back path. Match navigation hierarchy to the user's task structure.\n2. Use links for navigation and buttons for in-place actions. Preserve meaningful filter, tab or pagination state in the URL when users may share or return to it.\n3. Ensure browser back and forward restore useful state. Do not create dead-end routes or use a click handler where a real link should support new tabs.\n\nVerify: Navigate directly to a nested URL, refresh it, go back and open a destination in a new tab.",
+      "content": "1. Use consistent destination names, a visible current location and a predictable parent or back path. Match navigation hierarchy to the user's task structure.\n2. Use links for navigation and buttons for in-place actions. Preserve meaningful filter, tab or pagination state in the URL when users may share or return to it.\n3. Ensure browser back and forward restore useful state. Do not create dead-end routes or use a click handler where a real link should support new tabs.\n\nVerify: Navigate directly to a nested URL, refresh it, go back and open a destination in a new tab.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -226,7 +226,7 @@
         "alerts",
         "status feedback"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Match the interruption to urgency. Keep important errors and decisions on a persistent surface; a short-lived toast is unsuitable for information the user must read to recover.\n2. State the outcome and any useful next action. Avoid repeated announcements for routine background updates.\n3. Allow dismissal where appropriate, respect notification preferences and use live-region priority deliberately.\n\nVerify: Test a screen reader, rapid repeated events and delayed background work. Confirm that essential information remains available after a toast disappears.",
+      "content": "1. Match the interruption to urgency. Keep important errors and decisions on a persistent surface; a short-lived toast is unsuitable for information the user must read to recover.\n2. State the outcome and any useful next action. Avoid repeated announcements for routine background updates.\n3. Allow dismissal where appropriate, respect notification preferences and use live-region priority deliberately.\n\nVerify: Test a screen reader, rapid repeated events and delayed background work. Confirm that essential information remains available after a toast disappears.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -240,8 +240,8 @@
         "retry",
         "offline"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Explain the failed task, whether changes were saved and what the user can do next. Keep diagnostics separate from the plain-language recovery message.\n2. Offer retry only when retrying is safe; use idempotency or reconciliation to avoid duplicate payments or submissions.\n3. Preserve useful context and input through network failure, expired sessions and partial completion. Distinguish an empty result from a failed load.\n\nVerify: Disconnect the network, expire the session and simulate a partial server failure. Check that each state reflects reality.",
-      "sourceFile": "src/guidance.ts",
+      "content": "1. Explain what failed, what the user can do next and which entered values or selections were kept. Give a retry or a useful return path when the task can recover.\n2. After form submission, provide a concise error summary linked to affected fields and specific messages beside those fields. Associate errors with controls and move focus to the summary when appropriate for the form.\n3. Preserve valid input during validation and server failure. Announce asynchronous errors without stealing focus. Reconcile uncertain outcomes before repeating actions that could create duplicate orders or payments.\n4. Avoid technical codes as the only explanation. Keep diagnostic details available where they help support resolve the problem.\n\nVerify: Submit invalid input and simulate a server failure. Follow each summary link, correct the fields, retry and confirm that work is preserved.",
+      "sourceFile": "docs/DESIGN-RESEARCH.md",
       "chunkType": "parent"
     },
     {
@@ -254,7 +254,7 @@
         "confirmation",
         "destructive-actions"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use a dialog when a focused decision must interrupt the current task. Prefer an inline panel or separate page for long, persistent or multi-step work.\n2. Give the dialog a meaningful title, an explicit cancel path and correct focus management. Use action labels that name the consequence.\n3. Explain irreversible effects before committing, including the object affected. Prefer undo when the underlying operation can be safely reversed.\n\nVerify: Open and close the dialog by keyboard, verify focus return and test long content at text zoom.",
+      "content": "1. Use a dialog when a focused decision must interrupt the current task. Prefer an inline panel or separate page for long, persistent or multi-step work.\n2. Give the dialog a meaningful title, an explicit cancel path and correct focus management. Use action labels that name the consequence.\n3. Explain irreversible effects before committing, including the object affected. Prefer undo when the underlying operation can be safely reversed.\n\nVerify: Open and close the dialog by keyboard, verify focus return and test long content at text zoom.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -268,8 +268,8 @@
         "search results",
         "query"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. State what is searched and distinguish a text query from filters and sort order. Preserve the query and selected scope in results and empty states.\n2. Rank results with signals relevant to the task and show the matched object's useful attributes. Do not represent lexical ranking as semantic understanding.\n3. Provide useful recovery for no matches: remove a restrictive filter, edit the query or browse the full list. Cancel stale requests so old results do not overwrite newer ones.\n\nVerify: Try misspellings, empty queries, conflicting filters and out-of-order network responses with realistic data.",
-      "sourceFile": "src/guidance.ts",
+      "content": "1. Name the collection being searched and show active filters, the number of matching results and a clear reset. Labels should use terms visitors already recognize.\n2. Keep preview and read actions visible beside each result. Put optional metadata behind one disclosure. Remove duplicate listings that do not offer a distinct result.\n3. Show enough results to compare, with an explicit way to load more or all matches. State both the visible and matching counts; do not imply that a partial page is the complete collection.\n4. Preserve useful query and filter state when opening a result. Distinguish no matches from a failed request and let visitors retry without re-entering their query.\n\nVerify: Search by a known name, combine filters, load more, open and close a result and recover from failure. Confirm counts and keyboard focus remain useful.",
+      "sourceFile": "docs/DESIGN-RESEARCH.md",
       "chunkType": "parent"
     },
     {
@@ -282,7 +282,7 @@
         "setup",
         "activation"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Identify the first outcome that demonstrates value, then ask only for setup needed to reach it. Allow optional preferences to be completed later.\n2. Explain permissions when their purpose becomes relevant. Provide a clear path if a permission is denied or an integration fails.\n3. Label sample data and make it removable. Preserve progress across refresh or interruption without implying completed work that did not occur.\n\nVerify: Walk the first task from a fresh account and a deep link, with skipped optional steps and denied permissions.",
+      "content": "1. Identify the first outcome that demonstrates value, then ask only for setup needed to reach it. Allow optional preferences to be completed later.\n2. Explain permissions when their purpose becomes relevant. Provide a clear path if a permission is denied or an integration fails.\n3. Label sample data and make it removable. Preserve progress across refresh or interruption without implying completed work that did not occur.\n\nVerify: Walk the first task from a fresh account and a deep link, with skipped optional steps and denied permissions.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -297,7 +297,7 @@
         "empty states",
         "plain language"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Write button labels that predict the next state, such as Save changes or Create invoice. Use the same name for the same object across the interface.\n2. Explain an empty state with the reason and a valid next step. Distinguish no records, no search matches and unavailable data.\n3. Use familiar terms for the audience, spell out unfamiliar abbreviations and show units, time zones or currency where interpretation depends on them.\n\nVerify: Read labels outside their visual context and ask whether a first-time visitor can predict each action's consequence.",
+      "content": "1. Write button labels that predict the next state, such as Save changes or Create invoice. Use the same name for the same object across the interface.\n2. Explain an empty state with the reason and a valid next step. Distinguish no records, no search matches and unavailable data.\n3. Use familiar terms for the audience, spell out unfamiliar abbreviations and show units, time zones or currency where interpretation depends on them.\n\nVerify: Read labels outside their visual context and ask whether a first-time visitor can predict each action's consequence.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -311,7 +311,7 @@
         "headline",
         "benefits"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Establish the audience, current problem, offered outcome and evidence before writing a headline. Treat unknown facts as questions or labeled assumptions.\n2. Connect the product to a concrete task and a supported benefit. Avoid claims about conversion, speed, trust or market leadership without evidence.\n3. Keep the next commitment clear: an account, purchase, conversation or download should not hide behind a vague action label.\n\nVerify: Have a reader explain the offer in their own words and identify which claims have a real supporting source.",
+      "content": "1. Establish the audience, current problem, offered outcome and evidence before writing a headline. Treat unknown facts as questions or labeled assumptions.\n2. Connect the product to a concrete task and a supported benefit. Avoid claims about conversion, speed, trust or market leadership without evidence.\n3. Keep the next commitment clear: an account, purchase, conversation or download should not hide behind a vague action label.\n\nVerify: Have a reader explain the offer in their own words and identify which claims have a real supporting source.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -325,7 +325,7 @@
         "celebration",
         "feedback"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Confirm the completed outcome and show useful progress, saved effort or newly available capability. Keep feedback proportionate to the task.\n2. Let the user control sound and motion. Routine actions should not require dismissing a celebration before work can continue.\n3. Do not substitute points or praise for meaningful completion. Explain what changed and where the user can continue.\n\nVerify: Repeat the task several times and confirm that feedback remains useful, quiet when requested and easy to move past.",
+      "content": "1. Confirm the completed outcome and show useful progress, saved effort or newly available capability. Keep feedback proportionate to the task.\n2. Let the user control sound and motion. Routine actions should not require dismissing a celebration before work can continue.\n3. Do not substitute points or praise for meaningful completion. Explain what changed and where the user can continue.\n\nVerify: Repeat the task several times and confirm that feedback remains useful, quiet when requested and easy to move past.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -339,7 +339,7 @@
         "motivation",
         "nudges"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define the behavior the person wants to change and the obstacle they face. Offer a manageable next action and feedback grounded in actual progress.\n2. Make reminders optional and adjustable. Avoid misleading urgency, guilt or friction that prevents a person from leaving.\n3. Use achievable defaults and recovery after a missed session. Do not make an invented streak more important than the underlying user goal.\n\nVerify: Test opting out, returning after an interruption and changing the goal without losing useful history.",
+      "content": "1. Define the behavior the person wants to change and the obstacle they face. Offer a manageable next action and feedback grounded in actual progress.\n2. Make reminders optional and adjustable. Avoid misleading urgency, guilt or friction that prevents a person from leaving.\n3. Use achievable defaults and recovery after a missed session. Do not make an invented streak more important than the underlying user goal.\n\nVerify: Test opting out, returning after an interruption and changing the goal without losing useful history.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -353,7 +353,7 @@
         "understanding users",
         "design brief"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Identify the user, task, current problem and definition of success. Ask the question that most changes implementation when essential information is missing.\n2. Separate observed facts from assumptions. Preserve the requested scope and the existing product's behavior unless a change is authorized.\n3. Map the important states, routes and data before implementation. Choose representative examples and acceptance checks that can disprove the proposed solution.\n\nVerify: Trace the requested task from entry through success and recovery; identify any untested assumption or missing state.",
+      "content": "1. Identify the user, task, current problem and definition of success. Ask the question that most changes implementation when essential information is missing.\n2. Separate observed facts from assumptions. Preserve the requested scope and the existing product's behavior unless a change is authorized.\n3. Map the important states, routes and data before implementation. Choose representative examples and acceptance checks that can disprove the proposed solution.\n\nVerify: Trace the requested task from entry through success and recovery; identify any untested assumption or missing state.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -366,7 +366,7 @@
         "design trade-offs",
         "decision rationale"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. For each viable option, state the gain, the cost and the users or maintainers who bear it. Use evidence from the product instead of generic claims about conversion.\n2. Recommend an option based on the known task and constraints. Label predictions and assumptions, and keep minor reversible choices proportionate.\n3. After an accepted direction, preserve it unless new evidence warrants a change. Record the material reason for a changed choice in the handoff, not extra product copy.\n\nVerify: Check that the chosen option's important cost is acknowledged and that the promised gain is observable or clearly identified as a prediction.",
+      "content": "1. For each viable option, state the gain, the cost and the users or maintainers who bear it. Use evidence from the product instead of generic claims about conversion.\n2. Recommend an option based on the known task and constraints. Label predictions and assumptions, and keep minor reversible choices proportionate.\n3. After an accepted direction, preserve it unless new evidence warrants a change. Record the material reason for a changed choice in the handoff, not extra product copy.\n\nVerify: Check that the chosen option's important cost is acknowledged and that the promised gain is observable or clearly identified as a prediction.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -380,7 +380,7 @@
         "gestalt laws",
         "cognitive load"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Group related content, make options distinguishable and put recognition ahead of recall. Reduce decisions by providing useful defaults without hiding meaningful choices.\n2. Treat named cognitive laws as context-sensitive guidance. They do not prove that a specific layout will improve completion or conversion.\n3. Check the task with real users or concrete walkthroughs when complexity matters. Record where confusion occurs rather than explaining every defect through a favorite theory.\n\nVerify: Ask a visitor to complete the task without coaching and compare observed mistakes with the predicted benefit of the change.",
+      "content": "1. Group related content, make options distinguishable and put recognition ahead of recall. Reduce decisions by providing useful defaults without hiding meaningful choices.\n2. Treat named cognitive laws as context-sensitive guidance. They do not prove that a specific layout will improve completion or conversion.\n3. Check the task with real users or concrete walkthroughs when complexity matters. Record where confusion occurs rather than explaining every defect through a favorite theory.\n\nVerify: Ask a visitor to complete the task without coaching and compare observed mistakes with the predicted benefit of the change.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -394,7 +394,7 @@
         "product listing",
         "filters"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Show comparable product names, imagery, prices and availability. Include variant or pack information when it changes the apparent price.\n2. Use filters that match buyer decisions, label active filters and make clearing them straightforward. Show a useful result count after filtering.\n3. Preserve list position and filter state when the buyer visits a detail page and returns. Keep sort order separate from filtering.\n\nVerify: Find a product using multiple filters, inspect its detail and return to the same list state on mobile.",
+      "content": "1. Show comparable product names, imagery, prices and availability. Include variant or pack information when it changes the apparent price.\n2. Use filters that match buyer decisions, label active filters and make clearing them straightforward. Show a useful result count after filtering.\n3. Preserve list position and filter state when the buyer visits a detail page and returns. Keep sort order separate from filtering.\n\nVerify: Find a product using multiple filters, inspect its detail and return to the same list state on mobile.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -408,7 +408,7 @@
         "checkout",
         "payments"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Show the items, quantities, currency, taxes, shipping and final total before payment. Explain recurring charges and renewal terms beside the commitment.\n2. Preserve cart and entered data through validation or payment failure. Use safe retry and reconcile uncertain payment outcomes before asking the buyer to pay again.\n3. Offer a clear way to edit the order and use appropriate address, autofill and input modes. Do not preselect an optional paid addition.\n\nVerify: Test declined payment, changed shipping cost, lost connection and duplicate submission with server-confirmed order state.",
+      "content": "1. Show the items, quantities, currency, taxes, shipping and final total before payment. Explain recurring charges and renewal terms beside the commitment.\n2. Preserve cart and entered data through validation or payment failure. Use safe retry and reconcile uncertain payment outcomes before asking the buyer to pay again.\n3. Offer a clear way to edit the order and use appropriate address, autofill and input modes. Do not preselect an optional paid addition.\n\nVerify: Test declined payment, changed shipping cost, lost connection and duplicate submission with server-confirmed order state.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -423,7 +423,7 @@
         "prompt-and-response",
         "ai"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Express the brand through typography, tone and useful interaction details while keeping the prompt, response and next action easy to read.\n2. Label generated content, disclose relevant input use and let users edit output before consequential use. Avoid invented citations or claims of certainty.\n3. Show progress during a long operation, support cancellation and preserve useful partial output. Provide a manual or recovery path when generation is unavailable.\n\nVerify: Test first use, an ambiguous prompt, failed generation, stop, retry and editing before the output is saved or sent.",
+      "content": "1. Express the brand through typography, tone and useful interaction details while keeping the prompt, response and next action easy to read.\n2. Label generated content, disclose relevant input use and let users edit output before consequential use. Avoid invented citations or claims of certainty.\n3. Show progress during a long operation, support cancellation and preserve useful partial output. Provide a manual or recovery path when generation is unavailable.\n\nVerify: Test first use, an ambiguous prompt, failed generation, stop, retry and editing before the output is saved or sent.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -437,7 +437,7 @@
         "mobile patterns",
         "reflow"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose layouts based on content fit. Collapse or reflow navigation and comparisons while preserving essential labels and actions.\n2. Keep focus, selection and entered values when the layout changes. Account for virtual keyboards, safe areas, browser chrome and text resizing.\n3. Use horizontal scrolling only where a two-dimensional relationship needs it, such as a data table; provide context for hidden columns.\n\nVerify: Finish the same task at narrow width, landscape orientation and text zoom, including an open overlay and visible keyboard.",
+      "content": "1. Choose layouts based on content fit. Collapse or reflow navigation and comparisons while preserving essential labels and actions.\n2. Keep focus, selection and entered values when the layout changes. Account for virtual keyboards, safe areas, browser chrome and text resizing.\n3. Use horizontal scrolling only where a two-dimensional relationship needs it, such as a data table; provide context for hidden columns.\n\nVerify: Finish the same task at narrow width, landscape orientation and text zoom, including an open overlay and visible keyboard.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -451,7 +451,7 @@
         "sound",
         "anti-patterns"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Name the trigger, object that changes, destination state and information motion must communicate. Decide how interruption and repeated input should behave.\n2. Define duration, easing and reduced-motion behavior using the product's tokens. Make sound optional and never essential to comprehension.\n3. Avoid animations that shift controls under the pointer, delay frequent tasks or obscure updated content.\n\nVerify: Record the transition under rapid input, reduced motion and representative device load, and inspect whether it explains the state change.",
+      "content": "1. Name the trigger, object that changes, destination state and information motion must communicate. Decide how interruption and repeated input should behave.\n2. Define duration, easing and reduced-motion behavior using the product's tokens. Make sound optional and never essential to comprehension.\n3. Avoid animations that shift controls under the pointer, delay frequent tasks or obscure updated content.\n\nVerify: Record the transition under rapid input, reduced motion and representative device load, and inspect whether it explains the state change.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -466,7 +466,7 @@
         "setup",
         "components"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use the app's established navigation, theme and state ownership. Respect safe-area insets and use platform controls where their behavior fits.\n2. Provide accessibility labels, roles and state; test Dynamic Type or font scaling, screen readers and comfortable touch targets on devices.\n3. Model loading, empty, error and offline states. Use virtualized lists for substantial data and stable keys to preserve item identity.\n\nVerify: Run the task on both supported platforms with a virtual keyboard, large text and a slow connection.",
+      "content": "1. Use the app's established navigation, theme and state ownership. Respect safe-area insets and use platform controls where their behavior fits.\n2. Provide accessibility labels, roles and state; test Dynamic Type or font scaling, screen readers and comfortable touch targets on devices.\n3. Model loading, empty, error and offline states. Use virtualized lists for substantial data and stable keys to preserve item identity.\n\nVerify: Run the task on both supported platforms with a virtual keyboard, large text and a slow connection.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -480,7 +480,7 @@
         "session",
         "secure storage"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use the provider's recommended OAuth/PKCE flow and a registered redirect URI. Keep credentials out of URLs, logs and ordinary unencrypted preferences.\n2. Represent restoring, signed-out, signed-in and expired-session states explicitly. Wait for restoration before routing so users do not see an incorrect sign-in flash.\n3. Cancel or reconcile in-flight work on sign-out and clear private cached data. Refresh tokens deliberately and prevent concurrent refresh races.\n\nVerify: Test a cold start, expired token, cancelled browser sign-in, offline restoration and sign-out while requests are running.",
+      "content": "1. Use the provider's recommended OAuth/PKCE flow and a registered redirect URI. Keep credentials out of URLs, logs and ordinary unencrypted preferences.\n2. Represent restoring, signed-out, signed-in and expired-session states explicitly. Wait for restoration before routing so users do not see an incorrect sign-in flash.\n3. Cancel or reconcile in-flight work on sign-out and clear private cached data. Refresh tokens deliberately and prevent concurrent refresh races.\n\nVerify: Test a cold start, expired token, cancelled browser sign-in, offline restoration and sign-out while requests are running.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -494,7 +494,7 @@
         "messages",
         "keyboard avoidance"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Keep the composer visible above the keyboard and respect safe-area insets. Preserve scroll position when messages arrive unless the user is already following the latest message.\n2. Use stable message IDs, explicit sending/failure states and safe retry to avoid duplicates. Do not replace the entire list for a small update.\n3. Announce incoming content proportionately and provide accessible timestamps and author context. Preserve drafted text across temporary interruption.\n\nVerify: Test long messages, keyboard changes, failed sends, pagination and incoming messages while reading older history.",
+      "content": "1. Keep the composer visible above the keyboard and respect safe-area insets. Preserve scroll position when messages arrive unless the user is already following the latest message.\n2. Use stable message IDs, explicit sending/failure states and safe retry to avoid duplicates. Do not replace the entire list for a small update.\n3. Announce incoming content proportionately and provide accessible timestamps and author context. Preserve drafted text across temporary interruption.\n\nVerify: Test long messages, keyboard changes, failed sends, pagination and incoming messages while reading older history.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -508,7 +508,7 @@
         "native modules",
         "expo-go"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Check whether the app needs a native module or configuration unavailable in Expo Go. Use a development build for the app's actual native dependencies.\n2. Keep the native build profile, environment and update channel explicit. Rebuild when native configuration changes rather than expecting a JavaScript update to add native code.\n3. Test device permissions, deep links and release behavior in a representative build, not only the development runtime.\n\nVerify: Install the intended development build on a device and verify each native feature and redirect path.",
+      "content": "1. Check whether the app needs a native module or configuration unavailable in Expo Go. Use a development build for the app's actual native dependencies.\n2. Keep the native build profile, environment and update channel explicit. Rebuild when native configuration changes rather than expecting a JavaScript update to add native code.\n3. Test device permissions, deep links and release behavior in a representative build, not only the development runtime.\n\nVerify: Install the intended development build on a device and verify each native feature and redirect path.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -521,7 +521,7 @@
         "expo ui",
         "native-ui"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Check the currently installed Expo SDK and the library's platform support before selecting a native UI package. Do not assume a component exists on both iOS and Android.\n2. Use native primitives where they improve interaction consistency, and keep business state outside platform-specific rendering.\n3. Provide an accessible equivalent when a component or platform capability is unavailable. Verify the library's current API in its official documentation.\n\nVerify: Build for each supported platform and test theme, accessibility and unsupported capability handling.",
+      "content": "1. Check the currently installed Expo SDK and the library's platform support before selecting a native UI package. Do not assume a component exists on both iOS and Android.\n2. Use native primitives where they improve interaction consistency, and keep business state outside platform-specific rendering.\n3. Provide an accessible equivalent when a component or platform capability is unavailable. Verify the library's current API in its official documentation.\n\nVerify: Build for each supported platform and test theme, accessibility and unsupported capability handling.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -535,7 +535,7 @@
         "release",
         "app stores"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Keep application identifiers, build numbers, signing credentials and release environment explicit. Confirm the build points at the intended production services.\n2. Verify privacy declarations, permissions, account deletion where required and real screenshots against current store requirements.\n3. Run a release build through internal distribution before submission. Check startup, deep links, purchases, offline behavior and crash reporting.\n\nVerify: Install the signed release candidate and complete critical flows without development tooling.",
+      "content": "1. Keep application identifiers, build numbers, signing credentials and release environment explicit. Confirm the build points at the intended production services.\n2. Verify privacy declarations, permissions, account deletion where required and real screenshots against current store requirements.\n3. Run a release build through internal distribution before submission. Check startup, deep links, purchases, offline behavior and crash reporting.\n\nVerify: Install the signed release candidate and complete critical flows without development tooling.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -549,7 +549,7 @@
         "native layout",
         "dynamic type"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose state ownership deliberately: transient view state belongs near the view, while shared models have a stable owner. Preserve identity in repeated and navigated content.\n2. Use semantic text styles, native controls and platform navigation. Respect safe areas and avoid fixed heights that clip Dynamic Type content.\n3. Provide VoiceOver labels, values and traits. Keep loading, failure and empty data distinct, and cancel view-bound work when it is no longer needed.\n\nVerify: Test the smallest and largest supported text sizes, VoiceOver, rotation and interrupted asynchronous work.",
+      "content": "1. Choose state ownership deliberately: transient view state belongs near the view, while shared models have a stable owner. Preserve identity in repeated and navigated content.\n2. Use semantic text styles, native controls and platform navigation. Respect safe areas and avoid fixed heights that clip Dynamic Type content.\n3. Provide VoiceOver labels, values and traits. Keep loading, failure and empty data distinct, and cancel view-bound work when it is no longer needed.\n\nVerify: Test the smallest and largest supported text sizes, VoiceOver, rotation and interrupted asynchronous work.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -563,7 +563,7 @@
         "refraction",
         "shader effects"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use a shader effect only when it explains a meaningful interaction. Keep the triggering point, coordinate space and effect bounds consistent through resize.\n2. Gate the effect on platform and API availability and provide an ordinary state transition when the effect is unsupported or Reduce Motion is enabled.\n3. Keep text and controls usable during the effect and measure rendering on supported devices rather than assuming a preview's performance.\n\nVerify: Repeat the gesture, rotate the device and test Reduce Motion and the oldest supported runtime.",
+      "content": "1. Use a shader effect only when it explains a meaningful interaction. Keep the triggering point, coordinate space and effect bounds consistent through resize.\n2. Gate the effect on platform and API availability and provide an ordinary state transition when the effect is unsupported or Reduce Motion is enabled.\n3. Keep text and controls usable during the effect and measure rendering on supported devices rather than assuming a preview's performance.\n\nVerify: Repeat the gesture, rotate the device and test Reduce Motion and the oldest supported runtime.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -577,7 +577,7 @@
         "task",
         "cancellation"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use structured tasks for view-bound work and cancellation-aware operations. Keep UI model updates on the appropriate actor.\n2. Guard against stale responses when the input or selected item changes. Do not let a completed request update a different screen's state.\n3. Represent restoration, loading, success and failure in a model the view can render directly. Avoid using disappearance as proof that server work was cancelled.\n\nVerify: Navigate away during a request, rapidly change selection and verify that stale results and cancelled tasks are handled.",
+      "content": "1. Use structured tasks for view-bound work and cancellation-aware operations. Keep UI model updates on the appropriate actor.\n2. Guard against stale responses when the input or selected item changes. Do not let a completed request update a different screen's state.\n3. Represent restoration, loading, success and failure in a model the view can render directly. Avoid using disappearance as proof that server work was cancelled.\n\nVerify: Navigate away during a request, rapidly change selection and verify that stale results and cancelled tasks are handled.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -592,7 +592,7 @@
         "r3f",
         "react three fiber"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define the information or interaction the scene must communicate, the camera framing and the target device budget before adding objects.\n2. Handle resize, device pixel ratio and unavailable WebGL. Provide useful HTML content or a static alternative for essential information.\n3. Dispose of owned geometry, material and texture resources and clean up listeners and loops. Keep shared resource lifetimes explicit.\n\nVerify: Resize the canvas, navigate away and return, and test a low-powered device and WebGL failure.",
+      "content": "1. Define the information or interaction the scene must communicate, the camera framing and the target device budget before adding objects.\n2. Handle resize, device pixel ratio and unavailable WebGL. Provide useful HTML content or a static alternative for essential information.\n3. Dispose of owned geometry, material and texture resources and clean up listeners and loops. Keep shared resource lifetimes explicit.\n\nVerify: Resize the canvas, navigate away and return, and test a low-powered device and WebGL failure.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -607,7 +607,7 @@
         "materials",
         "shader-effects"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define the effect's uniforms, coordinate spaces and time source. Keep expensive work and branch behavior consistent with the target hardware budget.\n2. Treat shaders as part of a material and color-management pipeline. Check output color space, tone mapping and transparency with the actual renderer configuration.\n3. Use a simple material fallback when compilation or capability checks fail. Keep required labels and controls outside the effect.\n\nVerify: Check compile errors, renderer warnings, the intended color pipeline and frame time on representative devices.",
+      "content": "1. Define the effect's uniforms, coordinate spaces and time source. Keep expensive work and branch behavior consistent with the target hardware budget.\n2. Treat shaders as part of a material and color-management pipeline. Check output color space, tone mapping and transparency with the actual renderer configuration.\n3. Use a simple material fallback when compilation or capability checks fail. Keep required labels and controls outside the effect.\n\nVerify: Check compile errors, renderer warnings, the intended color pipeline and frame time on representative devices.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -621,7 +621,7 @@
         "controls",
         "loaders"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Confirm a helper's current API and requirements in the installed version. Use it to solve a specific camera, loading, staging or interaction requirement.\n2. Keep camera control ownership clear and avoid multiple controls competing for the same input. Bound resource-heavy helpers and progressive effects.\n3. Provide loading/error UI and accessible HTML equivalents for important interactions. Dispose or reuse owned assets deliberately.\n\nVerify: Test loading failure, unmount, multiple scenes and control interactions with touch and a keyboard.",
+      "content": "1. Confirm a helper's current API and requirements in the installed version. Use it to solve a specific camera, loading, staging or interaction requirement.\n2. Keep camera control ownership clear and avoid multiple controls competing for the same input. Bound resource-heavy helpers and progressive effects.\n3. Provide loading/error UI and accessible HTML equivalents for important interactions. Dispose or reuse owned assets deliberately.\n\nVerify: Test loading failure, unmount, multiple scenes and control interactions with touch and a keyboard.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -635,7 +635,7 @@
         "tsl",
         "node materials"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Check browser, renderer and installed Three.js support before adopting WebGPU or node-based materials. Feature detection is more useful than browser-name assumptions.\n2. Separate scene behavior from renderer-specific material and compute code. Decide whether a WebGL or static fallback can meet the user's task.\n3. Measure shader compilation, memory and frame costs with the chosen renderer. Do not assume a WebGL shader can be moved unchanged into a TSL pipeline.\n\nVerify: Run supported and unsupported capability paths and compare correctness and performance with representative assets.",
+      "content": "1. Check browser, renderer and installed Three.js support before adopting WebGPU or node-based materials. Feature detection is more useful than browser-name assumptions.\n2. Separate scene behavior from renderer-specific material and compute code. Decide whether a WebGL or static fallback can meet the user's task.\n3. Measure shader compilation, memory and frame costs with the chosen renderer. Do not assume a WebGL shader can be moved unchanged into a TSL pipeline.\n\nVerify: Run supported and unsupported capability paths and compare correctness and performance with representative assets.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -650,7 +650,7 @@
         "textures",
         "fps"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Measure frame time, draw calls, triangles, texture memory and loading costs. Set budgets for the target device rather than optimizing a desktop-only preview.\n2. Reuse geometry and materials, instance repeated objects and choose texture resolution for actual on-screen size. Avoid allocating objects inside a frequent render loop.\n3. Use demand rendering when a scene is idle and lower pixel ratio when appropriate. Balance visual quality with readable, responsive interaction.\n\nVerify: Profile representative scenes and repeated mounts, including a slow device, idle state and worst-case interaction.",
+      "content": "1. Measure frame time, draw calls, triangles, texture memory and loading costs. Set budgets for the target device rather than optimizing a desktop-only preview.\n2. Reuse geometry and materials, instance repeated objects and choose texture resolution for actual on-screen size. Avoid allocating objects inside a frequent render loop.\n3. Use demand rendering when a scene is idle and lower pixel ratio when appropriate. Balance visual quality with readable, responsive interaction.\n\nVerify: Profile representative scenes and repeated mounts, including a slow device, idle state and worst-case interaction.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -664,7 +664,7 @@
         "theme architecture",
         "online store 2.0"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Fit changes into the theme's existing templates, sections, blocks and assets. Use merchant-editable settings for content and design choices that must be maintained without code.\n2. Keep product, cart, localization and customer behavior tied to Shopify's actual objects. Do not replace live pricing or inventory with sample values.\n3. Support section lifecycle events and theme-editor reloads without duplicate listeners. Preserve header, footer and relevant legal links.\n\nVerify: Add, reorder and remove the section in the editor, then test the storefront with actual product and cart states.",
+      "content": "1. Fit changes into the theme's existing templates, sections, blocks and assets. Use merchant-editable settings for content and design choices that must be maintained without code.\n2. Keep product, cart, localization and customer behavior tied to Shopify's actual objects. Do not replace live pricing or inventory with sample values.\n3. Support section lifecycle events and theme-editor reloads without duplicate listeners. Preserve header, footer and relevant legal links.\n\nVerify: Add, reorder and remove the section in the editor, then test the storefront with actual product and cart states.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -678,7 +678,7 @@
         "filters",
         "objects"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use documented Liquid objects and filters for the current theme context. Escape untrusted text and use the platform's money and localization formatting.\n2. Check empty values, collection limits and variant availability before rendering an action. Keep display labels separate from IDs and handles used for behavior.\n3. Avoid expensive repeated lookups and preserve the theme's asset-loading conventions. Do not put credentials or privileged API requests into public theme code.\n\nVerify: Run Theme Check and inspect empty, unavailable, localized and long-content examples in the rendered storefront.",
+      "content": "1. Use documented Liquid objects and filters for the current theme context. Escape untrusted text and use the platform's money and localization formatting.\n2. Check empty values, collection limits and variant availability before rendering an action. Keep display labels separate from IDs and handles used for behavior.\n3. Avoid expensive repeated lookups and preserve the theme's asset-loading conventions. Do not put credentials or privileged API requests into public theme code.\n\nVerify: Run Theme Check and inspect empty, unavailable, localized and long-content examples in the rendered storefront.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -692,7 +692,7 @@
         "blocks",
         "section settings"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose setting types, defaults and ranges that fit the actual rendering. Keep IDs stable so existing merchant choices are preserved.\n2. Provide useful presets and block limits where needed, and use labels a merchant can understand without implementation knowledge.\n3. Keep the schema valid JSON and verify current Shopify restrictions. Reflect a missing or empty setting gracefully in the storefront.\n\nVerify: Run Theme Check, add the section from its preset and test defaults, empty values and every exposed setting.",
+      "content": "1. Choose setting types, defaults and ranges that fit the actual rendering. Keep IDs stable so existing merchant choices are preserved.\n2. Provide useful presets and block limits where needed, and use labels a merchant can understand without implementation knowledge.\n3. Keep the schema valid JSON and verify current Shopify restrictions. Reflect a missing or empty setting gracefully in the storefront.\n\nVerify: Run Theme Check, add the section from its preset and test defaults, empty values and every exposed setting.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -706,7 +706,7 @@
         "markets",
         "currency"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Move customer-facing text into locale files using the theme's translation conventions. Preserve interpolation variables and pluralization where the platform supports them.\n2. Use Shopify's money and localization objects rather than manually appending currency symbols. Check that variant prices and cart totals use the selected market.\n3. Allow longer translated labels and right-to-left layout where supported. Do not embed required copy only in product images.\n\nVerify: Render multiple languages and markets, including long labels, plural quantities and the complete checkout handoff.",
+      "content": "1. Move customer-facing text into locale files using the theme's translation conventions. Preserve interpolation variables and pluralization where the platform supports them.\n2. Use Shopify's money and localization objects rather than manually appending currency symbols. Check that variant prices and cart totals use the selected market.\n3. Allow longer translated labels and right-to-left layout where supported. Do not embed required copy only in product images.\n\nVerify: Render multiple languages and markets, including long labels, plural quantities and the complete checkout handoff.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -720,7 +720,7 @@
         "product landing page",
         "shopify-product"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Keep the offer, price, selected variant, availability and cart action backed by the actual product. Put required offer conditions before the commitment.\n2. Use real product imagery and supportable claims. Keep copy adjacent to imagery and preserve the store's navigation and policy links.\n3. Make the page editable through theme settings where practical. Preserve cart and analytics integration behavior used elsewhere in the theme.\n\nVerify: Check each variant, sold-out state, market currency and cart feedback on mobile and in the theme editor.",
+      "content": "1. Keep the offer, price, selected variant, availability and cart action backed by the actual product. Put required offer conditions before the commitment.\n2. Use real product imagery and supportable claims. Keep copy adjacent to imagery and preserve the store's navigation and policy links.\n3. Make the page editable through theme settings where practical. Preserve cart and analytics integration behavior used elsewhere in the theme.\n\nVerify: Check each variant, sold-out state, market currency and cart feedback on mobile and in the theme editor.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -734,7 +734,7 @@
         "theme testing",
         "theme-check"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Run the version of Theme Check appropriate to the project and address syntax, schema and high-impact warnings. A clean static check does not establish working storefront behavior.\n2. Verify section editor lifecycle, localization, keyboard controls, product variants, cart updates and responsive layout with representative data.\n3. Use a preview theme for review and preserve the merchant's live theme settings. Compare the intended change against the existing page at the same width.\n\nVerify: Keep a preview URL and repeat the affected customer task, including failure and empty states, before publishing.",
+      "content": "1. Run the version of Theme Check appropriate to the project and address syntax, schema and high-impact warnings. A clean static check does not establish working storefront behavior.\n2. Verify section editor lifecycle, localization, keyboard controls, product variants, cart updates and responsive layout with representative data.\n3. Use a preview theme for review and preserve the merchant's live theme settings. Compare the intended change against the existing page at the same width.\n\nVerify: Keep a preview URL and repeat the affected customer task, including failure and empty states, before publishing.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -748,7 +748,7 @@
         "discovery",
         "honest selling"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Ask about the buyer's problem, current approach, decision constraints and cost of leaving the problem unresolved. Confirm your understanding before proposing a solution.\n2. Connect each relevant capability to a supported outcome. State limitations and avoid invented customer references, metrics or urgency.\n3. Agree on a practical next step, owner and date. Make price, scope and commitments clear before asking for a decision.\n\nVerify: Check that the proposal uses the buyer's actual requirements and that every material claim has support.",
+      "content": "1. Ask about the buyer's problem, current approach, decision constraints and cost of leaving the problem unresolved. Confirm your understanding before proposing a solution.\n2. Connect each relevant capability to a supported outcome. State limitations and avoid invented customer references, metrics or urgency.\n3. Agree on a practical next step, owner and date. Make price, scope and commitments clear before asking for a decision.\n\nVerify: Check that the proposal uses the buyer's actual requirements and that every material claim has support.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -763,7 +763,7 @@
         "acers",
         "price objection"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Acknowledge the concern and ask what specifically makes the choice difficult. Distinguish price, fit, risk, timing and decision authority instead of delivering a generic rebuttal.\n2. Respond with relevant evidence or a concrete scope adjustment. Do not claim that every objection is secretly interest or pressure the buyer to ignore a valid limitation.\n3. Confirm whether the answer resolves the concern and identify a useful next step, including declining the offer when the fit is wrong.\n\nVerify: Restate the buyer's concern accurately and identify what evidence or change would actually address it.",
+      "content": "1. Acknowledge the concern and ask what specifically makes the choice difficult. Distinguish price, fit, risk, timing and decision authority instead of delivering a generic rebuttal.\n2. Respond with relevant evidence or a concrete scope adjustment. Do not claim that every objection is secretly interest or pressure the buyer to ignore a valid limitation.\n3. Confirm whether the answer resolves the concern and identify a useful next step, including declining the offer when the fit is wrong.\n\nVerify: Restate the buyer's concern accurately and identify what evidence or change would actually address it.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -777,7 +777,7 @@
         "buying committee",
         "internal pitch"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Understand who evaluates value, risk, procurement and implementation. Give the champion a concise statement of the problem, proposal, evidence and unresolved questions.\n2. Provide truthful comparisons, clear pricing and an implementation plan with responsibilities. Do not invent stakeholder approval or financial returns.\n3. Make supporting material easy to share and verify. Offer answers to likely concerns without asking the champion to hide limitations.\n\nVerify: Check that an uninvolved stakeholder can understand the recommendation and verify its important claims.",
+      "content": "1. Understand who evaluates value, risk, procurement and implementation. Give the champion a concise statement of the problem, proposal, evidence and unresolved questions.\n2. Provide truthful comparisons, clear pricing and an implementation plan with responsibilities. Do not invent stakeholder approval or financial returns.\n3. Make supporting material easy to share and verify. Offer answers to likely concerns without asking the champion to hide limitations.\n\nVerify: Check that an uninvolved stakeholder can understand the recommendation and verify its important claims.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -791,7 +791,7 @@
         "feature value",
         "benefits"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Start from a task the buyer actually performs, explain the capability that changes it and identify the resulting benefit.\n2. Distinguish a product fact from a predicted effect. Quantify only when the input and calculation are known, and show the assumptions.\n3. Omit capabilities unrelated to the decision. A short proposal tied to real requirements is more useful than an undifferentiated feature list.\n\nVerify: For each proposed capability, name the buyer task it helps and the evidence supporting the claimed outcome.",
+      "content": "1. Start from a task the buyer actually performs, explain the capability that changes it and identify the resulting benefit.\n2. Distinguish a product fact from a predicted effect. Quantify only when the input and calculation are known, and show the assumptions.\n3. Omit capabilities unrelated to the decision. A short proposal tied to real requirements is more useful than an undifferentiated feature list.\n\nVerify: For each proposed capability, name the buyer task it helps and the evidence supporting the claimed outcome.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -805,7 +805,7 @@
         "product video",
         "brand"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Use the product's actual typography, color, control shapes and movement tokens. Keep the visual language consistent between title cards and product shots.\n2. Choose motion that explains the task narrative. Do not imply shipped interactions or results that the product does not support.\n3. Define output format, frame rate, readable type sizes and caption placement before authoring compositions.\n\nVerify: Review representative frames at delivery resolution and confirm the product depiction is truthful and text remains legible.",
+      "content": "1. Use the product's actual typography, color, control shapes and movement tokens. Keep the visual language consistent between title cards and product shots.\n2. Choose motion that explains the task narrative. Do not imply shipped interactions or results that the product does not support.\n3. Define output format, frame rate, readable type sizes and caption placement before authoring compositions.\n\nVerify: Review representative frames at delivery resolution and confirm the product depiction is truthful and text remains legible.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -819,7 +819,7 @@
         "demo narrative",
         "film plan"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Identify the audience, task trigger, meaningful interaction and result. Keep the sequence specific enough that a viewer can explain what changed.\n2. Budget beats in frames and give reading time to important text. Use a clear beginning and end instead of stacking unrelated feature shots.\n3. Use actual product recordings or accurately implemented examples. Record assumptions and missing assets in the production handoff.\n\nVerify: Read the storyboard without narration and verify that the result follows from the shown interaction.",
+      "content": "1. Identify the audience, task trigger, meaningful interaction and result. Keep the sequence specific enough that a viewer can explain what changed.\n2. Budget beats in frames and give reading time to important text. Use a clear beginning and end instead of stacking unrelated feature shots.\n3. Use actual product recordings or accurately implemented examples. Record assumptions and missing assets in the production handoff.\n\nVerify: Read the storyboard without narration and verify that the result follows from the shown interaction.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -833,7 +833,7 @@
         "safe areas",
         "frame budget"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Choose resolution, aspect ratio, frame rate and duration for the destination. Keep essential text and actions away from expected player or platform overlays.\n2. Recompose important content for each format rather than cropping a widescreen composition blindly into a vertical frame.\n3. Use integer frame boundaries for deterministic cuts. Verify the final encoding and audio behavior against destination requirements.\n\nVerify: Inspect the complete frame at actual delivery size for each format, including captions and platform overlay areas.",
+      "content": "1. Choose resolution, aspect ratio, frame rate and duration for the destination. Keep essential text and actions away from expected player or platform overlays.\n2. Recompose important content for each format rather than cropping a widescreen composition blindly into a vertical frame.\n3. Use integer frame boundaries for deterministic cuts. Verify the final encoding and audio behavior against destination requirements.\n\nVerify: Inspect the complete frame at actual delivery size for each format, including captions and platform overlay areas.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -847,7 +847,7 @@
         "typing",
         "screen transitions"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Make the pointer or input arrive before the reaction and keep the action's origin visible. Keep loading and results consistent with the actual task.\n2. Use deliberate timing that remains readable without making routine work look slow. Avoid moving required controls beneath a pointer during a click.\n3. Coordinate camera movement and product transitions so they do not compete for attention. Show one meaningful change at a time.\n\nVerify: Inspect the frames around each trigger and confirm the action, state change and result form a believable sequence.",
+      "content": "1. Make the pointer or input arrive before the reaction and keep the action's origin visible. Keep loading and results consistent with the actual task.\n2. Use deliberate timing that remains readable without making routine work look slow. Avoid moving required controls beneath a pointer during a click.\n3. Coordinate camera movement and product transitions so they do not compete for attention. Show one meaningful change at a time.\n\nVerify: Inspect the frames around each trigger and confirm the action, state change and result form a believable sequence.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -861,7 +861,7 @@
         "screen recording",
         "cut recording"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Prepare representative product data and remove unrelated private content before recording. Keep the viewport, zoom and cursor behavior consistent.\n2. Record enough lead-in and ending time for a readable cut. Note the source time of each meaningful interaction and result.\n3. Crop browser chrome only when it does not remove useful context. Do not edit a failure into a success or speed changes into unsupported performance claims.\n\nVerify: Review the uncut source and each exported beat for legibility, truthful timing and accidental private content.",
+      "content": "1. Prepare representative product data and remove unrelated private content before recording. Keep the viewport, zoom and cursor behavior consistent.\n2. Record enough lead-in and ending time for a readable cut. Note the source time of each meaningful interaction and result.\n3. Crop browser chrome only when it does not remove useful context. Do not edit a failure into a success or speed changes into unsupported performance claims.\n\nVerify: Review the uncut source and each exported beat for legibility, truthful timing and accidental private content.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -875,7 +875,7 @@
         "subtitles",
         "accessibility"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Caption spoken information accurately and provide an accessible transcript where useful. Keep essential product information available without relying on sound.\n2. Use readable caption contrast, line length and placement. Do not cover the control or result the viewer needs to follow.\n3. Avoid rapid flashing and consider motion-sensitive viewers. Keep optional background sound below speech and respect export requirements.\n\nVerify: Watch muted at delivery size, read the captions through each transition and check that essential visual context remains visible.",
+      "content": "1. Caption spoken information accurately and provide an accessible transcript where useful. Keep essential product information available without relying on sound.\n2. Use readable caption contrast, line length and placement. Do not cover the control or result the viewer needs to follow.\n3. Avoid rapid flashing and consider motion-sensitive viewers. Keep optional background sound below speech and respect export requirements.\n\nVerify: Watch muted at delivery size, read the captions through each transition and check that essential visual context remains visible.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -889,7 +889,7 @@
         "composition",
         "rendering"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Drive animation from the composition frame and declared props rather than wall-clock time or unseeded randomness.\n2. Load assets through supported asynchronous rendering mechanisms and handle failures explicitly. Keep source dimensions and fonts available during rendering.\n3. Make frame count, frame rate and output dimensions explicit and verify the installed Remotion API before selecting a helper.\n\nVerify: Render selected frames repeatedly and compare them, then inspect the encoded output at the intended resolution.",
+      "content": "1. Drive animation from the composition frame and declared props rather than wall-clock time or unseeded randomness.\n2. Load assets through supported asynchronous rendering mechanisms and handle failures explicitly. Keep source dimensions and fonts available during rendering.\n3. Make frame count, frame rate and output dimensions explicit and verify the installed Remotion API before selecting a helper.\n\nVerify: Render selected frames repeatedly and compare them, then inspect the encoded output at the intended resolution.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -904,7 +904,7 @@
         "logo-reveal",
         "video component"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Give each reusable beat explicit inputs, dimensions and natural duration. Keep task-specific content in props rather than hidden global state.\n2. Ensure a title, statistic or caption is readable for enough frames. Do not animate an unsupported metric or invention as evidence.\n3. Provide examples for short, long and missing content, and keep transitions compatible with adjacent beats.\n\nVerify: Render the first, middle and last frames with content extremes and compare the transition to the next beat.",
+      "content": "1. Give each reusable beat explicit inputs, dimensions and natural duration. Keep task-specific content in props rather than hidden global state.\n2. Ensure a title, statistic or caption is readable for enough frames. Do not animate an unsupported metric or invention as evidence.\n3. Provide examples for short, long and missing content, and keep transitions compatible with adjacent beats.\n\nVerify: Render the first, middle and last frames with content extremes and compare the transition to the next beat.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -918,7 +918,7 @@
         "quality assurance",
         "frame verification"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Inspect selected frames around cuts, interaction triggers, text reveals and endings. Check clipping, fonts, imagery and source-state accuracy.\n2. Play the full encoded file to check pacing, audio, captions and transitions. Static frames alone cannot establish smooth motion or sync.\n3. Record the exact composition, props, assets and render settings used. Changes after review require checking the affected output again.\n\nVerify: Verify both sampled frames and the final file, with muted playback and the intended delivery player.",
+      "content": "1. Inspect selected frames around cuts, interaction triggers, text reveals and endings. Check clipping, fonts, imagery and source-state accuracy.\n2. Play the full encoded file to check pacing, audio, captions and transitions. Static frames alone cannot establish smooth motion or sync.\n3. Record the exact composition, props, assets and render settings used. Changes after review require checking the affected output again.\n\nVerify: Verify both sampled frames and the final file, with muted playback and the intended delivery player.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -934,7 +934,7 @@
         "generator",
         "formula"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define the reader's question, inputs, units, permitted ranges and assumptions. Keep the calculation as pure logic separate from rendering.\n2. Show the result with units and explain its interpretation. Distinguish an estimate from a guaranteed outcome and avoid false precision.\n3. Offer presets and exact-value entry where useful. Label validation errors clearly and keep controls usable with keyboard and touch.\n\nVerify: Check known examples, zero and boundary inputs, invalid values and rounding against an independently calculated result.",
+      "content": "1. Define the reader's question, inputs, units, permitted ranges and assumptions. Keep the calculation as pure logic separate from rendering.\n2. Show the result with units and explain its interpretation. Distinguish an estimate from a guaranteed outcome and avoid false precision.\n3. Offer presets and exact-value entry where useful. Label validation errors clearly and keep controls usable with keyboard and touch.\n\nVerify: Check known examples, zero and boundary inputs, invalid values and rounding against an independently calculated result.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -948,7 +948,7 @@
         "programmatic seo",
         "csv pages"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define a stable route and slug rule and identify what each row contributes that a reader cannot get from a generic template.\n2. Validate missing, duplicated and unsafe values before page creation. Escape row content and preserve source provenance for factual claims.\n3. Use row-specific data, comparisons or a prefilled useful widget. Do not claim a page is unique merely because its title changes.\n\nVerify: Review several materially different rows and verify routes, missing-data behavior and the value of each resulting page.",
+      "content": "1. Define a stable route and slug rule and identify what each row contributes that a reader cannot get from a generic template.\n2. Validate missing, duplicated and unsafe values before page creation. Escape row content and preserve source provenance for factual claims.\n3. Use row-specific data, comparisons or a prefilled useful widget. Do not claim a page is unique merely because its title changes.\n\nVerify: Review several materially different rows and verify routes, missing-data behavior and the value of each resulting page.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -963,7 +963,7 @@
         "assessment",
         "scoring"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define what the questions measure and explain how answers produce the result. Avoid presenting a casual score as a clinical, financial or professional diagnosis.\n2. Keep answer options clear and mutually distinguishable. Preserve progress and support correction before final submission.\n3. Give a useful explanation and next action for each result. Check keyboard operation and screen-reader announcements for question changes.\n\nVerify: Test every scoring branch, skipped answers, revised answers and the complete keyboard path.",
+      "content": "1. Define what the questions measure and explain how answers produce the result. Avoid presenting a casual score as a clinical, financial or professional diagnosis.\n2. Keep answer options clear and mutually distinguishable. Preserve progress and support correction before final submission.\n3. Give a useful explanation and next action for each result. Check keyboard operation and screen-reader announcements for question changes.\n\nVerify: Test every scoring branch, skipped answers, revised answers and the complete keyboard path.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -977,7 +977,7 @@
         "article calculator",
         "widget guide"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n## Minimum build contract\n\n1. Begin with a reader's concrete question and choose a calculator, estimator, converter, generator, quiz or checklist only when interaction improves the answer.\n2. Specify inputs, units, ranges, defaults and the transformation before styling. Keep pure calculation or scoring logic separate from presentation and verify it against independent examples.\n3. Keep labels, input feedback and the derived result together. Support exact keyboard entry even when a slider, preset or direct manipulation offers a faster path.\n4. Explain assumptions and useful next steps beside the result. Match the containing page's design system and distinguish estimates from guaranteed outcomes.\n\nVerify: Check known results, invalid and boundary inputs, all scoring branches, text zoom and keyboard operation within the actual article layout.",
+      "content": "## Minimum build contract\n\n1. Begin with a reader's concrete question and choose a calculator, estimator, converter, generator, quiz or checklist only when interaction improves the answer.\n2. Specify inputs, units, ranges, defaults and the transformation before styling. Keep pure calculation or scoring logic separate from presentation and verify it against independent examples.\n3. Keep labels, input feedback and the derived result together. Support exact keyboard entry even when a slider, preset or direct manipulation offers a faster path.\n4. Explain assumptions and useful next steps beside the result. Match the containing page's design system and distinguish estimates from guaranteed outcomes.\n\nVerify: Check known results, invalid and boundary inputs, all scoring branches, text zoom and keyboard operation within the actual article layout.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -991,7 +991,7 @@
         "generated pages",
         "data-driven pages"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n## Minimum build contract\n\n1. Define the row source, stable route rule and distinct value a reader gets from each page. A substituted title alone does not make a useful page family.\n2. Validate missing data, duplicate slugs and input content before generation. Preserve factual provenance and escape row values in every rendered context.\n3. Use each row to provide relevant comparisons, specific explanations or a useful prefilled widget. Show missing values honestly instead of inventing complete data.\n4. Keep navigation and page updates consistent across the family. Plan how invalid or retired rows affect existing routes and links.\n\nVerify: Inspect several materially different rows and verify unique value, slug stability, empty-data behavior and the accuracy of derived results.",
+      "content": "## Minimum build contract\n\n1. Define the row source, stable route rule and distinct value a reader gets from each page. A substituted title alone does not make a useful page family.\n2. Validate missing data, duplicate slugs and input content before generation. Preserve factual provenance and escape row values in every rendered context.\n3. Use each row to provide relevant comparisons, specific explanations or a useful prefilled widget. Show missing values honestly instead of inventing complete data.\n4. Keep navigation and page updates consistent across the family. Plan how invalid or retired rows affect existing routes and links.\n\nVerify: Inspect several materially different rows and verify unique value, slug stability, empty-data behavior and the accuracy of derived results.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -1005,7 +1005,7 @@
         "technical figure",
         "isometric"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Identify the relationship the reader must understand before drawing. Make important parts, flow direction and cause/effect visible through geometry and labels.\n2. Use consistent perspective, scale, light direction and stroke weight. Avoid decorative details that obscure the working of the mechanism.\n3. Provide a text explanation for essential information. Color differences alone must not carry the connection or category.\n\nVerify: Ask a reader to explain the mechanism from the rendered figure and identify any occluded or ambiguous connection.",
+      "content": "1. Identify the relationship the reader must understand before drawing. Make important parts, flow direction and cause/effect visible through geometry and labels.\n2. Use consistent perspective, scale, light direction and stroke weight. Avoid decorative details that obscure the working of the mechanism.\n3. Provide a text explanation for essential information. Color differences alone must not carry the connection or category.\n\nVerify: Ask a reader to explain the mechanism from the rendered figure and identify any occluded or ambiguous connection.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     },
@@ -1019,7 +1019,7 @@
         "diagram primitives",
         "drawing kit"
       ],
-      "content": "Source: Eidova original guidance (MIT).\n\n1. Define a shared projection and a small set of reusable shapes for planes, volumes and connectors. Keep connector endpoints tied to the actual objects.\n2. Keep labels readable at the intended output size and reserve clear space around them. Use a deliberate palette for function, not arbitrary decoration.\n3. Inspect the rendered artifact rather than relying on source coordinates. Handle clipping, overlapping shapes and ambiguous depth ordering before export.\n\nVerify: Render at intended size and inspect crop, label legibility, object alignment and each required connection.",
+      "content": "1. Define a shared projection and a small set of reusable shapes for planes, volumes and connectors. Keep connector endpoints tied to the actual objects.\n2. Keep labels readable at the intended output size and reserve clear space around them. Use a deliberate palette for function, not arbitrary decoration.\n3. Inspect the rendered artifact rather than relying on source coordinates. Handle clipping, overlapping shapes and ambiguous depth ordering before export.\n\nVerify: Render at intended size and inspect crop, label legibility, object alignment and each required connection.",
       "sourceFile": "src/guidance.ts",
       "chunkType": "parent"
     }
@@ -1030,175 +1030,182 @@
       "title": "Controls have meaningful accessible names",
       "category": "accessibility",
       "severity": "serious",
-      "content": "rule/eidova/accessible-names\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Buttons, links, inputs and custom interactive controls expose names that describe their purpose; inputs have programmatically associated labels and error text.\nEvidence: Inspect the accessibility tree and complete the task with a screen reader.\nExceptions: A decorative image uses empty alt. A placeholder alone is not an input label."
+      "content": "rule/eidova/accessible-names\nSeverity: serious\nCheck: Buttons, links, inputs and custom interactive controls expose names that describe their purpose; inputs have programmatically associated labels and error text.\nEvidence: Inspect the accessibility tree and complete the task with a screen reader.\nExceptions: A decorative image uses empty alt. A placeholder alone is not an input label."
     },
     {
       "id": "rule/eidova/keyboard-task",
       "title": "The main task works with a keyboard",
       "category": "accessibility",
       "severity": "critical",
-      "content": "rule/eidova/keyboard-task\nSource: Eidova original review rules (MIT).\nSeverity: critical\nCheck: All required actions are keyboard reachable and operable; focus is visible and does not become trapped or disappear.\nEvidence: Perform the entire task with Tab, Shift+Tab, Enter, Space, Escape and appropriate arrow-key interactions.\nExceptions: A properly managed modal intentionally contains focus while open; it must still offer a usable exit and focus return."
+      "content": "rule/eidova/keyboard-task\nSeverity: critical\nCheck: All required actions are keyboard reachable and operable; focus is visible and does not become trapped or disappear.\nEvidence: Perform the entire task with Tab, Shift+Tab, Enter, Space, Escape and appropriate arrow-key interactions.\nExceptions: A properly managed modal intentionally contains focus while open; it must still offer a usable exit and focus return."
     },
     {
       "id": "rule/eidova/contrast",
       "title": "Rendered text and controls meet contrast requirements",
       "category": "accessibility",
       "severity": "serious",
-      "content": "rule/eidova/contrast\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Ordinary text has at least 4.5:1 contrast, qualifying large text 3:1, and required non-text control information meets applicable 3:1 requirements.\nEvidence: Calculate contrast from rendered foreground and composited background in relevant states.\nExceptions: WCAG exceptions apply to inactive controls, incidental content and logotypes; document the specific exception. Do not assign a ratio to an unknown image or gradient background."
+      "content": "rule/eidova/contrast\nSeverity: serious\nCheck: Ordinary text has at least 4.5:1 contrast, qualifying large text 3:1, and required non-text control information meets applicable 3:1 requirements.\nEvidence: Calculate contrast from rendered foreground and composited background in relevant states.\nExceptions: WCAG exceptions apply to inactive controls, incidental content and logotypes; document the specific exception. Do not assign a ratio to an unknown image or gradient background."
     },
     {
       "id": "rule/eidova/reflow",
       "title": "Required content survives narrow widths and zoom",
       "category": "accessibility",
       "severity": "serious",
-      "content": "rule/eidova/reflow\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Labels, controls and required information remain usable at text zoom and narrow width without unintended two-dimensional page scrolling.\nEvidence: Check text zoom and a narrow viewport with representative long content.\nExceptions: A data table or other content requiring a two-dimensional layout may scroll locally while its surrounding page still reflows."
+      "content": "rule/eidova/reflow\nSeverity: serious\nCheck: Labels, controls and required information remain usable at text zoom and narrow width without unintended two-dimensional page scrolling.\nEvidence: Check text zoom and a narrow viewport with representative long content.\nExceptions: A data table or other content requiring a two-dimensional layout may scroll locally while its surrounding page still reflows."
     },
     {
       "id": "rule/eidova/non-color-status",
       "title": "Status is understandable without color",
       "category": "accessibility",
       "severity": "serious",
-      "content": "rule/eidova/non-color-status\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Selected, error, warning and success states include a name, shape or symbol with an accessible equivalent.\nEvidence: Inspect grayscale rendering and the accessibility tree for each important state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/non-color-status\nSeverity: serious\nCheck: Selected, error, warning and success states include a name, shape or symbol with an accessible equivalent.\nEvidence: Inspect grayscale rendering and the accessibility tree for each important state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/focus-dialog",
       "title": "Overlays manage focus and dismissal",
       "category": "accessibility",
       "severity": "serious",
-      "content": "rule/eidova/focus-dialog\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: A dialog has a name, focus enters a useful location, background content is appropriately inert, Escape or a clear exit works, and closing returns focus predictably.\nEvidence: Open, interact with and dismiss overlays by keyboard, including an overlay near viewport edges.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/focus-dialog\nSeverity: serious\nCheck: A dialog has a name, focus enters a useful location, background content is appropriately inert, Escape or a clear exit works, and closing returns focus predictably.\nEvidence: Open, interact with and dismiss overlays by keyboard, including an overlay near viewport edges.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass.\n\nAlso check focused controls beneath sticky headers and overlays. At WCAG 2.2 AA, authored content must not entirely obscure the focused component; aim to keep it fully visible."
     },
     {
       "id": "rule/eidova/spacing-groups",
       "title": "Spacing expresses meaningful groups",
       "category": "visual-design",
       "severity": "moderate",
-      "content": "rule/eidova/spacing-groups\nSource: Eidova original review rules (MIT).\nSeverity: moderate\nCheck: Related labels, controls and feedback are grouped more closely than independent sections; repeated content aligns and uses consistent spacing tokens.\nEvidence: Measure rendered DOM or native geometry with viewport/state information. Source class names alone are insufficient.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/spacing-groups\nSeverity: moderate\nCheck: Related labels, controls and feedback are grouped more closely than independent sections; repeated content aligns and uses consistent spacing tokens.\nEvidence: Measure rendered DOM or native geometry with viewport/state information. Source class names alone are insufficient.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/overflow",
       "title": "Content and controls are not unintentionally clipped",
       "category": "visual-design",
       "severity": "serious",
-      "content": "rule/eidova/overflow\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Required text, controls, menus and focus indications fit or have an intentional usable scrolling path.\nEvidence: Inspect long content, text zoom, narrow/wide widths and open menus.\nExceptions: Intentional decorative cropping or a documented scroll container is not a failure merely because content extends beyond its rectangle."
+      "content": "rule/eidova/overflow\nSeverity: serious\nCheck: Required text, controls, menus and focus indications fit or have an intentional usable scrolling path.\nEvidence: Inspect long content, text zoom, narrow/wide widths and open menus.\nExceptions: Intentional decorative cropping or a documented scroll container is not a failure merely because content extends beyond its rectangle."
     },
     {
       "id": "rule/eidova/component-states",
       "title": "Component states preserve geometry and meaning",
       "category": "visual-design",
       "severity": "serious",
-      "content": "rule/eidova/component-states\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Normal, selected, focused, hover, loading, error and disabled states remain usable and do not unexpectedly shift nearby controls.\nEvidence: Interact with each reachable state and compare the rendered control and neighboring rectangles.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/component-states\nSeverity: serious\nCheck: Normal, selected, focused, hover, loading, error and disabled states remain usable and do not unexpectedly shift nearby controls.\nEvidence: Interact with each reachable state and compare the rendered control and neighboring rectangles.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/responsive-shell",
       "title": "Screens remain inside a coherent app shell",
       "category": "visual-design",
       "severity": "moderate",
-      "content": "rule/eidova/responsive-shell\nSource: Eidova original review rules (MIT).\nSeverity: moderate\nCheck: Product navigation, current location and page hierarchy remain consistent with the existing application at each supported layout.\nEvidence: Compare affected routes at the same widths and verify current navigation state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/responsive-shell\nSeverity: moderate\nCheck: Product navigation, current location and page hierarchy remain consistent with the existing application at each supported layout.\nEvidence: Compare affected routes at the same widths and verify current navigation state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/photography-copy",
       "title": "Product images and copy remain readable",
       "category": "visual-design",
       "severity": "serious",
-      "content": "rule/eidova/photography-copy\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Required product or offer copy uses a readable surface; essential text is not obscured by detailed product photography or decorative effects.\nEvidence: Inspect imagery at narrow/wide widths and with alternate crops; verify contrast and the no-image fallback.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/photography-copy\nSeverity: serious\nCheck: Required product or offer copy uses a readable surface; essential text is not obscured by detailed product photography or decorative effects.\nEvidence: Inspect imagery at narrow/wide widths and with alternate crops; verify contrast and the no-image fallback.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/reduced-motion",
       "title": "Reduced motion preserves task completion",
       "category": "animation",
       "severity": "critical",
-      "content": "rule/eidova/reduced-motion\nSource: Eidova original review rules (MIT).\nSeverity: critical\nCheck: The reduced-motion path keeps required content visible, preserves focus and lets the task complete without waiting for decorative motion.\nEvidence: Enable the platform's reduced-motion preference and repeat the affected task.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/reduced-motion\nSeverity: critical\nCheck: The reduced-motion path keeps required content visible, preserves focus and lets the task complete without waiting for decorative motion.\nEvidence: Enable the platform's reduced-motion preference and repeat the affected task.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/interruptible",
       "title": "Motion handles repeated input and interruption",
       "category": "animation",
       "severity": "serious",
-      "content": "rule/eidova/interruptible\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Transitions do not lock frequent tasks, shift controls under an active pointer or leave a stale state after repeated input.\nEvidence: Trigger, reverse, cancel and repeat the interaction under representative device load.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/interruptible\nSeverity: serious\nCheck: Transitions do not lock frequent tasks, shift controls under an active pointer or leave a stale state after repeated input.\nEvidence: Trigger, reverse, cancel and repeat the interaction under representative device load.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/flash",
       "title": "Animation avoids unsafe flashing and unreadable timing",
       "category": "animation",
       "severity": "serious",
-      "content": "rule/eidova/flash\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Flashing and rapid transitions are avoided or checked against applicable accessibility limits; essential text remains readable long enough.\nEvidence: Review the complete animation or encoded video, not only isolated still frames.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/flash\nSeverity: serious\nCheck: Flashing and rapid transitions are avoided or checked against applicable accessibility limits; essential text remains readable long enough.\nEvidence: Review the complete animation or encoded video, not only isolated still frames.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/truthful-data",
       "title": "Claims and sample data reflect their source",
       "category": "content",
       "severity": "serious",
-      "content": "rule/eidova/truthful-data\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Prices, totals, dates, status and performance claims are accurate or clearly labeled examples/estimates. Preserve supplied factual copy and required disclosures.\nEvidence: Compare source data and requested content with the rendered result, including hidden tabs and collapsed sections.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/truthful-data\nSeverity: serious\nCheck: Prices, totals, dates, status and performance claims are accurate or clearly labeled examples/estimates. Preserve supplied factual copy and required disclosures.\nEvidence: Compare source data and requested content with the rendered result, including hidden tabs and collapsed sections.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/errors-recovery",
       "title": "Errors explain recovery and preserve work",
       "category": "content",
       "severity": "serious",
-      "content": "rule/eidova/errors-recovery\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Failure messages identify the failed task, what remains saved and a safe next action; input survives recoverable failures.\nEvidence: Simulate validation, network, session and partial-server failures.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/errors-recovery\nSeverity: serious\nCheck: Failure messages identify the failed task, what remains saved and a safe next action; input survives recoverable failures.\nEvidence: Simulate validation, network, session and partial-server failures.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/units-locales",
       "title": "Quantities and dates have enough context",
       "category": "content",
       "severity": "moderate",
-      "content": "rule/eidova/units-locales\nSource: Eidova original review rules (MIT).\nSeverity: moderate\nCheck: Values include the units, currency, time zone or date context required for interpretation and use correct pluralization and locale formatting.\nEvidence: Inspect multiple quantities, dates and supported locales.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/units-locales\nSeverity: moderate\nCheck: Values include the units, currency, time zone or date context required for interpretation and use correct pluralization and locale formatting.\nEvidence: Inspect multiple quantities, dates and supported locales.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/empty-loading",
       "title": "Empty and loading states match the actual condition",
       "category": "content",
       "severity": "serious",
-      "content": "rule/eidova/empty-loading\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: No records, no matches, loading and failed loading are distinct, with a useful next step where possible.\nEvidence: Exercise each state from real data or an explicit fixture rather than treating a blank screenshot as proof.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/empty-loading\nSeverity: serious\nCheck: No records, no matches, loading and failed loading are distinct, with a useful next step where possible.\nEvidence: Exercise each state from real data or an explicit fixture rather than treating a blank screenshot as proof.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/task-purpose",
       "title": "A first-time visitor can identify the task",
       "category": "comprehension",
       "severity": "serious",
-      "content": "rule/eidova/task-purpose\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: The title and visible information explain the screen's purpose and the most useful next action without relying on internal product knowledge.\nEvidence: Ask a first-time visitor to explain the screen and predict the primary action; record an actual walkthrough or label a source-only check as unverified.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/task-purpose\nSeverity: serious\nCheck: The title and visible information explain the screen's purpose and the most useful next action without relying on internal product knowledge.\nEvidence: Ask a first-time visitor to explain the screen and predict the primary action; record an actual walkthrough or label a source-only check as unverified.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/action-outcome",
       "title": "Action labels predict the next state",
       "category": "comprehension",
       "severity": "serious",
-      "content": "rule/eidova/action-outcome\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Action labels name the outcome or destination and distinguish destructive and reversible commitments.\nEvidence: Read each button/link label with its nearby copy and confirm the next state matches that expectation.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/action-outcome\nSeverity: serious\nCheck: Action labels name the outcome or destination and distinguish destructive and reversible commitments.\nEvidence: Read each button/link label with its nearby copy and confirm the next state matches that expectation.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/language",
       "title": "Copy uses language the audience understands",
       "category": "comprehension",
       "severity": "moderate",
-      "content": "rule/eidova/language\nSource: Eidova original review rules (MIT).\nSeverity: moderate\nCheck: Unfamiliar abbreviations and internal object names are explained; sentences express one clear idea and useful detail is placed near the relevant decision.\nEvidence: Read the actual visible copy with known audience vocabulary and inspect wrapping at narrow widths.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/language\nSeverity: moderate\nCheck: Unfamiliar abbreviations and internal object names are explained; sentences express one clear idea and useful detail is placed near the relevant decision.\nEvidence: Read the actual visible copy with known audience vocabulary and inspect wrapping at narrow widths.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/accept-output",
       "title": "Generated output is reviewed before consequential use",
       "category": "ai-features",
       "severity": "critical",
-      "content": "rule/eidova/accept-output\nSource: Eidova original review rules (MIT).\nSeverity: critical\nCheck: Users can inspect and accept generated content before it is saved, sent or used for a consequential action; citations and claims are not invented.\nEvidence: Follow input through generation, editing, acceptance and the resulting save/send action.\nExceptions: Explicit user-authorized automation may execute its declared action; the interface must still disclose what is being automated and report actual results."
+      "content": "rule/eidova/accept-output\nSeverity: critical\nCheck: Users can inspect and accept generated content before it is saved, sent or used for a consequential action; citations and claims are not invented.\nEvidence: Follow input through generation, editing, acceptance and the resulting save/send action.\nExceptions: Explicit user-authorized automation may execute its declared action; the interface must still disclose what is being automated and report actual results."
     },
     {
       "id": "rule/eidova/generation-state",
       "title": "AI work has honest progress and recovery",
       "category": "ai-features",
       "severity": "serious",
-      "content": "rule/eidova/generation-state\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: Generated content is identifiable; long runs show progress, Stop is usable, useful partial work is preserved and failures offer a recovery/manual path.\nEvidence: Test delayed, failed, cancelled and partial generation against actual underlying state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/generation-state\nSeverity: serious\nCheck: Generated content is identifiable; long runs show progress, Stop is usable, useful partial work is preserved and failures offer a recovery/manual path.\nEvidence: Test delayed, failed, cancelled and partial generation against actual underlying state.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/input-use",
       "title": "Model input use is understandable",
       "category": "ai-features",
       "severity": "serious",
-      "content": "rule/eidova/input-use\nSource: Eidova original review rules (MIT).\nSeverity: serious\nCheck: The interface explains relevant data use and respects required permission/consent boundaries before sending user data to a model.\nEvidence: Trace the request payload and check disclosure, permission denial and opt-out behavior.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
+      "content": "rule/eidova/input-use\nSeverity: serious\nCheck: The interface explains relevant data use and respects required permission/consent boundaries before sending user data to a model.\nEvidence: Trace the request payload and check disclosure, permission denial and opt-out behavior.\nExceptions: Apply only to the relevant surface; record an untested requirement as unverified rather than a pass."
     },
     {
       "id": "rule/eidova/verification-boundary",
       "title": "State the limits of the review",
       "category": "coverage-gaps",
       "severity": "moderate",
-      "content": "rule/eidova/verification-boundary\nSource: Eidova original review rules (MIT).\nSeverity: moderate\nCheck: A rule list or source scan is not visual approval, usability research or accessibility certification. Identify surfaces, states and platforms without evidence.\nEvidence: Keep a coverage list linking conclusions to actual code, rendered measurements, screenshots and interaction checks.\nExceptions: A scoped review need not test unrelated product areas, but must not describe them as verified."
+      "content": "rule/eidova/verification-boundary\nSeverity: moderate\nCheck: A rule list or source scan is not visual approval, usability research or accessibility certification. Identify surfaces, states and platforms without evidence.\nEvidence: Keep a coverage list linking conclusions to actual code, rendered measurements, screenshots and interaction checks.\nExceptions: A scoped review need not test unrelated product areas, but must not describe them as verified."
+    },
+    {
+      "id": "rule/eidova/target-size",
+      "title": "Make adjacent targets easy to select",
+      "category": "accessibility",
+      "severity": "serious",
+      "content": "Rule: rule/eidova/target-size\n\nMeasure interactive targets and their separation on the rendered screen. WCAG 2.2 AA uses a 24 by 24 CSS pixel minimum with spacing and other exceptions. Use 44 by 44 touch targets for frequent actions where practical.\n\nEvidence: Target rectangles, adjacent gaps and narrow-screen screenshots.\nExceptions: Apply the standard's spacing, inline, equivalent, user-agent and essential exceptions before marking a small target as a failure."
     }
   ]
 }

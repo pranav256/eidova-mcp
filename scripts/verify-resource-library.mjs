@@ -36,8 +36,8 @@ try {
       if(mode==='dark')await page.getByRole('button',{name:'Switch to dark mode'}).click();
       await section.getByRole('searchbox',{name:'Search resources'}).fill('');
       await section.getByLabel('Resource type',{exact:true}).selectOption('all');
-      assert.equal(await section.locator('.resource-list > li').count(),8);
-      assert.match(await section.locator('.result-count').textContent(),/of 920 resources/);
+      assert.equal(await section.locator('.resource-list > li').count(),16);
+      assert.match(await section.locator('.result-count').textContent(),/of 784 resources/);
       assert.equal(await section.getByRole('heading',{name:'Explore the Eidova library.',exact:true}).count(),1);
       await section.getByLabel('Resource type',{exact:true}).selectOption('catalogs');
       assert.match(await section.locator('.result-count').textContent(),/of 2 resources/);
@@ -47,7 +47,9 @@ try {
       let state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} resource list`;states.push(state);
       await section.screenshot({path:path.join(output,`${width}-${mode}-list.png`)});
       await section.getByRole('button',{name:'Show more resources'}).click();
-      assert.equal(await section.locator('.resource-list > li').count(),24);
+      assert.equal(await section.locator('.resource-list > li').count(),32);
+      await section.getByRole('button',{name:'Show all resources',exact:true}).click();
+      assert.equal(await section.locator('.resource-list > li').count(),784);
       const search=section.getByRole('searchbox',{name:'Search resources'});
       await section.getByLabel('Resource type',{exact:true}).selectOption('design-systems');
       await search.fill('linear');
@@ -63,10 +65,8 @@ try {
       contrasts.push({width,mode,failures:(await page.evaluate(measureTextContrast)).filter(item=>item.ratio<item.minimum)});
       if(width===390&&mode==='dark') {
         panels.push(await section.evaluate(node=>({screen:'Resource library',headline:node.querySelector('h2').textContent,body:[node.querySelector('.section-heading p').textContent],actions:['Search resources','Resource type']})));
-        panels.push(await section.locator('.resource-list > li').evaluate(node=>({screen:'Selected resource',headline:node.querySelector('h3').textContent,body:[...node.querySelectorAll('p')].filter(p=>p.checkVisibility()).map(p=>p.textContent),actions:[...node.querySelectorAll('a')].map(a=>a.textContent)})));
+        panels.push(await section.locator('.resource-list > li').evaluate(node=>({screen:'Selected resource',headline:node.querySelector('h3').textContent,body:[...node.querySelectorAll('p')].filter(p=>p.checkVisibility()).map(p=>p.textContent),actions:[...node.querySelectorAll('button')].map(a=>a.textContent)})));
       }
-      await section.locator('.resource-list details details summary').click();
-      assert.match(await section.getByRole('link',{name:'Original source'}).getAttribute('href'),/b4ec310.*design-systems\/linear-app$/);
       await section.locator('.resource-about summary').click();
       await section.getByRole('button',{name:'Read files',exact:true}).click();
       const reader=page.getByRole('dialog',{name:'Linear files',exact:true});
@@ -97,7 +97,7 @@ try {
       await page.keyboard.press('Escape');await reader.waitFor({state:'detached'});
       assert.equal(await section.getByRole('button',{name:'Read files',exact:true}).evaluate(node=>node===document.activeElement),true);
       state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} source details`;states.push(state);
-      if(width===390&&mode==='dark')for(const selector of ['.resource-list details details','.resource-about'])panels.push(await section.locator(selector).evaluate(node=>({screen:node.querySelector('summary').textContent,headline:node.querySelector('summary').textContent,body:[...node.querySelectorAll('p')].map(p=>p.textContent),actions:[]})));
+      if(width===390&&mode==='dark')for(const selector of ['.resource-list details','.resource-about'])panels.push(await section.locator(selector).evaluate(node=>({screen:node.querySelector('summary').textContent,headline:node.querySelector('summary').textContent,body:[...node.querySelectorAll('p')].map(p=>p.textContent),actions:[]})));
       await section.locator('.resource-about summary').click();
       await section.getByLabel('Resource type',{exact:true}).selectOption('skills');
       assert.equal(await section.locator('.resource-list > li').count(),0);
@@ -148,7 +148,7 @@ try {
       assert.deepEqual(await readFile(await largeDownload.path()),await readFile('content/open-design/design-templates/open-design-landing/assets/hero.png'));
       await largeReader.getByRole('button',{name:'Close reader'}).click();
       await search.fill('');await section.getByLabel('Resource type',{exact:true}).selectOption('plugins');
-      assert.match(await section.locator('.result-count').textContent(),/of 479 resources/);
+      assert.match(await section.locator('.result-count').textContent(),/of 343 resources/);
       await search.fill('frame build minimal');
       const videoTemplate=section.locator('li').filter({has:page.getByRole('heading',{name:'Build Minimal Frame',exact:true})});
       await videoTemplate.locator('summary').first().click();await videoTemplate.getByRole('button',{name:'Read files'}).click();
@@ -164,6 +164,7 @@ try {
     }
     if(width===390) {
       const search=section.getByRole('searchbox',{name:'Search resources'});
+      await section.getByLabel('Resource type',{exact:true}).selectOption('design-systems');
       await search.fill('linear');await section.locator('.resource-list summary').first().click();
       const manifestUrl='**/api/resources/design-systems/linear-app';
       await page.route(manifestUrl,route=>route.fulfill({status:503,body:'Unavailable'}));
