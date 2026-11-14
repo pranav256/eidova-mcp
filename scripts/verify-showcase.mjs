@@ -200,8 +200,8 @@ try {
   await page.evaluate(() => { document.documentElement.style.fontSize = ''; });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  await page.getByRole('heading', { name: 'Design tools for coding agents.', exact: true }).waitFor();
-  assert.equal(await page.getByRole('link', { name: 'Try the showcase', exact: true }).getAttribute('href'), '/showcase');
+  await page.getByRole('heading', { name: 'Ideas made tangible.', exact: true }).waitFor();
+  assert.equal(await page.getByRole('link', { name: 'Try the toolkit', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Showcase', exact: true }).getAttribute('href'), '/showcase');
   assert.equal(await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Themes', exact: true }).getAttribute('href'), '#themes');
   assert.equal(await page.locator('.showcase-main').count(), 0);
