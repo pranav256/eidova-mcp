@@ -44,7 +44,7 @@ export const GUIDANCE_PROVENANCE = {
   source: "Editable local library; original seed guidance and owner-managed imports",
   license: "MIT for the original seed; retain the rights of imported material",
   retrieval: "lexical",
-  limitations: "General engineering guidance, not user research, a certification, or a copy of Better Design's hosted library.",
+  limitations: "General engineering guidance; validate decisions with real users and rendered evidence. Automated checks do not certify accessibility.",
 } as const;
 
 const library = await loadContentLibrary((process.env.EIDOVA_CONTENT_LIBRARY ?? process.env.OPEN_DESIGN_CONTENT_LIBRARY) ?? resourcePath('content/library.json'));

@@ -41,6 +41,9 @@ test('built MCP review retains reference mode, auto-margin evidence and authored
     assert.doesNotMatch(report,/"frame-\$\{…\}" builds/);assert.match(report,/bg-\$\{…\}-500/);
     const withoutCss=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'preview.tsx',content:source}]}});
     assert.match(JSON.stringify(withoutCss),/frame-\$\{…\}/);
+    const picker=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'picker.tsx',content:'export const Picker = () => <label>Theme<select name="theme"><option>Neutral</option><option>Warm</option><option>Ink</option><option>Paper</option><option>Slate</option></select></label>;'}]}});
+    assert.match(JSON.stringify(picker),/\*\*moderate\*\* `element\/select`/);
+    assert.doesNotMatch(JSON.stringify(picker),/\*\*serious\*\* `element\/select`/);
   } finally {
     await client.close();await server.close();assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});
   }

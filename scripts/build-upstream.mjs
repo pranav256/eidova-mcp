@@ -65,8 +65,14 @@ function patch(file, original) {
     if (primitiveName && componentName && exportsPrimitive
       && (componentName === primitiveName || (componentName.startsWith(primitiveName) && /^[A-Z]/.test(componentName.slice(primitiveName.length))))) return;
     const p = pos(sourceFile, node);`);
+    // A labeled native picker is valid; a component preference is not a blocker.
+    result=replaceExact(result,'      severity: "serious",\n      ruleId: `element/${ruleKey}`,','      severity: tag === "select" ? "moderate" : "serious",\n      ruleId: `element/${ruleKey}`,');
+    result=replaceExact(result,'      message: `Native <${tag}> should be replaced by <${rule.use}> from ${rule.from}.`,','      message: tag === "select" ? `Prefer <${rule.use}> when it exists in the product; a labeled native <select> is valid.` : `Native <${tag}> should be replaced by <${rule.use}> from ${rule.from}.`,');
+    result=replaceExact(result,'      fix: `Import { ${rule.use} } from "${rule.from}" and use <${rule.use}> instead of <${tag}>.`,','      fix: tag === "select" ? "Keep the existing product picker, its labels, focus and keyboard behavior. Use the house component when installed." : `Import { ${rule.use} } from "${rule.from}" and use <${rule.use}> instead of <${tag}>.`,');
   }
-  return result.replaceAll('issuedBy: "better-design-mcp"', 'issuedBy: "eidova-mcp"')
+  return result.replaceAll('send it the path of every .swift file you wrote, with no content', 'send each .swift file path with its complete inline content')
+    .replaceAll("send each file's path and no content, so it reads the whole file", "send each file's path and complete inline content")
+    .replaceAll('issuedBy: "better-design-mcp"', 'issuedBy: "eidova-mcp"')
     .replaceAll('Better Design', 'Eidova')
     .replaceAll('written by Eidova', 'from the MIT-licensed Better Design package')
     .replaceAll('https://better-design.com', 'https://open-design-mcp-liard.vercel.app')

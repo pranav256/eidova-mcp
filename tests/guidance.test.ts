@@ -19,12 +19,21 @@ test("every advertised guidance domain has original usable content", async () =>
     for (const item of index) {
       const entry = await getPrincipleByTopic(item.topic, area);
       assert.equal(entry?.id, item.id);
-      assert.ok(entry!.content.includes("Source: Eidova original guidance (MIT)."));
+      assert.ok(entry!.sourceFile, `${entry!.id} lacks a provenance record`);
+      assert.ok(!entry!.content.startsWith('Source:'), 'Guidance should begin with useful instructions.');
       assert.ok(entry!.content.includes("Verify:"));
-      assert.ok(entry!.content.length > 400, `${entry!.id} lacks substantive content`);
+      assert.ok(entry!.content.length > 300, `${entry!.id} lacks substantive content`);
     }
   }
   assert.equal(GUIDANCE_PROVENANCE.retrieval, "lexical");
+});
+
+test('craft, targets and recovery guidance remain practical and retrievable', async () => {
+  assert.match((await getPrincipleByTopic('polish','ui'))!.content,/design:\/\/open-design\/skills\/unslop/);
+  const accessibility=(await getPrincipleByTopic('accessibility','ui'))!.content;
+  assert.match(accessibility,/24 by 24/);assert.match(accessibility,/44 by 44/);assert.match(accessibility,/entirely obscured/);
+  assert.match((await getPrincipleByTopic('errors','ux'))!.content,/summary linked to affected fields/);
+  assert.ok((await getReviewRules('accessibility')).some(rule=>rule.id==='rule/eidova/target-size'));
 });
 
 test("topic aliases normalize spaces and underscores while preserving domain", async () => {

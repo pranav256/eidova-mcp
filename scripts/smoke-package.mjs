@@ -22,7 +22,7 @@ try {
   const packedPaths=new Set(packed.files.map(file=>file.path));
   assert.ok(packedPaths.has('vendor/upstream/provenance.json'));
   assert.ok(packedPaths.has('content/open-design/LICENSE'));
-  for(const entry of bundle.entries)for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${entry.sourcePath??entry.kind+'/'+entry.id}/${file.path}`),`Missing bundled file: ${entry.id}/${file.path}`);
+  for(const entry of [...bundle.entries,...bundle.legacyEntries])for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${file.storagePath??(entry.sourcePath??entry.kind+'/'+entry.id)+'/'+file.path}`),`Missing bundled bytes: ${entry.id}/${file.path}`);
   for(const notice of ['LICENSE','NOTICE','assets/LICENSE','assets/TABLER-LICENSE','vendor/upstream/LICENSE'])assert.ok(packed.files.some(file=>file.path===notice),`Missing notice: ${notice}`);
   for(const document of ['README.md','CHANGELOG.md','SECURITY.md','server.json','docs/CLIENTS.md','docs/BENCHMARK.md','docs/DESIGN-FAMILIES.md','docs/DTCG.md','docs/RELEASE-CANDIDATE.md','docs/SOL-IMPLEMENTATION-PLAN.md'])assert.ok(packed.files.some(file=>file.path===document),`Missing release document: ${document}`);
   assert.ok(packed.files.every(file=>!/(^|\/)(\.work|\.eidova|\.open-design|private-captures|\.env|node_modules)(\/|$)/.test(file.path)));
@@ -48,7 +48,10 @@ try {
     assert.match(JSON.stringify(await client.callTool({name:'read-resource',arguments:{uri:'design://open-design/design-systems/linear-app/files/DESIGN.md'}})),/Linear/);
     assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/design-systems/linear-app/files/DESIGN.md'})),/Linear/);
     const capabilities=JSON.parse((await client.callTool({name:'get-capabilities',arguments:{}})).content[0].text);
-    assert.equal(capabilities.library.total,920);
+    assert.equal(capabilities.library.total,784);
+    const legacy=bundle.legacyEntries[0];
+    assert.ok(!(await client.callTool({name:'read-resource',arguments:{uri:`design://open-design/${legacy.kind}/${legacy.id}/files/${legacy.entrypoint}`}})).isError);
+    assert.match(JSON.stringify(await client.callTool({name:'read-resource',arguments:{uri:'design://open-design/skills/unslop/files/SKILL.md'}})),/CC-BY-4.0/);
     assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/design-templates/aster-atelier/files/example.html'})),/Aster/);
     const font=await client.callTool({name:'read-resource',arguments:{uri:'design://open-design/plugins/video-templates-frame-build-minimal/files/source/fonts/f6e772e776f666632.woff2'}});
     assert.equal(JSON.parse(font.content[0].text).mimeType,'font/woff2');

@@ -1,6 +1,6 @@
 export const toolDescriptions:Record<string,string> = {
-  'get-ui-principle':'Read original UI guidance by topic or query; omit both for an index. Full entries retain source attribution.',
-  'get-ux-principle':'Read original UX guidance by topic or query; omit both for an index. Use before changing behavior.',
+  'get-ui-principle':'Read practical UI guidance by topic or query; omit both for an index. Use polish for a focused craft audit before editing.',
+  'get-ux-principle':'Read practical UX guidance by topic or query; omit both for an index. Use before changing behavior.',
   'get-sales-principle':'Read original sales guidance by topic or query. This tool does not send messages or generate hosted assets.',
   'get-react-native-guide':'Read original React Native guidance. Public native install kits are unavailable.',
   'get-swiftui-guide':'Read original SwiftUI guidance. Public native install kits are unavailable.',
@@ -43,4 +43,4 @@ export const toolDescriptions:Record<string,string> = {
 };
 
 export const coreTools=new Set(['get-capabilities','search-resources','read-resource','find-design-system','get-design-system-kit','extract-design-system','extract-from-url','get-ui-principle','get-ux-principle','get-review-rules','review-ui-code','check-comprehension','inspect-spacing']);
-export const workflowNote='Keep the product’s existing design. Otherwise choose a family and install its actual kit. Load UI guidance before styling and UX guidance before behavior. Review source, copy and rendered spacing; fix critical/serious findings. Source checks are not visual approval. Full workflow: design://workflow/v1.';
+export const workflowNote='Keep the product’s existing design. Otherwise choose a family and install its actual kit. Load UI guidance before styling and UX guidance before behavior. For polish, audit with design://open-design/skills/unslop. Review source, copy and rendered spacing; fix critical/serious findings. Source checks are not visual approval. Full workflow: design://workflow/v1.';

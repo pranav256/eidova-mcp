@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-14",
+  "resources": 784,
+  "legacyLinks": 137,
+  "removedCopies": 782,
+  "savedBytes": 36967093,
+  "backend": {
+    "tests": 128,
+    "failed": 0,
+    "typecheck": "pass",
+    "build": "pass",
+    "stdio": "pass",
+    "packagedInstall": "pass"
+  },
+  "sourceSha256": {
+    "eidova-mcp/src/bundled-resources.ts": "bb0bda48cffa0a966dcfc5090598b6130b42072c784e49015786bd87be844963",
+    "eidova-mcp/scripts/curate-resources.mjs": "88a673cb419a1df5d2abc57f744f25c737ed3e8d16800f49677401d89e7fc83e",
+    "eidova-mcp/content/library.json": "872edac3200b3f8c568d74757ded86b9544c21e2b3ea09a4d42477d0f7c305bc",
+    "eidova-mcp/content/workflow.md": "17f9a5b9358c7846bf7ed0e49d00aa4249b0c2ba1cda373d685a53cc3a6f78bc",
+    "eidova-mcp/vendor/upstream/runtime.mjs": "a02c400b8a0062444c3a2ab26ec6b539dac0d7ce866d270b80c04313c262cf97"
+  },
+  "limits": [
+    "Browser checks used Edge; other engines and the separate native Studio GUI were not rerun.",
+    "Automated source, copy and spacing checks do not certify accessibility or replace user research."
+  ]
+}

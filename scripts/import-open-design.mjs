@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { lstat, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { curateResources } from './curate-resources.mjs';
 
 const revision = 'b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f';
 const repository = 'https://github.com/nexu-io/open-design';
@@ -111,4 +112,4 @@ await writeFile(path.join(destination, 'index.json'), JSON.stringify(catalog, nu
 const website = process.argv[3];
 if (website) await writeFile(path.resolve(website, 'src/resource-catalog.json'), JSON.stringify({ repository, revision,
   entries: entries.map(({files, licensePaths, ...entry}) => ({...entry, fileCount: files.length})) }, null, 2) + '\n');
-console.log(JSON.stringify({revision, packages: entries.length, files: included.size, bytes: [...included].reduce((sum, name) => sum + files.get(name).length, 0)}));
+console.log(JSON.stringify({revision, ...await curateResources(website)}));
