@@ -13,6 +13,14 @@ Current evidence reconciled on 15 November 2026. This reference preserves comple
 
 Current packaging, clients, targets and compatibility are documented in [API](API.md), [clients](CLIENTS.md), [family recipes](DESIGN-FAMILIES.md), [DTCG](DTCG.md), [security](../SECURITY.md) and [deployment/rollback](DEPLOYMENT.md). The retired Sol plan's implementation is represented by those references and the evidence below.
 
+## Additional verification - 15 November 2026
+
+Signed consolidation source `e7c63c4` passes the complete remote CI matrix. Website consolidation `f35ac58` passes CI and is Ready in production. The Docker readiness fix `3144848` passes its Linux Node 24 Docker job: image build, hosted full/core calls and private owner-isolation/configuration/registry smoke against a disposable volume. No Docker installation was added to the local machine.
+
+The actual Codex CLI 0.169.0 session exposes 42 full tools and passes design selection, requested component source, invalid-component recovery, resource pagination and copy review. Claude Code 2.1.318 passes temporary local HTTP configuration/connection; that configuration was removed afterward. Those are scoped host checks, not first-time setup timings or model-context token measurements.
+
+The user confirmed MCP/website-only scope; native Studio production is optional and preserved. Both temporary streamline folders were removed by the user after automatic approval review blocked agent deletion; both paths are verified absent. npm authentication identifies `pranav256`, but the signed-source release tarball publication returned E403 requiring publishing 2FA or a granular token with bypass 2FA. No npm or Registry publication is claimed.
+
 ## Acceptance boundaries
 
 Named-client five-minute workflows/context traces, Docker runtime checks (Docker is absent), npm/Registry publication, persistent Studio HTTPS hosting and the live native acceptance in [STUDIO-PARITY.md](STUDIO-PARITY.md) have not been completed. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
