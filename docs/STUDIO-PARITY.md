@@ -8,7 +8,7 @@ repeated on 2026-11-12; the implementation commits use 2026-11-11 at the user's 
 | Feature boundary | Verified locally | Remaining work |
 | --- | --- | --- |
 | Design and skill resources | 152 design packages, 169 skill entries, companions/licenses and MCP/HTTP/website reads | Maintain pinned-source updates |
-| Design tools | 13 core / 42 public full / 43 owner tools; packaged install and stdio checks | Coordinated hosted release and actual client-host walks |
+| Design tools | 13 core / 42 public full / 43 owner tools; packaged install, stdio and hosted full/core checks; API/website deployed | Actual client-host workflows/context traces and npm/Registry publication |
 | Team backend | SQLite migrations, invitations, hashed/revocable keys, one-use recovery, rotation, registration gate, quotas, rate limits, atomic commits, history, presence, shares and online backup/restore | Production HTTPS deployment, operational load and scheduled backup validation |
 | Website workspace | Responsive editor, immutable revision reader/restore, feedback, invitations, access recovery and native creator/read-only policy | Actual production backend/HTTPS acceptance |
 | Native membership | Exact request/project/tool authority and run-revocation adapters tested against real backend; installed daemon starts with verified own-backend membership | Complete active-run and multi-member acceptance inside the running daemon |
@@ -27,7 +27,7 @@ repeated on 2026-11-12; the implementation commits use 2026-11-11 at the user's 
 
 ## Evidence
 
-- Fresh standalone MCP suite: 116 passed; separate native integration suite: 8
+- Standalone MCP suite repeated on 15 November: 128 passed; separate native integration suite: 8
   passed, no skips. Native adapter tests cover real HTTP/SQLite and exact Express
   authorization gates, rather than proving a complete daemon workflow.
 - Native workspace `pnpm guard` / `pnpm typecheck` pass. Focused web tests: 64
@@ -46,11 +46,9 @@ repeated on 2026-11-12; the implementation commits use 2026-11-11 at the user's 
   These checks are scoped local evidence, not accessibility certification or a
   trusted dashboard receipt. No provider keys or paid model calls were used.
 
-## Next checkpoint
+## Acceptance scope
 
-Run creator/teammate workflows, private/shared transitions, live revocation,
-watch/restart recovery and private-file preservation inside the installed daemon.
-Then verify user-configured Local BYOK, media/export and plugin execution, own
-public publication/community, platform installers and production HTTPS hosting.
-Preserve the existing runtime data and upstream provenance; do not infer full
-parity from imported source, green adapter tests or catalog discovery.
+This matrix records verified boundaries rather than a separate continuation plan.
+Active acceptance is tracked in the parent workspace's `TODO.md`. Runtime data and
+upstream provenance remain intact. Imported source, green adapter tests and catalog
+discovery do not establish full parity, live generation or installer release.

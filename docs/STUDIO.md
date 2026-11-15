@@ -199,7 +199,7 @@ The sibling `eidova-studio` checkout contains the complete upstream source at
 `b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f`, version 0.25.1, plus the new native
 own-backend adapters, daemon wiring and focused test entries. It is not a built/released Eidova
 engine. Its retained upstream license is Apache-2.0.
-It has not been pushed to an Eidova remote or included in the MCP npm package.
+It is pushed to the private `pranav256/eidova-studio` repository on `eidova-integration`; it is not included in the MCP npm package.
 
 It requires Node **24** and **pnpm 10.33.2**, plus upstream native build prerequisites.
 On Windows, better-sqlite3 may require Visual Studio Build Tools. With dependency

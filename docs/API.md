@@ -38,7 +38,7 @@ JSON bodies are limited to 4 MB. A shared 16-request process cap covers MCP and 
 
 Diagnostics contain request ID, whitelisted operation, elapsed milliseconds, parsed body bytes, HTTP status and boundary error class. They exclude source, rules, credentials and caller URLs. MCP tool errors delivered with HTTP 200 remain protocol tool errors, not HTTP failure counts.
 
-See [client setup](CLIENTS.md), [security](../SECURITY.md) and [candidate evidence](RELEASE-CANDIDATE.md).
+See [client setup](CLIENTS.md), [security](../SECURITY.md) and [release evidence](RELEASE-VERIFICATION.md).
 
 ## Bundled OpenDesign resources
 

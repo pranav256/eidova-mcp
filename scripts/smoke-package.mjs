@@ -24,7 +24,7 @@ try {
   assert.ok(packedPaths.has('content/open-design/LICENSE'));
   for(const entry of [...bundle.entries,...bundle.legacyEntries])for(const file of entry.files)assert.ok(packedPaths.has(`content/open-design/${file.storagePath??(entry.sourcePath??entry.kind+'/'+entry.id)+'/'+file.path}`),`Missing bundled bytes: ${entry.id}/${file.path}`);
   for(const notice of ['LICENSE','NOTICE','assets/LICENSE','assets/TABLER-LICENSE','vendor/upstream/LICENSE'])assert.ok(packed.files.some(file=>file.path===notice),`Missing notice: ${notice}`);
-  for(const document of ['README.md','CHANGELOG.md','SECURITY.md','server.json','docs/CLIENTS.md','docs/BENCHMARK.md','docs/DESIGN-FAMILIES.md','docs/DTCG.md','docs/RELEASE-CANDIDATE.md','docs/SOL-IMPLEMENTATION-PLAN.md'])assert.ok(packed.files.some(file=>file.path===document),`Missing release document: ${document}`);
+  for(const document of ['README.md','CHANGELOG.md','SECURITY.md','server.json','docs/CLIENTS.md','docs/BENCHMARK.md','docs/DESIGN-FAMILIES.md','docs/DTCG.md','docs/RELEASE-VERIFICATION.md'])assert.ok(packed.files.some(file=>file.path===document),`Missing release document: ${document}`);
   assert.ok(packed.files.every(file=>!/(^|\/)(\.work|\.eidova|\.open-design|private-captures|\.env|node_modules)(\/|$)/.test(file.path)));
   assert.equal(path.basename(packed.filename),packed.filename);
   const consumer=path.join(directory,'consumer with spaces');await mkdir(consumer);

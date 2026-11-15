@@ -1,6 +1,6 @@
 # Security policy
 
-Before public release, enable GitHub private vulnerability reporting. Use that private channel for suspected vulnerabilities, or privately contact the repository owner if unavailable. Include version, transport, reproduction and impact without posting real keys or private content. No response-time SLA is currently promised.
+GitHub private vulnerability reporting is enabled. Use that private channel for suspected vulnerabilities, or privately contact the repository owner if unavailable. Include version, transport, reproduction and impact without posting real keys or private content. No response-time SLA is currently promised.
 
 Locally tested boundaries:
 
@@ -12,4 +12,4 @@ Locally tested boundaries:
 
 Keys have no email recovery, rotation or revocation. Lost keys lose access; leaked keys cannot be invalidated by this version. Move trusted data to a new workspace and restrict the old deployment when needed. [Deployment](docs/DEPLOYMENT.md) covers persistence and release controls.
 
-The process cap is not a global serverless rate limit. Configure host-level abuse/rate controls before claiming hosted capacity. Browser workers and OAuth/credential administration need separate boundaries and remain later milestones. Audits/reviews have defined scope and do not certify the entire service.
+The process cap is not a global serverless rate limit. The public API also has a verified Vercel WAF limit of 120 POST requests per minute per IP per region; GET downloads remain available. Regional counters and shared proxy IPs limit what that control establishes. [Deployment](docs/DEPLOYMENT.md) records the smoke, monitoring and rollback. Browser workers and OAuth/credential administration need separate boundaries and remain later milestones. Audits/reviews have defined scope and do not certify the entire service.
