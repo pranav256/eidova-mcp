@@ -49,6 +49,7 @@ repeated on 2026-11-12; the implementation commits use 2026-11-11 at the user's 
 ## Acceptance scope
 
 This matrix records verified boundaries rather than a separate continuation plan.
-Active acceptance is tracked in the parent workspace's `TODO.md`. Runtime data and
-upstream provenance remain intact. Imported source, green adapter tests and catalog
-discovery do not establish full parity, live generation or installer release.
+The user selected MCP/website-only scope on 15 November; native Studio production
+is optional and preserved. Runtime data and upstream provenance remain intact.
+Imported source, green adapter tests and catalog discovery do not establish full
+parity, live generation or installer release.
