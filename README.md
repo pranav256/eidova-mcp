@@ -16,15 +16,15 @@ Use Node 22 or newer:
 npm ci
 npm run build
 npm start
-codex mcp add eidova --url http://localhost:3000/mcp/core
+codex mcp add eidova --url http://localhost:3000/mcp
 ```
 
-Use `/mcp` for full. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
+The default `/mcp` profile exposes all 42 tools. Use `/mcp/core` for 13 essentials; reconnect the client after changing the URL. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
 
 For stdio use an absolute path, independently of your client's working directory:
 
 ```sh
-node /absolute/path/eidova-mcp/dist/stdio.js --profile core
+node /absolute/path/eidova-mcp/dist/stdio.js --profile full
 node /absolute/path/eidova-mcp/dist/stdio.js doctor
 ```
 
