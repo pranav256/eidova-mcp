@@ -36,7 +36,7 @@ jobs:
           docker run -d --name eidova-smoke -p 3000:3000 \
             -v eidova-smoke-state:/app/.open-design \
             -e EIDOVA_BASE_URL=http://localhost:3000 eidova-smoke
-          curl --fail --silent --retry 30 --retry-connrefused --retry-delay 1 http://localhost:3000/health
+          curl --fail --silent --retry 30 --retry-all-errors --retry-delay 1 http://localhost:3000/health
           npm run smoke -- http://localhost:3000/mcp
           npm run smoke -- http://localhost:3000/mcp/core
           npm run smoke:private -- http://localhost:3000
