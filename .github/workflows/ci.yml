@@ -26,6 +26,20 @@ jobs:
       - run: npm run benchmark -- --check
       - run: npm run audit:themes
       - run: npm audit --omit=dev
+      - name: Build and smoke the Docker image
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 24
+        shell: bash
+        run: |
+          docker build -t eidova-smoke .
+          docker volume create eidova-smoke-state
+          trap 'docker logs eidova-smoke; docker rm -f eidova-smoke; docker volume rm eidova-smoke-state' EXIT
+          docker run -d --name eidova-smoke -p 3000:3000 \
+            -v eidova-smoke-state:/app/.open-design \
+            -e EIDOVA_BASE_URL=http://localhost:3000 eidova-smoke
+          curl --fail --silent --retry 30 --retry-connrefused --retry-delay 1 http://localhost:3000/health
+          npm run smoke -- http://localhost:3000/mcp
+          npm run smoke -- http://localhost:3000/mcp/core
+          npm run smoke:private -- http://localhost:3000
   consumers:
     # Playwright 1.56.1 requires a supported Ubuntu release.
     runs-on: ubuntu-24.04
