@@ -60,6 +60,8 @@ After the new aliases work, update website build variables and `vercel.json` rew
 
 ## Release sequence
 
+npm/Registry publication was deferred by the user on 15 November 2026. The tested `eidova-mcp@0.2.0` tarball was built from signed source `e7c63c4`; its SHA-1 is `7f769037660a726a769c8a10326f906ff6eae12e`. A retained local copy is `.work/release-publish/eidova-mcp-0.2.0.tgz`; that ignored artifact is not part of the repository or production deployment. Publication returned E403 because npm requires publishing 2FA or a granular token with bypass 2FA. No version was published. The official Registry publisher 1.8.9 validated `server.json` and authenticated as the matching GitHub owner; package-backed Registry publication waits for npm. Resume the sequence below with fresh credentials and complete the named-client acceptance in [CLIENTS.md](CLIENTS.md). Do not describe the deferred host timings/context traces as measured.
+
 1. Finish remote CI and named-client walkthroughs; record client versions, profile, first-task time and context traces. Resolve naming/package/namespace ownership before publishing metadata.
 2. Build the exact MCP commit; run tests, stdio/package smoke, benchmark and theme audit. Stage it with separate disposable state/Blob records.
 3. Verify staging `/health`, full and core initialize/discovery, recovery, registry source and owner isolation. `npm run smoke -- <staging-origin>/mcp` is read-only. `smoke:private` creates disposable records; use it only within the authorized environment.

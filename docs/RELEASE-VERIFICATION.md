@@ -1,6 +1,6 @@
 # Release verification
 
-Current evidence reconciled on 15 November 2026. This reference preserves completed checks; the only active workspace checklist is `../../TODO.md`. Historical sections describe their dated revisions.
+Current evidence reconciled on 15 November 2026. This reference preserves completed checks from the consolidated handoffs. npm/Registry publication and its remaining client acceptance were deferred by the user; their prerequisites remain in [DEPLOYMENT.md](DEPLOYMENT.md) and [CLIENTS.md](CLIENTS.md). Historical sections describe their dated revisions.
 
 ## Current source and hosted state
 
