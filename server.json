@@ -13,8 +13,8 @@
       "version": "0.2.0",
       "runtimeHint": "npx",
       "transport": { "type": "stdio" },
-      "packageArguments": [{ "type": "named", "name": "--profile", "value": "core" }]
+      "packageArguments": [{ "type": "named", "name": "--profile", "value": "full" }]
     }
   ],
-  "remotes": [{ "type": "streamable-http", "url": "https://open-design-mcp-liard.vercel.app/mcp/core" }]
+  "remotes": [{ "type": "streamable-http", "url": "https://open-design-mcp-liard.vercel.app/mcp" }]
 }
