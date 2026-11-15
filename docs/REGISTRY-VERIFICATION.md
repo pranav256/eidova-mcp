@@ -4,7 +4,7 @@
 
 Six clean consumers installed Linear, Tactile and Industrial through actual shadcn 4.23.0 in both Vite 7.3.7 and Next 16.4.6. All production builds, forms, dialog focus, font checks, source/comprehension review and 72 rendered spacing/contrast states passed; minimum sampled text contrast was 4.719:1. The fixture uses React 19.2.0, Tailwind 4.3.5 and Node 24.20.0 on Windows.
 
-Run `npm run verify:consumers` against the local candidate to reproduce. Raw evidence: `.work/consumers/1794301807557/`; scope and release status: [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md). This checks representative web kits, not every component or a named agent-host walkthrough.
+Run `npm run verify:consumers` against the local candidate to reproduce. Raw evidence: `.work/consumers/1794301807557/`; scope and release status: [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). This checks representative web kits, not every component or a named agent-host walkthrough.
 
 ## Historical 2026-11-07 verification
 

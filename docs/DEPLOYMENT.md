@@ -1,6 +1,6 @@
 # Self-host and release
 
-Version 0.2.0 is a locally verified candidate; package/Registry publication remains separate work. The API and website are independent repositories/Vercel projects. A Git push can trigger their existing deployment integrations; verify the exact deployed commits and versions. Promote the API before the website: the new website defaults to core, which the previous hosted release does not provide.
+Version 0.2.0 is deployed on the public API and website; package/Registry publication remains separate work. The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. Setup defaults to full `/mcp`; optional `/mcp/core` is also deployed.
 
 The new [Studio team backend](STUDIO.md) is a separate Node 24+ process with persistent SQLite storage. It cannot run in Vercel functions. Its website connection uses `VITE_STUDIO_API_URL` and exact allowed origins; without that setting the production `/studio` page shows setup instructions. Configure EIDOVA_STUDIO_REGISTRATION_KEY and exact allowed origins for remote access. Signup gating, quotas and rate limiting are implemented; production load and operational validation remain outstanding.
 
@@ -48,13 +48,13 @@ The Node API functions have a 60-second maximum. Link a **private** Vercel Blob 
 | Local `MCP_PROXY_ORIGIN` | Development/local-preview API origin |
 | `server.json` remotes | Checked production core URL after it is live |
 
-Keep previous deployment IDs, URL settings and package version before promotion. Retain the same Blob store, capability scheme and state paths. Add host-wide rate/abuse controls separately: the 16-request process cap is local to an instance, not deployment-wide enforcement.
+Keep previous deployment IDs, URL settings and package version before promotion. Retain the same Blob store, capability scheme and state paths. The 16-request process cap is local to an instance. On 15 November 2026 Vercel firewall version 1 (`waf_cC9Yii5SCOuF`) activated a valid fixed-window rule for all POST requests: 120/minute per IP per region, returning HTTP 429. A bounded smoke against an absent route returned 120 normal 404 responses and ten 429 responses; GET `/health` remained 200. GET registry downloads do not match the rule. Vercel counters are regional, so this is not a single global limit. Shared proxy/NAT clients share an IP's allowance; monitor firewall events and adjust deliberately. The Hobby project uses its included single rate-limit rule. To roll back this control, deactivate the named `Eidova POST rate limit` rule without changing source, keys or data. API deployments do not replace project firewall settings.
 
 ## Eidova hosted rename
 
 The source, package, CLI and local checkout names use Eidova. GitHub repositories are now `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs. Native Studio has a separate private `pranav256/eidova-studio` repository. Existing Vercel project IDs and working hostnames remain intact. Historical review receipts retain their original names and hashes.
 
-For a later hostname migration, verify and assign `eidova.vercel.app` to the website and `eidova-mcp.vercel.app` to the API. These are proposed hostnames, not verified live endpoints. Preserve the existing project IDs, deployment history, Blob store and old aliases; coordinate the URL changes below after verifying the new hostnames.
+The website alias `eidova.vercel.app` is assigned and verified alongside `open-design-website.vercel.app`. The API remains at the verified `open-design-mcp-liard.vercel.app`; `eidova-mcp.vercel.app` is an optional future hostname, not a release requirement. Preserve existing project IDs, deployment history, Blob store and old aliases during any later migration.
 
 After the new aliases work, update website build variables and `vercel.json` rewrites, API `EIDOVA_BASE_URL` and `EIDOVA_WEBSITE_URL`, `server.json`, defaults and setup documentation together. Deploy the API before the website and verify health, MCP discovery, catalog and registry URLs. Do not point clients at unassigned hostnames or switch the existing storage prefixes or Docker volume during the rename.
 
@@ -86,7 +86,7 @@ npm run verify:consumers
 
 The browser scripts use Edge on Windows or installed Playwright Chromium elsewhere. `PLAYWRIGHT_CHANNEL` can select another installed channel. On Linux, install Chromium with `npx playwright install --with-deps chromium`; the CI browser job pins Ubuntu 24.04 for the locked Playwright 1.56.1 version. Clean consumers use actual shadcn 4.23.0, React 19.2, Tailwind 4.3.5, Vite 7.3.7 and Next 16.4.6, and run only against a local registry.
 
-`npm run sync:previews` copies exact public source and required licensed fonts/notices into the sibling website. `node scripts/sync-website-themes.mjs ../eidova-website` regenerates catalog tokens and appearance metadata without rewriting the source registry. The website keeps its own appearance fixed; theme selection opens an isolated viewer. Restart the MCP after registry/content edits because source is cached per process.
+`npm run sync:previews` copies exact public source and required licensed fonts/notices into the sibling website. `node scripts/sync-website-themes.mjs ../eidova-website` regenerates catalog tokens and appearance metadata without rewriting the source registry. The website keeps its reference design by default; the landing navbar applies selected themes while component specimens stay isolated. Restart the MCP after registry/content edits because source is cached per process.
 
 ## Rollback
 
@@ -102,4 +102,4 @@ docker run --rm -p 3000:3000 -v open-design-state:/app/.open-design \
   -e EIDOVA_BASE_URL=http://localhost:3000 eidova-mcp
 ```
 
-Docker and Vercel staging were not exercised by the local candidate checks. Verify any production deployment triggered by the pushed commits separately. The local Node builds, clean consumers and package evidence are in [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).
+Docker is absent and its runtime smoke remains unverified. Vercel production API/website deployments and full/core hosted checks pass; verify the exact source of future deployments separately. The local Node builds, clean consumers and package evidence are in [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).

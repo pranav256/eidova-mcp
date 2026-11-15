@@ -35,7 +35,7 @@ On 2026-11-10, source review of the eight copied JSX/CSS kits plus font-loader e
 
 Edge/Playwright captured **96 states** at 390, 1440 and 1728px: base, primary hover/focus and invite dialog. Source hashes matched the registry copies; required-field/email checks, save, member addition and focus return passed. Measured solid-background text contrast was at least **4.542:1**, spacing had no critical/serious findings, and there were no page errors or runtime Google/Iconify requests.
 
-Raw local evidence is `.work/verification/specimens/`; the website retains a compact specimen summary. Six actual CLI-installed Vite/Next consumers separately passed with Linear, Tactile and Industrial. [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md) records exact versions and scope.
+Raw local evidence is `.work/verification/specimens/`; the website retains a compact specimen summary. Six actual CLI-installed Vite/Next consumers separately passed with Linear, Tactile and Industrial. [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md) records exact versions and scope.
 
 Contrast sampling composites solid ancestor backgrounds. It does not inspect pixels over images/gradients or certify accessibility. Moderate source findings include legacy token declarations/comments and Tailwind font alias evidence; moderate spacing findings include off-scale values in retained components. Reviews of supplied evidence are not trusted dashboard receipts.
 

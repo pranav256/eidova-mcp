@@ -4,9 +4,9 @@ Design-system selection, real React components, and practical UI review for codi
 
 The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 packages: 152 design systems, 115 design templates, 343 plugins, 169 skills, three framework/live-artifact templates and two catalogs. Identical assets share storage; 137 legacy links remain readable. Use `search-resources`, then `read-resource` for files, previews and licenses. The website offers direct previews, downloads and an agent prompt. Unslop supports focused interface polish. Eidova's 31 installable React kits remain available separately.
 
-The [Studio integration](docs/STUDIO.md) adds an own-backend team workspace, version-checked files, feedback, fourteen opt-in stdio tools, watched file sync, history/restore, presence, sharing and access recovery. `--native-studio` combines an installed native engine's tools and brief resources with Eidova's stdio tools. **Full OpenDesign feature parity is incomplete**: the native runtime is source-only here, and its cloud collaboration has not been replaced. See the [parity matrix](docs/STUDIO-PARITY.md).
+The [Studio integration](docs/STUDIO.md) adds an own-backend team workspace, version-checked files, feedback, fourteen opt-in stdio tools, watched file sync, history/restore, presence, sharing and access recovery. `--native-studio` combines an installed native engine's tools and brief resources with Eidova's stdio tools. **Full OpenDesign feature parity is incomplete**: the installed native daemon has own-backend adapters and focused acceptance, while live generation, complete native workflows and installers still require verification. See the [parity matrix](docs/STUDIO-PARITY.md).
 
-**0.2.0 is a release candidate, not a published npm package.** Verify the [website](https://open-design-website.vercel.app), [full HTTP endpoint](https://open-design-mcp-liard.vercel.app/mcp) and `/mcp/core` against the matching deployed version. Hosted core URLs and new specimens need the coordinated [release](docs/DEPLOYMENT.md); local checks alone do not certify deployment.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [full HTTP endpoint](https://open-design-mcp-liard.vercel.app/mcp) and optional `/mcp/core` are deployed. [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining native acceptance.
 
 ## Run locally
 
@@ -77,7 +77,7 @@ npm run audit:themes
 
 `npm run verify:consumers` uses the local registry and actual shadcn CLI in six disposable Vite/Next consumers. Website checks are in [deployment](docs/DEPLOYMENT.md). Edit `content/library.json` or use the [content importer](docs/CONTENT-LIBRARY.md); restart to load changes.
 
-Read the [API](docs/API.md), [candidate verification](docs/RELEASE-CANDIDATE.md), [implementation status](docs/SOL-IMPLEMENTATION-PLAN.md) and [security policy](SECURITY.md). Eidova is the selected name; hosted-domain and package ownership are still unverified.
+Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Eidova is the selected name; the GitHub repositories and website alias are assigned; npm/Registry publication remains unverified.
 
 Eidova replaces Open Design. New configuration uses `EIDOVA_*`; existing `OPEN_DESIGN_*` settings remain fallback aliases. Local `.open-design/state` and the private Blob `open-design/state` prefix are retained so saved workspaces remain accessible. Old review-rule resource links still resolve to the renamed rules. Existing GitHub and Vercel URLs stay in use until the coordinated [hosted rename](docs/DEPLOYMENT.md#eidova-hosted-rename) is verified.
 

@@ -1,6 +1,80 @@
-# Release verification — 2026-11-07
+# Release verification
 
-Historical verification of the previous release. For the locally implemented 0.2.0 candidate, see [RELEASE-CANDIDATE.md](RELEASE-CANDIDATE.md). The statements and deployment IDs below are not fresh candidate checks.
+Current evidence reconciled on 15 November 2026. This reference preserves completed checks; the only active workspace checklist is `../../TODO.md`. Historical sections describe their dated revisions.
+
+## Current source and hosted state
+
+- Signed MCP commit **9b23c02** and website commit **4ab5743** are on their remote default branches. Both production deployments are Ready. MCP CI [passed on the exact commit](https://github.com/pranav256/eidova-mcp/actions/runs/43691196675); website CI passed on 4ab5743.
+- The public API reports **0.2.0**. Full [`/mcp`](https://open-design-mcp-liard.vercel.app/mcp) has **42** public tools; optional `/mcp/core` has **13**. Fresh hosted discovery and read-only tool/source smokes pass on both profiles. Existing connections need reconnection to refresh discovery.
+- https://eidova.vercel.app/ and https://open-design-website.vercel.app/ use the warm paper/rust reference and the working navbar theme slider. Website setup, Docs and Registry metadata default to full. The website's `docs/theme-slider-review.json` records all 31 themes, pointer/keyboard/history/storage recovery and the rendered review.
+- Fresh standalone MCP tests: **128 passed**. Separate real-backend/native-adapter integration tests: **8 passed**. Actual tarball installation, all resource bytes/notices, doctor/recovery and core stdio passed (approximately 89.9 MB compressed). These adapter checks do not establish full native runtime acceptance.
+- Eidova GitHub repositories and the branded website alias are assigned. Existing API hostname, routes, keys and storage stay compatible. npm currently returns E404 for `eidova-mcp`; the authenticated publisher is `pranav256`. An absent listing does not prove ownership. Registry publication is unverified.
+- GitHub private vulnerability reporting is enabled for MCP and website. The rate-limit smoke returned 120 normal 404 responses and ten 429 responses with zero network errors; GET health remained 200. Vercel's active valid rule limits POST requests to **120/minute per IP per region**, using a fixed window. It leaves GET registry downloads available. Counters are regional, not a single global cap; the process cap of 16 remains an independent boundary. See [operating controls](DEPLOYMENT.md).
+
+Current packaging, clients, targets and compatibility are documented in [API](API.md), [clients](CLIENTS.md), [family recipes](DESIGN-FAMILIES.md), [DTCG](DTCG.md), [security](../SECURITY.md) and [deployment/rollback](DEPLOYMENT.md). The retired Sol plan's implementation is represented by those references and the evidence below.
+
+## Acceptance boundaries
+
+Named-client five-minute workflows/context traces, Docker runtime checks (Docker is absent), npm/Registry publication, persistent Studio HTTPS hosting and the live native acceptance in [STUDIO-PARITY.md](STUDIO-PARITY.md) have not been completed. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
+
+Explicitly deferred work stays deferred: the optional two-family playground, trusted dashboard capture worker, public native/Shopify install kits, proprietary inspiration, hosted AI generation and account administration. Personal resource Keep/Skip choices remain the user's optional decisions. The deterministic public web core needs no model provider.
+
+## Historical candidate evidence — 10 November 2026
+
+The following measurements cover the then-current candidate, not the subsequent paper redesign or live slider. Some raw captures and disposable installs were removed by workspace cleanup; compact receipts, hashes and reproducible scripts remain.
+
+
+## Verification and evidence
+
+Local reference environment: Windows x64, Node **24.20.0**, Intel Core 3 100U, Edge through Playwright **1.56.1**. Browser widths: **390, 1440 and 1728px**. Remote CI subsequently passed Node 22/24 on Linux/Windows plus clean installed consumers on MCP `3f30dd4`; website CI passed `6441ac4`. The browser job pins Ubuntu 24.04 for the locked Playwright version.
+
+| Check | Recorded result | Evidence |
+| --- | --- | --- |
+| MCP typecheck / production build | Passed | Local commands; package prepack repeats these checks |
+| Remote service CI | All four Node 22/24 Linux/Windows jobs and six installed consumers passed | [MCP run on 3f30dd4](https://github.com/pranav256/open-design-mcp/actions/runs/42818900705) |
+| Remote website CI | Typecheck/build and production audit passed | [Website run on 6441ac4](https://github.com/pranav256/open-design-website/actions/runs/42818368810) |
+| Service suite | **89 passed**, zero failures/skips | `.work/verification/service-tests.log` |
+| Both production dependency audits | Zero reported vulnerabilities | Local `npm audit --omit=dev`; not an all-dependency security certification |
+| Built stdio | Passed from a different working directory | `npm run smoke:stdio` |
+| Final package | Dry-run and tarball installation checks passed; assets/notices/release docs included, private state excluded | `npm pack --dry-run --json`, `npm run smoke:package` |
+| Package recovery | Version, offline doctor, missing-assets recovery, invalid profile, core search/resource passed from a Windows path containing spaces | `scripts/smoke-package.mjs` assertions |
+| Profiles/protocol/security | Full/core HTTP and stdio discovery, schema/error/resource/prompt checks, private isolation/concurrency and fetch-boundary cases passed | Service suite and benchmark |
+| Eight native specimens | **96 states**; eight registry copies matched; zero critical/serious source or spacing findings, no copy failures/page errors/runtime Google or Iconify requests | `.work/site-elevation/specimens/`; sibling website `docs/specimen-review.json` |
+| Specimen sampled text contrast | Minimum **4.542:1** | Specimen summary/contrast evidence |
+| Actual installed React consumers | Six Vite/Next builds and interactions passed; **72 states**; minimum sampled contrast **4.719:1** | `.work/consumers/1794301807557/` |
+| Website typecheck / production build | Passed | Latest built preview at `http://127.0.0.1:5174` |
+| Website source/comprehension/spacing | **51 panels**, zero copy failures and zero critical/serious spacing findings; setup spacing findings zero | `.work/installation-first/after/summary.json`; sibling `docs/review-candidate.json` |
+| Installation and gallery | Six setup formats, keyboard tabs, core/full disclosure and clipboard recovery passed; eight native image source/CSS/image hashes verified | Website summary and `src/family-preview-manifest.json` |
+| Website footer | Displayed package version, Docs destination and actual `/health` response version passed | `scripts/verify-website.mjs` assertions |
+| Fixed-site theme viewers | **74 layouts / 148 parent-and-iframe states**, all 31 IDs retained; **31 copy checks** passed; minimum sampled contrast **4.542:1**; zero critical/serious spacing findings/page errors | `.work/installation-first/viewers/`; sibling `docs/theme-viewer-review.json` |
+| Theme audit / DTCG / metadata | All 31 IDs covered; aliases/types/unsupported values and prepared Registry schema checked | [THEME-AUDIT.json](THEME-AUDIT.json), service tests |
+
+All eight settled 1440px specimen screenshots were visually inspected. Typography, geometry, density and material treatments differ on matching content; [recipes](DESIGN-FAMILIES.md) document at least three non-color axes and two component treatments per promoted family. This is internal review, not user preference research. The optional separate two-family playground was unnecessary because the real specimens are directly comparable.
+
+The installation-first marketing/catalog page was compared against the preceding page at matching 390/1440/1728px widths. Mobile and desktop hero appearances, Tactile mobile and Editorial desktop viewers were visually inspected. The copy comparison allows the user-requested removal of the hero demo and global palette controls, decorative icons and the readable Inter font-label correction. Iframe Escape, nested invitation Escape, focus return, sample reset, setup/scroll retention, legacy URL migration, invalid IDs, disabled storage and no catalog refetch passed. No additional dependency was added for this change.
+
+The six consumers use actual **shadcn 4.23.0**, **React 19.2.0**, **Tailwind 4.3.5**, **Vite 7.3.7** and **Next 16.4.6**, installing Linear, Tactile and Industrial in each framework. Their forms check required names, email validation, save feedback, Dialog Escape/focus return and member addition. This does not certify every retained component, framework version or agent host.
+
+Raw screenshots, DOM states and tool responses remain in ignored `.work` directories and are excluded from distribution. Checked-in compact summaries and scripts retain the reproducible scope. Moderate findings remain in legacy component scales, source declarations/comments and font alias evidence; there are no recorded critical/serious findings in the reviewed source/DOM scope. Solid ancestor backgrounds are composited for contrast; image/gradient pixels are not measured. These checks are not accessibility certification or trusted dashboard receipts.
+
+## Context and latency
+
+| Compact JSON UTF-8 bytes | Baseline | Candidate |
+| --- | ---: | ---: |
+| Public full discovery | 125,752 | 53,393 |
+| Owner full discovery | 127,977 | 54,401 |
+| Core discovery | — | 21,127 |
+| Initialize instructions | 1,961 | 305 |
+| Default theme search | 34,333 | 5,183 |
+| Full choose/install workflow | 180,145 | 81,134 |
+| Core choose/install workflow | — | 48,868 |
+
+All six fixed full workflows meet **at least 50% byte reduction**, including complete discovery, requests/responses and both protocol representations. Five public workflows also pass through core using ordinary tools. Final 20-sample warm p95: **catalog 0.77ms**, **guidance 0.21ms**, both within the local 200ms gate. [Benchmark report and method](BENCHMARK.md) link the original/candidate measurements.
+
+These are protocol bytes and local SDK timings. Actual model tokens, host context injection/caching and named-client traces were not measured. HTTP caching is a separate network/CPU optimization.
+
+
+## Historical release - 7 November 2026
 
 The latest review passes **72 service tests**, TypeScript and builds. Theme
 search now includes font names. Private archive integration remains opt-in and
