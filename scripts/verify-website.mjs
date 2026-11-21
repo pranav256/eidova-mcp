@@ -10,8 +10,8 @@ import { measureTextContrast } from './browser-contrast.mjs';
 
 const origin = process.env.WEBSITE_REVIEW_URL || 'https://eidova.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website');
-const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website');
-const endpoint = process.env.WEBSITE_EXPECTED_MCP_URL || 'https://eidova-mcp.vercel.app/mcp';
+const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || '../eidova-website');
+const endpoint = (process.env.WEBSITE_EXPECTED_MCP_URL || 'https://eidova-mcp.vercel.app/mcp').replace(/\/core\/?$/,'').replace(/\/$/,'');
 const coreEndpoint=endpoint.replace(/\/core\/?$/,'').replace(/\/$/,'')+'/core';
 // Review the matching local service when supplied; keep hosted link assertions intact.
 const reviewServiceUrl = url => process.env.MCP_REVIEW_URL ? new URL(new URL(url).pathname, process.env.MCP_REVIEW_URL).href : url;
@@ -49,14 +49,15 @@ async function inspectStates(name,captured) {
 }
 async function verifyBehavior(page) {
   assert.equal(await page.locator('.connection-section #connect').count(),1);
-  assert.equal(await page.locator('.hero iframe, .theme-session, .apply-theme').count(),0);
+  assert.equal(await page.locator('.hero iframe, .theme-session').count(),0);
+  assert.equal(await page.locator('.apply-theme').count(),31);
   assert.equal(await page.locator('.theme-card-preview img').count(),31);
   for(const image of await page.locator('.theme-card-preview img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(node=>node.decode());assert.ok(await image.evaluate(node=>node.naturalWidth>=700));}
   const footer=page.getByRole('navigation',{name:'Footer navigation'});
-  assert.match(await footer.getByRole('link',{name:'Docs',exact:true}).getAttribute('href'),/docs\/CLIENTS\.md$/);
+  assert.equal(await footer.getByRole('link',{name:'Docs',exact:true}).getAttribute('href'),'/docs');
   const health=await page.request.get(reviewServiceUrl(await footer.getByRole('link',{name:'Status',exact:true}).getAttribute('href')));
   assert.equal(health.status(),200);assert.equal((await health.json()).version,websiteVersion);
-  assert.match(await page.locator('.site-footer > p').textContent(),new RegExp('v'+websiteVersion.replaceAll('.','\\.')));
+  assert.match(await page.locator('.site-footer .footer-grid > div > p').textContent(),new RegExp('v'+websiteVersion.replaceAll('.','\\.')));
   const preview=page.getByRole('button',{name:'Preview theme: Linear',exact:true});
   await preview.focus();await page.keyboard.press('Enter');
   await page.getByRole('heading',{name:'Linear preview',exact:true}).waitFor();
@@ -118,15 +119,14 @@ async function verifyBehavior(page) {
     await page.getByRole('button',{name:label}).click();
     await page.locator('.copy-feedback').filter({hasText:'Copied to clipboard.'}).waitFor();
     const text=await page.evaluate(()=>navigator.clipboard.readText());
-    if(name==='Codex')assert.equal(text,'codex mcp add eidova --url '+coreEndpoint);
-    else if(name==='Claude Code')assert.equal(text,'claude mcp add --transport http eidova '+coreEndpoint);
-    else if(name==='Cursor')assert.equal(JSON.parse(text).mcpServers['eidova'].url,coreEndpoint);
-    else if(name==='VS Code')assert.deepEqual(JSON.parse(text).servers['eidova'],{type:'http',url:coreEndpoint});
-    else assert.equal(text,coreEndpoint);
+    if(name==='Codex')assert.equal(text,'codex mcp add eidova --url '+endpoint);
+    else if(name==='Claude Code')assert.equal(text,'claude mcp add --transport http eidova '+endpoint);
+    else if(name==='Cursor')assert.equal(JSON.parse(text).mcpServers['eidova'].url,endpoint);
+    else if(name==='VS Code')assert.deepEqual(JSON.parse(text).servers['eidova'],{type:'http',url:endpoint});
+    else assert.equal(text,endpoint);
   }
-  await page.locator('.tool-options > summary').click();
   panels.push({screen:'Tool options',headline:'Tool options',body:await page.locator('.profile-note').allTextContents(),actions:await page.locator('.profile-picker button').allTextContents()});
-  await page.getByRole('button',{name:'All tools',exact:true}).click();
+  await page.getByRole('button',{name:'All tools · 42 tools',exact:true}).click();
   assert.equal(await page.locator('#mcp-endpoint').inputValue(),endpoint.replace(/\/core\/?$/,'').replace(/\/$/,''));
   await page.getByRole('button',{name:'Essentials · 13 tools',exact:true}).click();
   assert.equal(await page.locator('#mcp-endpoint').inputValue(),coreEndpoint);
@@ -172,10 +172,10 @@ try {
     assert.equal((await page.goto(origin,{waitUntil:'networkidle'})).status(),200);
     await count(page); await page.evaluate(() => document.fonts.ready);
     assert.ok(await page.evaluate(()=>document.fonts.check('400 16px Inter')));
-    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Inter/);
-    assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+    assert.match(await page.locator('h1').evaluate(e=>getComputedStyle(e).fontFamily),/Newsreader/);
+    assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
     for (const mode of ['light','dark']) {
-      if(mode==='dark') { await page.getByRole('button',{name:'Switch to dark mode'}).click(); await page.reload({waitUntil:'networkidle'}); await count(page); }
+      await page.getByRole('button',{name:'Switch to '+mode+' mode',exact:true}).click(); await page.reload({waitUntil:'networkidle'}); await count(page);
       assert.equal(await page.locator('html').getAttribute('data-theme'),mode);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
       for(const image of await page.locator('.theme-card-preview img').all()){await image.scrollIntoViewIfNeeded();await image.evaluate(node=>node.decode());}

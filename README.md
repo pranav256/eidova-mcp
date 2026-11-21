@@ -6,7 +6,7 @@ The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 pa
 
 The [Studio integration](docs/STUDIO.md) adds an own-backend team workspace, version-checked files, feedback, fourteen opt-in stdio tools, watched file sync, history/restore, presence, sharing and access recovery. `--native-studio` combines an installed native engine's tools and brief resources with Eidova's stdio tools. **Full OpenDesign feature parity is incomplete**: the installed native daemon has own-backend adapters and focused acceptance, while live generation, complete native workflows and installers still require verification. See the [parity matrix](docs/STUDIO-PARITY.md).
 
-**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app) is deployed. Source now uses the [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core`; their updated defaults still need deployment and hosted verification. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining native acceptance.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core` are deployed and verified. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining optional acceptance.
 
 ## Run locally
 
@@ -44,11 +44,11 @@ Search returns compact family summaries. Retrieve a selected kit with `target: "
 npx shadcn@latest add http://localhost:3000/registry/linear/button.json
 ```
 
-The [family recipes](docs/DESIGN-FAMILIES.md) explain material, typography, geometry and density. The website puts installation in the hero and keeps its own appearance fixed. **View components** opens a separate viewer of actual Button, Input, Card, Dialog, Table and Sidebar source. Variants have exact token links and an explicitly labelled family specimen.
+The [family recipes](docs/DESIGN-FAMILIES.md) explain material, typography, geometry and density. The website's navbar slider applies all 31 themes plus the default immediately. **Preview theme** opens an isolated viewer of actual Button, Input, Card, Dialog, Table and Sidebar source. Variants have exact token links and an explicitly labelled family specimen.
 
 ## Context cost
 
-Full public discovery falls from **125,752 to 51,503 UTF-8 bytes**; core discovery is **19,237 bytes**. All six fixed full-profile workflows meet the 50% reduction gate. These are compact JSON protocol bytes; model token counts and actual client context traces were not measured. See [benchmark scope](docs/BENCHMARK.md).
+The 21 November local benchmark measures full public discovery at **54,065 UTF-8 bytes**, compared with the **125,752-byte** baseline; core discovery is **21,800 bytes**. All six fixed full-profile workflows meet the 50% reduction gate. These are compact JSON protocol bytes; model token counts and actual client context traces were not measured. See [benchmark scope](docs/BENCHMARK.md).
 
 Detailed guidance is at `design://workflow/v1`, with principle/review resources and three optional prompts. Ordinary tools work without these resources/prompts. Choose full for private mutation and specialist guidance; core cannot call tools absent from its discovery.
 
@@ -81,6 +81,6 @@ npm run audit:themes
 
 Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Eidova is the selected name; the GitHub repositories and website alias are assigned; npm/Registry publication remains unverified.
 
-Eidova replaces Open Design. New configuration uses `EIDOVA_*`; existing `OPEN_DESIGN_*` settings remain fallback aliases. Local `.open-design/state` and the private Blob `open-design/state` prefix are retained so saved workspaces remain accessible. Old review-rule resource links still resolve to the renamed rules. Existing GitHub and Vercel URLs stay in use until the coordinated [hosted rename](docs/DEPLOYMENT.md#eidova-hosted-rename) is verified.
+Configuration uses `EIDOVA_*`; existing `OPEN_DESIGN_*` settings remain fallback aliases. Local `.open-design/state` and the private Blob `open-design/state` prefix are retained so saved workspaces remain accessible. Old review-rule resource links still resolve to the renamed rules. Branded GitHub and Vercel URLs are live; previous hosted aliases remain compatible after the coordinated [hosted rename](docs/DEPLOYMENT.md#eidova-hosted-rename).
 
 This independent MIT project is unaffiliated with Better Design. Copyright, Tabler's embedded SVG license and Lucide's ISC notice are retained in [NOTICE](NOTICE) and bundled licenses. Supplemental icons use local Lucide; some specialist registry components retain their original Iconify dependencies.

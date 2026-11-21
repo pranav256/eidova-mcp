@@ -106,4 +106,4 @@ docker run --rm -p 3000:3000 -v open-design-state:/app/.open-design \
   -e EIDOVA_BASE_URL=http://localhost:3000 eidova-mcp
 ```
 
-Docker is absent and its runtime smoke remains unverified. Vercel production API/website deployments and full/core hosted checks pass; verify the exact source of future deployments separately. The local Node builds, clean consumers and package evidence are in [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).
+Docker is absent from the local machine. The 15 November remote CI passed the actual Docker build and full/core/private runtime smokes; the Linux Node 24 CI job repeats them for subsequent pushes. Local Docker absence does not negate that dated remote evidence. Vercel production API/website deployments and full/core hosted checks pass; verify the exact source of future deployments separately. The local Node builds, clean consumers and package evidence are in [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).

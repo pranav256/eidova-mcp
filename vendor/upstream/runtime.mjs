@@ -18946,8 +18946,9 @@ function registerDesignConfigTools({
     const bearer = authContext.kind === "api-key" ? authContext.apiKey : authContext.accessToken;
     return { Authorization: `Bearer ${bearer}` };
   };
-  const textResult = (text5) => ({
-    content: [{ type: "text", text: text5 }]
+  const textResult = (text5, isError = false) => ({
+    content: [{ type: "text", text: text5 }],
+    isError
   });
   const resolveFragmentId = async (projectId) => {
     const projectUrl = `${APP_BASE_URL}/api/projects/${projectId}`;
@@ -18998,19 +18999,19 @@ function registerDesignConfigTools({
     },
     async ({ projectId, context }) => tracked("get-design-config", { projectId, context }, async () => {
       const resolved = await resolveFragmentId(projectId);
-      if ("error" in resolved) return textResult(resolved.error);
+      if ("error" in resolved) return textResult(resolved.error, true);
       const configUrl = `${APP_BASE_URL}/api/fragments/${resolved.fragmentId}/config`;
       try {
         const res = await apiFetch(configUrl, { headers: authHeaders3() });
         if (!res.ok) {
-          return textResult(`Could not read the design config (HTTP ${res.status}).`);
+          return textResult(`Could not read the design config (HTTP ${res.status}).`, true);
         }
         const config = await res.json();
         return textResult(
           configMd("Design config", config, resolved.project, projectId)
         );
       } catch (err) {
-        return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`);
+        return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`, true);
       }
     })
   );
@@ -19038,7 +19039,7 @@ function registerDesignConfigTools({
     },
     async ({ projectId, config, context }) => tracked("set-design-config", { projectId, context }, async () => {
       const resolved = await resolveFragmentId(projectId);
-      if ("error" in resolved) return textResult(resolved.error);
+      if ("error" in resolved) return textResult(resolved.error, true);
       const configUrl = `${APP_BASE_URL}/api/fragments/${resolved.fragmentId}/config`;
       try {
         const res = await apiFetch(configUrl, {
@@ -19048,18 +19049,19 @@ function registerDesignConfigTools({
         });
         if (res.status === 404) {
           return textResult(
-            `Could not write the design config: the project was not found or is not yours. Only the project's owner can change its config. Check the project id, or pass the API key that created it.`
+            `Could not write the design config: the project was not found or is not yours. Only the project's owner can change its config. Check the project id, or pass the API key that created it.`,
+            true
           );
         }
         if (!res.ok) {
-          return textResult(`Could not write the design config (HTTP ${res.status}).`);
+          return textResult(`Could not write the design config (HTTP ${res.status}).`, true);
         }
         const updated = await res.json();
         return textResult(
           configMd("Design config updated", updated.config, resolved.project, projectId)
         );
       } catch (err) {
-        return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`);
+        return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`, true);
       }
     })
   );
@@ -21816,7 +21818,7 @@ function radiusMismatch(parent, child, tolerance) {
     const horizontalInset = insets[horizontal];
     if (Math.max(parentRadius.horizontal, parentRadius.vertical) <= tolerance) continue;
     if (verticalInset < -tolerance || horizontalInset < -tolerance) continue;
-    if (verticalInset > parentRadius.vertical + tolerance || horizontalInset > parentRadius.horizontal + tolerance) continue;
+    if (verticalInset >= parentRadius.vertical || horizontalInset >= parentRadius.horizontal) continue;
     if (Math.abs(verticalInset - horizontalInset) > tolerance) continue;
     const expected = normalizedExpected[corner];
     const delta = {

@@ -1,0 +1,606 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-16T11:36:46.286Z",
+  "verdict": "Catalog and main flows pass; config error flags and metadata fail; earlier intermittent burst resets remain unresolved.",
+  "scope": "Local Windows/Node 24 MCP and website; bounded read traffic plus disposable private-state tests. No production load.",
+  "source": {
+    "heads": {
+      "mcp": "eb2c6fab736ee5d2bb6246782f2fa402a155da08",
+      "website": "e906664e27f1c9c6ac6a80277aafb9a48f858e0d"
+    },
+    "applicationChanges": false,
+    "preservedReadmeEdit": true,
+    "websiteSourceSha256": {
+      "App.tsx": "ce2a02bf1aa2572b653e232a086b080281edee934c02bbb774518d664ef31c6b",
+      "ResourceLibrary.tsx": "bb132ef8c5a11d711e3c89386d9a1e8e5f331e6e7a13309b4619a083ece3f58b",
+      "components/CopyButton.tsx": "04a61c7e3f4de9fd2aefd051831dd9c1f8e4ee751d335a7a418af6519280f607",
+      "styles.css": "c1b71881f74539927f50b615d4fa84e39427d7bd03243baa843e33cbcb440d32",
+      "theme.css": "edc05a03afd375589439f6109a99482ffc282d2efd8c65a2792895df3982c17c",
+      "clean.css": "ab50f370d1cbbe3d5a682bb2a90b7f2594d3109a31e713901c8845da465723fa",
+      "main.tsx": "a834d7d15b7c9a34d6a2cb214a954386c599133414351c4638001ee2079123e9"
+    }
+  },
+  "catalog": {
+    "themes": 31,
+    "families": 8,
+    "advertisedResources": 784,
+    "legacyResources": 137,
+    "referencedFiles": 7188
+  },
+  "serviceTests": {
+    "tests": 128,
+    "passed": 127,
+    "failed": 0,
+    "cancelled": 1,
+    "canonicalLauncher": "blocked: uv_os_get_passwd ENOMEM",
+    "remaining": "Optional native-bridge child-launch timeout"
+  },
+  "tools": {
+    "exercised": 42,
+    "failedContracts": [
+      "get-design-config",
+      "set-design-config"
+    ],
+    "ownerWritePreserved": true,
+    "configWriteAnnotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    },
+    "profiles": {
+      "full": 42,
+      "core": 13,
+      "owner": 43
+    }
+  },
+  "load": {
+    "initialAudit": {
+      "requests": 2320,
+      "connectionFailures": 9,
+      "stages": [
+        {
+          "concurrency": 1,
+          "requests": 80,
+          "statuses": {
+            "200": 80
+          },
+          "failures": [],
+          "p50Ms": 178.96,
+          "p95Ms": 504.22,
+          "maxMs": 1589.92,
+          "requestsPerSecond": 4.53
+        },
+        {
+          "concurrency": 8,
+          "requests": 320,
+          "statuses": {
+            "200": 320
+          },
+          "failures": [],
+          "p50Ms": 598.92,
+          "p95Ms": 2825.89,
+          "maxMs": 3847.78,
+          "requestsPerSecond": 8.28
+        },
+        {
+          "concurrency": 16,
+          "requests": 320,
+          "statuses": {
+            "200": 320
+          },
+          "failures": [],
+          "p50Ms": 951.77,
+          "p95Ms": 4507.86,
+          "maxMs": 5642.38,
+          "requestsPerSecond": 10.44
+        },
+        {
+          "concurrency": 32,
+          "requests": 320,
+          "statuses": {
+            "200": 296,
+            "429": 24
+          },
+          "failures": [],
+          "p50Ms": 1808.46,
+          "p95Ms": 8954.76,
+          "maxMs": 12761.37,
+          "requestsPerSecond": 11.25
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 189,
+            "429": 127
+          },
+          "failures": [
+            "TypeError: fetch failed",
+            "TypeError: fetch failed",
+            "TypeError: fetch failed",
+            "TypeError: fetch failed"
+          ],
+          "p50Ms": 2948.77,
+          "p95Ms": 7377.17,
+          "maxMs": 10354.74,
+          "requestsPerSecond": 16.75
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 137,
+            "429": 179
+          },
+          "failures": [
+            {
+              "error": "TypeError: fetch failed",
+              "cause": "ECONNRESET",
+              "message": "read ECONNRESET",
+              "code": null,
+              "signal": null
+            },
+            {
+              "error": "TypeError: fetch failed",
+              "cause": "ECONNRESET",
+              "message": "read ECONNRESET",
+              "code": null,
+              "signal": null
+            },
+            {
+              "error": "TypeError: fetch failed",
+              "cause": "ECONNRESET",
+              "message": "read ECONNRESET",
+              "code": null,
+              "signal": null
+            },
+            {
+              "error": "TypeError: fetch failed",
+              "cause": "ECONNRESET",
+              "message": "read ECONNRESET",
+              "code": null,
+              "signal": null
+            }
+          ],
+          "p50Ms": 2262.27,
+          "p95Ms": 7872.63,
+          "maxMs": 9764.67,
+          "requestsPerSecond": 18.97,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 161,
+            "429": 158
+          },
+          "failures": [
+            {
+              "error": "TypeError: fetch failed",
+              "cause": "ECONNRESET",
+              "message": "read ECONNRESET",
+              "code": null,
+              "signal": null
+            }
+          ],
+          "p50Ms": 2888.79,
+          "p95Ms": 8302.43,
+          "maxMs": 12557.93,
+          "requestsPerSecond": 19.7,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 196,
+            "429": 124
+          },
+          "failures": [],
+          "p50Ms": 3446.45,
+          "p95Ms": 7332.24,
+          "maxMs": 11381.75,
+          "requestsPerSecond": 18.1,
+          "recovered": true
+        }
+      ]
+    },
+    "freshConfirmation": {
+      "requests": 2320,
+      "connectionFailures": 0,
+      "stages": [
+        {
+          "concurrency": 1,
+          "requests": 80,
+          "statuses": {
+            "200": 80
+          },
+          "failures": [],
+          "p50Ms": 42.78,
+          "p95Ms": 70.61,
+          "maxMs": 172.5,
+          "requestsPerSecond": 21.54,
+          "recovered": true
+        },
+        {
+          "concurrency": 8,
+          "requests": 320,
+          "statuses": {
+            "200": 320
+          },
+          "failures": [],
+          "p50Ms": 139.97,
+          "p95Ms": 605.48,
+          "maxMs": 846.85,
+          "requestsPerSecond": 35.42,
+          "recovered": true
+        },
+        {
+          "concurrency": 16,
+          "requests": 320,
+          "statuses": {
+            "200": 320
+          },
+          "failures": [],
+          "p50Ms": 258.36,
+          "p95Ms": 1286.18,
+          "maxMs": 1479.99,
+          "requestsPerSecond": 35.75,
+          "recovered": true
+        },
+        {
+          "concurrency": 32,
+          "requests": 320,
+          "statuses": {
+            "200": 298,
+            "429": 22
+          },
+          "failures": [],
+          "p50Ms": 530.17,
+          "p95Ms": 2241.07,
+          "maxMs": 2522.51,
+          "requestsPerSecond": 39.5,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 189,
+            "429": 131
+          },
+          "failures": [],
+          "p50Ms": 808.08,
+          "p95Ms": 2300.48,
+          "maxMs": 2960.97,
+          "requestsPerSecond": 63.11,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 184,
+            "429": 136
+          },
+          "failures": [],
+          "p50Ms": 540.21,
+          "p95Ms": 1863.68,
+          "maxMs": 3115.32,
+          "requestsPerSecond": 77.36,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 196,
+            "429": 124
+          },
+          "failures": [],
+          "p50Ms": 850.62,
+          "p95Ms": 2103.46,
+          "maxMs": 2946.64,
+          "requestsPerSecond": 63.2,
+          "recovered": true
+        },
+        {
+          "concurrency": 64,
+          "requests": 320,
+          "statuses": {
+            "200": 196,
+            "429": 124
+          },
+          "failures": [],
+          "p50Ms": 587.6,
+          "p95Ms": 2013.07,
+          "maxMs": 2679.66,
+          "requestsPerSecond": 77.72,
+          "recovered": true
+        }
+      ]
+    },
+    "boundaries": [
+      {
+        "path": "/mcp",
+        "tools": 42
+      },
+      {
+        "path": "/mcp/core",
+        "tools": 13
+      },
+      {
+        "name": "malformed JSON",
+        "status": 400
+      },
+      {
+        "name": "oversized body",
+        "status": 413
+      },
+      {
+        "name": "invalid key",
+        "status": 401
+      },
+      {
+        "name": "negative offset",
+        "status": 400
+      },
+      {
+        "name": "duplicate query values",
+        "status": 400
+      },
+      {
+        "name": "file traversal",
+        "status": 404
+      },
+      {
+        "name": "invalid MCP GET",
+        "status": 405
+      },
+      {
+        "name": "SSRF and URL credentials",
+        "rejected": 4
+      },
+      {
+        "name": "16 held bodies",
+        "overflow": 429,
+        "retryAfter": "2",
+        "health": 200
+      },
+      {
+        "name": "Cancellation recovery",
+        "status": 200
+      }
+    ],
+    "limitation": "Local diagnostics, not production capacity or an SLA. Earlier and fresh stages used the same source."
+  },
+  "website": {
+    "maintainedSuites": "All three passed",
+    "widths": [
+      390,
+      1440,
+      1728
+    ],
+    "appearances": [
+      "light",
+      "dark"
+    ],
+    "axeViews": 36,
+    "axeViolations": 0,
+    "resources": {
+      "resources": 784,
+      "widths": [
+        390,
+        1440,
+        1728
+      ],
+      "sourceEquality": "pass",
+      "metadataAndNoScript": "pass",
+      "allFilters": "pass",
+      "searchReset": "pass",
+      "readerRetryAndDownload": "pass",
+      "isolatedPreview": "pass",
+      "focusReturn": "pass",
+      "errors": []
+    },
+    "themes": 31,
+    "detailedEvidenceReused": {
+      "sourceMatched": true,
+      "resourceStates": 36,
+      "resourceCopyPanels": 12,
+      "showcaseStates": 30,
+      "showcaseCopyPanels": 24,
+      "criticalOrSeriousSpacing": 0
+    },
+    "expectedMcpUrl": "http://localhost:3000/mcp"
+  },
+  "benchmark": {
+    "check": "passed",
+    "measurement": "compact JSON UTF-8 wire bytes; not model tokens or client traces",
+    "warmGuidanceP95Ms": 0.35,
+    "warmCatalogP95Ms": 2.84
+  },
+  "packaging": {
+    "inventory": "passed",
+    "files": 9622,
+    "licenses": "present",
+    "privateState": "excluded",
+    "cleanConsumerInstall": "unverified: registry network blocked",
+    "publication": "deferred"
+  },
+  "dependencies": {
+    "initialAuditReportedVulnerabilities": 0,
+    "freshConfirmation": "unverified: npm advisory endpoint blocked for both repositories"
+  },
+  "findings": [
+    {
+      "id": 1,
+      "priority": "must fix",
+      "title": "Config failure responses omit isError",
+      "reproduced": true,
+      "locations": [
+        "vendor/upstream/src/mcp/tools/design-config-tools.ts:129",
+        "vendor/upstream/src/mcp/tools/design-config-tools.ts:172",
+        "vendor/upstream/src/mcp/tools/design-config-tools.ts:186",
+        "src/mcp.ts:200"
+      ]
+    },
+    {
+      "id": 2,
+      "priority": "investigate",
+      "title": "Intermittent connection resets during earlier concurrency-64 bursts",
+      "initialFailures": 9,
+      "freshFailures": 0,
+      "cause": "unestablished",
+      "location": "src/app.ts:37"
+    },
+    {
+      "id": 3,
+      "priority": "should fix",
+      "title": "Config overwrite metadata says destructiveHint false",
+      "reproduced": true,
+      "location": "src/mcp.ts:234"
+    },
+    {
+      "id": 4,
+      "priority": "should fix",
+      "title": "Old website verifier expects superseded typography/default/footer",
+      "evidence": ".work/stress-2026-11-16/website.log",
+      "location": "scripts/verify-website.mjs:175"
+    },
+    {
+      "id": 5,
+      "priority": "should fix",
+      "title": "References contradict later hosted/Docker/theme evidence; local review instructions omit expected endpoint setting",
+      "locations": [
+        "docs/API.md:3",
+        "docs/RELEASE-VERIFICATION.md",
+        "../eidova-website/README.md:37",
+        "../eidova-website/README.md:58",
+        "../eidova-website/README.md:69",
+        "../eidova-website/scripts/review-redesign.mjs:81"
+      ]
+    }
+  ],
+  "notChecked": [
+    "Fresh remote heads/CI and direct production HTTP",
+    "Production WAF load",
+    "Fresh dependency advisories and clean consumer installs",
+    "Other browser engines and human screen-reader walkthrough",
+    "Live native Studio",
+    "Local Docker",
+    "Real Vercel Blob concurrency",
+    "Paid models or execution of all bundled upstream resources",
+    "Named-client five-minute workflows and model token traces",
+    "Trusted dashboard captures: unavailable"
+  ],
+  "evidence": [
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/http-stress.log",
+      "sha256": "994a2d953c7c1a586b879ca19d26bfcdc87f8f1e23931cb2a8dc5169c33d0cd7"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/http-overload-repeat.json",
+      "sha256": "151acf54029691636e3e6ff66c5236f871f6725f9eb4e56af9990421ab307848"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/http-close-control.json",
+      "sha256": "def710be787929fe1a8528ff4f2fbfdc7548055e4327e401756e3d591f060bf6"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/fresh-native-tests.log",
+      "sha256": "147f9556f7efbaff33a55c5c6104457568372b6af23d198618c4604d288fa181"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/resources/summary.json",
+      "sha256": "fb945e960c818897e783771052ff1fe43931bfcd3900e9d26dba910f755ecd09"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16/showcase/summary.json",
+      "sha256": "9ddc9887082b439c8abc687d8f34e9bc8e9bdcf576a6bfd63c74ddd2724e315e"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/tool-contracts.json",
+      "sha256": "2b365d6faf901b12c07e6c23647263f6a07848c28cb863a2861be261e4d139b7"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/config-contracts.json",
+      "sha256": "16a817b5b9a0b9ed8e5a8b4cb167edea560d35a5a56667b516c2df3b8f7f1fd4"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/http-stress.json",
+      "sha256": "18577757f07c4158f725821c8d9cd4728351552898b68db0c60cf726c27afb28"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/http-overload-repeat.json",
+      "sha256": "7780e8578caae79732934998171fbbf0754db0414c207b5b9c49c49606f1a28b"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/http-close-control.json",
+      "sha256": "070e5639fc212e9da9cbda2b7a9245fa66352f5fea34dbadb1cc24edf21321d1"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/benchmark.json",
+      "sha256": "a4b12dd5687af93ce7dbeb7853a5df40b8c35f163547a37723863d09f605cb7e"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/package-files.json",
+      "sha256": "863edd60d639c92e8422e8a1ee16e94c8d25cc1f242d9cbfc781e0ed8f0a6d91"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/dependency-audit.json",
+      "sha256": "4e137f4010df43861afd4b37cc1bcce655b2b16a9636e853ce4e43d748f5aaaa"
+    },
+    {
+      "repository": "mcp",
+      "path": ".work/stress-2026-11-16-confirmation/build.log",
+      "sha256": "fa8750d60df1474fee79f56c3de43a50d84207ed2f24439f8d9ae2ac1139f95a"
+    },
+    {
+      "repository": "website",
+      "path": ".work/stress-2026-11-16-confirmation/build.log",
+      "sha256": "13026a0fdce2d946e1298e74182f86ea6aeabfb4f70fa96120c430c3532d50ab"
+    },
+    {
+      "repository": "website",
+      "path": ".work/stress-2026-11-16-confirmation/dependency-audit.json",
+      "sha256": "641d4322e60731e395c2e6f28bec5383c6a65ba1dfae841a4eb9a33f7f67852e"
+    },
+    {
+      "repository": "website",
+      "path": ".work/stress-2026-11-16-confirmation/redesign-confirmed.log",
+      "sha256": "c9d2a0d3604aa4ebb56163946d8f5636d53216efdf740c4ddb4a4261f7537180"
+    },
+    {
+      "repository": "website",
+      "path": ".work/stress-2026-11-16-confirmation/resources.log",
+      "sha256": "751654f963b067b093245bbb52c63f198bd3ffa3169c33cfb6719a2e05ea5242"
+    },
+    {
+      "repository": "website",
+      "path": ".work/stress-2026-11-16-confirmation/themes.log",
+      "sha256": "d92ebd480e804e323a03a0de7ac3c2875bc5dab15e259350aef55ef726f25a75"
+    },
+    {
+      "repository": "website",
+      "path": ".work/redesign-1311/accessibility.json",
+      "sha256": "56f421649c8baca395719658ea4b94a239db52950071f0dd2f64fa63c78609e0"
+    }
+  ]
+}

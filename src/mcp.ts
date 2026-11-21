@@ -231,7 +231,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
   for(const [name,tool] of Object.entries(handles)) {
     const changes:Record<string,unknown>={description:privateArchive&&/inspiration|guide|principle|get-design-system-kit/.test(name)?tool.description:toolDescriptions[name]??tool.description};
     const mutates=['create-design-system','set-design-config','set-team-rules'].includes(name);
-    changes.annotations={readOnlyHint:!mutates,destructiveHint:name==='set-team-rules',idempotentHint:name!=='create-design-system',openWorldHint:name==='extract-from-url'};
+    changes.annotations={readOnlyHint:!mutates,destructiveHint:['set-team-rules','set-design-config'].includes(name),idempotentHint:name!=='create-design-system',openWorldHint:name==='extract-from-url'};
     // Drop verbose parameter metadata without changing types, bounds or defaults.
     if(tool.inputSchema) changes.paramsSchema=Object.fromEntries(Object.entries(tool.inputSchema.shape).map(([key,value])=>[key,conciseSchema(value as z.ZodType)]));
     if(tool.outputSchema) changes.outputSchema=Object.fromEntries(Object.entries(tool.outputSchema.shape).map(([key,value])=>[key,conciseSchema(value as z.ZodType)]));

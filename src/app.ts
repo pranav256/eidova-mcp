@@ -38,8 +38,8 @@ app.use((req,res,next)=> {
 });
 app.use((req,res,next)=> {
   if(!mcpPaths.includes(req.path)&&req.path!=='/api/v1/brand-extract/from-url'){next();return;}
-  // This process cap bounds memory; deployment-wide rate limits belong at the host.
-  if(inFlight>=16){res.setHeader('Retry-After','2');res.status(429).json({error:'Server is busy. Retry in two seconds; nothing was changed.'});return;}
+  // This is a process memory cap, not a global rate limit; retire rejected connections after the retry response.
+  if(inFlight>=16){res.setHeader('Retry-After','2');res.setHeader('Connection','close');res.status(429).json({error:'Server is busy. Retry in two seconds; nothing was changed.'});return;}
   inFlight++;res.once('close',()=>{inFlight--;});next();
 });
 app.use(express.json({limit:'4mb',strict:true,verify:(_req,res,buffer)=>{(res as Response).locals.requestBytes=buffer.byteLength;}}));

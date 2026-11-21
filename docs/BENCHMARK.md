@@ -1,5 +1,7 @@
 # Context and latency benchmark
 
+21 November 2026 revalidation on Node 24.20.0/Windows measured full public discovery at **54,065 UTF-8 bytes**, owner discovery at **55,073 bytes**, core at **21,800 bytes** and initialization instructions at **364 bytes**. All workflow and size budgets pass. Warm catalog/guidance p95 were **2.46/0.75 ms** on this local run. The updated receipt is recorded under `revalidation` in [stress-fixes-2026-11-16.json](stress-fixes-2026-11-16.json); the earlier measurements below retain their original scope.
+
 The SDK `InMemoryTransport` benchmark compares original discovery/handlers with the candidate. It measures anonymous/owner discovery, initialization, representative calls, cold/warm latency and six workflows: choose/install, preserve a brand, review a form, supplied spacing, owner rules and invalid input. Five public workflows also run through core using plain tools without resources/prompts or deferred discovery.
 
 | Compact JSON UTF-8 bytes | Baseline | Candidate |

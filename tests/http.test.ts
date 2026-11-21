@@ -78,6 +78,12 @@ test('process concurrency is bounded before reading bodies and released after ca
     }
     const busy=await fetch(origin+'/api/v1/brand-extract/from-url?url=https://example.com');assert.equal(busy.status,429);assert.equal(busy.headers.get('retry-after'),'2');assert.equal(busy.headers.get('cache-control'),'no-store');
     assert.match(await busy.text(),/nothing was changed/);
+    const bursts=await Promise.all(Array.from({length:32},()=>fetch(origin+'/mcp/core',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})));
+    for(const response of bursts) {
+      assert.equal(response.status,429);assert.equal(response.headers.get('retry-after'),'2');
+      assert.equal(response.headers.get('connection'),'close');assert.match(await response.text(),/nothing was changed/);
+    }
+    assert.equal((await fetch(origin+'/health')).status,200);
     const released=held.map(({response})=>once(response,'close'));for(const entry of held)entry.client.destroy();await Promise.all(released);
     const available=await fetch(origin+'/mcp/core',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})});assert.equal(available.status,200);await available.text();
   } finally {for(const entry of held)entry.client.destroy();await new Promise<void>((resolve,reject)=>listener.close(error=>error?reject(error):resolve()));}

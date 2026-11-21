@@ -1,8 +1,81 @@
 # Release verification
 
+## Audit completion - 21 November 2026
+
+The remaining 16 November audit fixes are ready for API-first release on top of branded MCP b96c576 and website a946828. Config read/write failures return the MCP error flag, overwrites retain destructive metadata, overload responses retire rejected connections after readable 429/Retry-After responses, and inset corners outside the parent curve no longer cause false spacing failures. Regression tests preserve owner isolation and genuine corner failures. The verifier matches the approved Newsreader/system appearance, full setup, current footer and theme behavior. No website component or styling changes were needed.
+
+Fresh Node 24 checks pass: all **131 standard MCP tests**, upstream regeneration, both builds/typechecks, stdio, clean tarball installation/recovery, all 42 representative tool contracts, disposable private-state isolation, benchmark gates and zero known production dependency advisories in both repositories. The repaired rendered verifier passes at **390/1440/1728 px in both appearances**, with zero critical/serious spacing findings, zero failed copy panels (62 checked), no sampled contrast failures and no page errors. Local mixed HTTP stress plus repeated concurrency-64 stages completed **2,000 requests with zero connection failures**, expected readable 429 responses and recovery. This is local mitigation evidence, not a production load guarantee or proof of the original reset's cause.
+
+The revalidation section of [stress-fixes-2026-11-16.json](stress-fixes-2026-11-16.json) binds current source and fresh evidence hashes. Original 16 November results below and both receipts retain their dated scope. The earlier branded release is live on both branded and compatibility aliases; these audit fixes require their own signed push and hosted verification. npm/Registry publication and optional native/live-generation acceptance remain deferred.
+
+## Audit fixes - 16 November 2026
+
+The follow-up fixes config failure flags (finding 1), config overwrite metadata (3), the stale website verifier (4), and contradictory API/website/Docker references (5). Missing-project and denied owner/anonymous config writes now return `isError: true`; successful reads/writes still succeed and rejected writes preserve saved values. The recovered runtime was regenerated from its source.
+
+For burst traffic (2), overload responses now send `Connection: close` with HTTP 429 and `Retry-After: 2`, retiring rejected connections after their response. Thirty-two simultaneous overflow requests return readable retry responses, health stays available, and cancellation restores capacity. The post-change 2,000-request run and concurrency-64 repeats have zero connection failures. This mitigates reuse of overloaded connections; the earlier resets' exact cause and production behavior remain unconfirmed.
+
+The repaired verifier retains its existing behavior coverage and now matches Newsreader/system appearance, full-profile setup, the current footer, applied themes and sibling checkout. Its complete rendered review passes at 390, 1440 and 1728 px in both appearances: no critical/serious spacing findings, failed copy panels, sampled contrast failures or page errors. That rerun also exposed and fixed a nested-radius checker false positive: a child outside the parent's corner curve can keep its own radius. The new regression fails before the fix and passes afterward while retaining real square-corner failures inside the curve. No website styling or component source changed.
+
+MCP build/typecheck, website typecheck, all 42 representative tool contracts, full/core/owner profiles, built stdio, owner-isolation smoke and benchmark assertions pass. The service suite passes **129 of 130 tests** using the native TypeScript resolver; the optional native-bridge child-launch test still times out because `tsx` cannot initialize for the sandbox account. A clean canonical `npm test`, fresh npm advisories/consumer installs, remote CI and production checks remain unavailable here.
+
+[stress-fixes-2026-11-16.json](stress-fixes-2026-11-16.json) binds the changed source and retained evidence under `.work/fixes-2026-11-16/`. These are local working changes, not a deployment or publication. The audit below and its original receipt describe the pre-fix source and preserve the intermittent failure evidence.
+
+## Stress and claim audit - 16 November 2026
+
+What this repo does: Eidova serves design guidance, component source and reviews through MCP, with a public website for setup, themes and resources. This audit assumed concurrent public read traffic and isolated owner writes. It exercised the local Windows/Node 24 build at 1, 8, 16, 32 and 64 concurrent requests; it did not load-test production.
+
+Reviewed MCP `eb2c6fab736ee5d2bb6246782f2fa402a155da08` and website `e906664e27f1c9c6ac6a80277aafb9a48f858e0d`. The existing README wording edit was preserved. No application code, dependencies, deployments or published packages changed. [Compact receipt](stress-test-2026-11-16.json) records source hashes, results and local evidence paths. This dated audit takes precedence over older claims below for its tested scope.
+
+An independent confirmation later the same day rebuilt both projects, exercised all 42 tools, reproduced the config error/annotation defects and passed 127 of 128 backend tests; one optional native-bridge child test timed out. Its 2,320 additional mixed HTTP requests, including three concurrency-64 stages with connection reuse and a connection-close control, completed without connection failures. Earlier resets remain an intermittent finding, not a reproduced failure in this confirmation. Fresh npm advisory queries and GitHub fetches were blocked. The receipt distinguishes the two runs and binds their retained evidence; confirmation logs are under `.work/stress-2026-11-16-confirmation/`.
+
+### Must fix
+
+1. **Failed config calls lack the MCP error flag.** These tools read or save a custom theme's values. Both tools return HTTP-404 failure text for a nonexistent project without `isError: true`; a different owner's attempted write similarly returns `Could not write the design config (HTTP 422).` without the flag. The existing value remained unchanged, so this is error reporting, not an ownership bypass. The connected hosted full MCP reproduced the missing-project read behavior. Failure branches in `vendor/upstream/src/mcp/tools/design-config-tools.ts:129` and `:172` use the success-shaped `textResult`; `src/mcp.ts:200` leaves unstructured results unchanged. Fix those error returns and add assertions for missing projects and denied writes. Otherwise clients that rely on the protocol flag can treat an unsuccessful save as successful.
+
+2. **Earlier burst traffic sometimes reset connections instead of delivering a response.** The first 320-request stage at concurrency 64 produced four connection failures. Two 320-request repeat stages produced four and one `ECONNRESET` errors, respectively, while the server stayed alive and accepted recovery calls. The preceding concurrency-32 stage completed with 296 HTTP 200s and 24 HTTP 429s. A concurrency-64 control using `Connection: close` completed with 196 HTTP 200s, 124 HTTP 429s and no connection errors. The later confirmation completed the same workload and repeats without connection errors. Connection reuse is implicated by the earlier control; the exact server/client cause is not established. Investigate the early admission response in `src/app.ts:37` together with Node/Undici connection reuse, then retain a regression for readable overload responses and recovery. Until resolved, callers may receive transport failures without the documented `Retry-After` guidance. No production outage or write loss was observed.
+
+### Should fix
+
+3. **Config writes advertise that they are non-destructive.** `set-design-config` merges over existing values, including replacing a previously saved color, but live local discovery says `destructiveHint: false`. The blanket annotation assignment in `src/mcp.ts:234` overrides the original handler's explicit `true`. Include this tool in the destructive annotation or preserve its original annotation. Otherwise a client sees inaccurate metadata when deciding how to handle a saved-value overwrite; ownership checks still work.
+
+4. **The older main website verifier rejects the current approved design.** `scripts/verify-website.mjs:175` fails on the real Newsreader heading because it requires Inter. It also assumes a light default despite a dark system context (`:176`) and a GitHub client-guide footer destination (`:56`) instead of `/docs`. Align these assertions with the current `DESIGN.md`, or retire the duplicate verifier after carrying over any unique behavior checks. The three maintained website suites pass; leaving this script stale makes the documented reproduction command fail and prevents its later checks from running.
+
+5. **Maintained references contradict their own later release evidence.** `docs/API.md:3` and website `README.md:58` still say hosted core needs deployment. The acceptance-boundaries paragraph below says Docker runtime checks have not completed, while the preceding 15 November entry records successful Docker CI. The paragraphs labeled current also name older commits without qualifying their date. Website `README.md:37` says saved palette choices are ignored and `:69` says theme selection does not apply tokens; `src/theme.ts:13` reads saved `eidova-page-theme` and `:43` applies the selected palette. Local build/review instructions also omit `WEBSITE_EXPECTED_MCP_URL`, which the maintained redesign script reads at line 81; leaving its hosted default while building with a local endpoint produces a false setup failure. Date release claims, distinguish local Docker absence from remote CI, describe the working navbar palette separately from isolated specimens, and include the expected endpoint setting. Otherwise readers and local reviewers receive contradictory instructions. Fresh remote Git heads and CI status could not be checked in this sandbox.
+
+### Passing checks and measured limits
+
+| Check | Fresh result |
+| --- | --- |
+| MCP TypeScript/build; website production build including TypeScript | Passed |
+| Production dependency audits | Earlier audit reported zero known vulnerabilities; later confirmation could not query npm's advisory endpoint |
+| Existing service tests | 127 distinct tests passed using a temporary native TypeScript resolver; one optional native-bridge child-launch test remained blocked by `tsx` account lookup |
+| Catalog and bundled files | 31 themes, 8 families, 784 advertised entries, 137 legacy entries; all 7,188 referenced file records passed existing hash/read checks |
+| Public tools | All 42 invoked with representative inputs; expected incomplete-evidence/private-access rejections checked; the two config error-flag failures above remain |
+| Full/core/owner profiles and built stdio | 42 / 13 / 43 tools; standalone stdio, profile calls and invalid-input recovery passed |
+| Disposable private-state smoke | Rules persist across clients; project rules and config writes are owner-isolated; rejected writes preserve saved values |
+| HTTP boundaries | Invalid JSON 400; oversized body 413; invalid key 401; bad query values 400; traversal 404; MCP GET 405; private/credentialed URL extraction refused |
+| Admission/cancellation | Sixteen held bodies cause 429 with `Retry-After: 2`; health remains 200; cancellation frees the slots |
+| Benchmark | All byte-reduction/budget assertions passed again; confirmation in-memory warm p95: guidance 0.35 ms, catalog 2.84 ms |
+| Current website suites | `test:redesign`, `test:resources`, `test:page-themes` all passed; 36 route/appearance/width views, all 784 resources and all 31 themes covered |
+| Detailed resource/showcase review | 36 resource states with 12 passing copy panels; 30 showcase states with 24 passing panels; no critical/serious spacing findings, sampled contrast failures or page errors |
+| Rendered evidence | 390, 1440 and 1728 px, both appearances; mobile/desktop home captures also visually inspected |
+| Packaging | Tarball file/license/private-state exclusion assertions passed before clean installation was blocked by registry access |
+
+The first mixed HTTP run completed 1,360 requests. At concurrency 1/8/16/32, p95 was 504/2,826/4,508/8,955 ms; these are real HTTP timings, not the in-memory benchmark above. There were 2,320 mixed requests including the repeats and connection-close control. The nine connection failures occurred in the 960 concurrency-64 requests using connection reuse. Early stages shared the machine with browser/package checks, so these measurements are diagnostics, not production capacity or an SLA. The server was not observed crashing.
+
+The confirmation's full HTTP run completed 1,360 requests with p95 of 71/605/1,286/2,241/2,300 ms at concurrency 1/8/16/32/64. Its two additional concurrency-64 stages and connection-close control brought confirmation traffic to 2,320 requests with zero transport failures. Successful responses and expected 429 overload responses are counted separately in the receipt. Timing variation between runs reinforces the measurement limit above.
+
+Reproduction evidence and bounded harnesses are retained under `.work/stress-2026-11-16/` in each checkout. From MCP, `node .work/stress-2026-11-16/http-stress.mjs` starts and stops its own disposable server on port 3001; `--repeat-overload` repeats the 64-client stages and `--close` runs the connection-close control. `tool-contracts.mjs` targets the disposable service on port 3000 and intentionally fails on the two remaining config contract defects. These ignored harnesses are audit evidence, not shipped features.
+
+For website confirmation, use `REVIEW_URL=http://127.0.0.1:5512` and `WEBSITE_EXPECTED_MCP_URL=http://localhost:3000/mcp` to match the local production build. All three maintained suites pass with that contract. The disposable private-state smoke and built stdio pass again; package inventory confirms all bundled files and required licenses while excluding private state. Clean consumer installation remains unverified here.
+
+Verdict: the documented catalog, source delivery and main website behaviors largely hold. Fix the protocol error flags and investigate burst connection resets before claiming the stress pass is clean; reconcile the metadata, verifier and documentation findings.
+
+Not checked: a clean canonical `npm test` run (`tsx` fails before execution with `uv_os_get_passwd`/`ENOMEM` for the sandbox account), the remaining optional bridge child test, fresh package installation/consumer builds and dependency advisories (npm network requests blocked), fresh remote heads/CI, direct production HTTP or WAF load, other browser engines, live native Studio, Docker execution on this machine, real Vercel Blob races, paid generation and host token/timing studies. The connected full MCP did answer capability and missing-project reads during the earlier audit; new hosted calls, direct website/API probes and GitHub fetches were blocked in the confirmation. No trusted dashboard visual receipt, accessibility certification or exhaustive resource-script execution is claimed.
+
 Current evidence reconciled on 15 November 2026. This reference preserves completed checks from the consolidated handoffs. npm/Registry publication and its remaining client acceptance were deferred by the user; their prerequisites remain in [DEPLOYMENT.md](DEPLOYMENT.md) and [CLIENTS.md](CLIENTS.md). Historical sections describe their dated revisions.
 
-## Current source and hosted state
+## Hosted state last verified - 15 November 2026
 
 - Signed MCP commit **9b23c02** and website commit **4ab5743** are on their remote default branches. Both production deployments are Ready. MCP CI [passed on the exact commit](https://github.com/pranav256/eidova-mcp/actions/runs/43691196675); website CI passed on 4ab5743.
 - The public API reports **0.2.0**. Full [`/mcp`](https://open-design-mcp-liard.vercel.app/mcp) has **42** public tools; optional `/mcp/core` has **13**. Fresh hosted discovery and read-only tool/source smokes pass on both profiles. Existing connections need reconnection to refresh discovery.
@@ -23,7 +96,7 @@ The user confirmed MCP/website-only scope; native Studio production is optional 
 
 ## Acceptance boundaries
 
-Named-client five-minute workflows/context traces, Docker runtime checks (Docker is absent), npm/Registry publication, persistent Studio HTTPS hosting and the live native acceptance in [STUDIO-PARITY.md](STUDIO-PARITY.md) have not been completed. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
+Named-client five-minute workflows/context traces, npm/Registry publication, persistent Studio HTTPS hosting and the live native acceptance in [STUDIO-PARITY.md](STUDIO-PARITY.md) have not been completed. Docker image/runtime full/core/private smokes passed remote CI as recorded above; Docker remains absent on this local machine. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
 
 Explicitly deferred work stays deferred: the optional two-family playground, trusted dashboard capture worker, public native/Shopify install kits, proprietary inspiration, hosted AI generation and account administration. Personal resource Keep/Skip choices remain the user's optional decisions. The deterministic public web core needs no model provider.
 

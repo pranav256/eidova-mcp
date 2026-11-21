@@ -2,6 +2,18 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {inspectSpacing} from '../vendor/upstream/runtime.mjs';
 
+test('independent inset corners do not need to follow the outer radius',()=>{
+  const snapshot=(inset:number,childRadius:number)=>{
+    const outer={horizontal:12,vertical:12},inner={horizontal:childRadius,vertical:childRadius};
+    return {name:'Inset component preview',viewport:{width:390,height:844},elements:[
+      {id:'dialog',rect:{x:24,y:80,width:320,height:200},style:{padding:{top:inset,right:inset,bottom:inset,left:inset},borderRadius:{topLeft:outer,topRight:outer,bottomLeft:outer,bottomRight:outer},backgroundColor:'rgb(255,255,255)'}},
+      {id:'preview',tag:'iframe',parentId:'dialog',rect:{x:24+inset,y:160,width:320-2*inset,height:120-inset},style:{borderRadius:{topLeft:inner,topRight:inner,bottomLeft:inner,bottomRight:inner},backgroundColor:'rgb(240,240,240)'}},
+    ]};
+  };
+  for(const inset of [12,13,14])assert.ok(!inspectSpacing({states:[snapshot(inset,8)]}).findings.some(f=>f.ruleId==='spacing/non-concentric-radius'),`Inset ${inset} clears the outer curve`);
+  assert.ok(inspectSpacing({states:[snapshot(4,0)]}).findings.some(f=>f.ruleId==='spacing/non-concentric-radius'),'A visible square corner inside the outer curve still fails');
+});
+
 test('spacing corpus distinguishes scroll clipping from exposed square corners and real lost content',()=>{
   const rounded={horizontal:10,vertical:10},square={horizontal:0,vertical:0};
   const state={name:'Rounded table',viewport:{width:390,height:844},elements:[

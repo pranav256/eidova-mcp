@@ -1,11 +1,11 @@
-# Public API — 0.2.0 candidate
+# Public API — 0.2.0
 
-These routes describe the local candidate. The existing hosted `/mcp` is the previous release; hosted core and new component previews require the coordinated [release](DEPLOYMENT.md).
+These routes describe the 0.2.0 API. The last verified hosted release serves the full 42-tool `/mcp` profile, the 13-tool `/mcp/core` profile and component previews. See [release evidence](RELEASE-VERIFICATION.md) for dates and local changes awaiting deployment, and [deployment](DEPLOYMENT.md) for coordinated promotion.
 
 | Route | Method | Result |
 | --- | --- | --- |
 | `/` | GET | Service metadata and website/repository links |
-| `/health` | GET | Health and candidate version |
+| `/health` | GET | Health and API version |
 | `/mcp`, `/api/mcp` | POST | Full MCP, stateless Streamable HTTP |
 | `/mcp/core`, `/api/mcp/core` | POST | Core MCP, 13 typed read-only tools |
 | `/api/catalog` | GET | All 31 compatible IDs with family/variant metadata |

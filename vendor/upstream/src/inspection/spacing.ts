@@ -281,8 +281,9 @@ function radiusMismatch(
     const horizontalInset = insets[horizontal];
     if (Math.max(parentRadius.horizontal, parentRadius.vertical) <= tolerance) continue;
     if (verticalInset < -tolerance || horizontalInset < -tolerance) continue;
-    if (verticalInset > parentRadius.vertical + tolerance
-      || horizontalInset > parentRadius.horizontal + tolerance) continue;
+    // A child beyond the outer curve can have its own independent corner.
+    if (verticalInset >= parentRadius.vertical
+      || horizontalInset >= parentRadius.horizontal) continue;
     if (Math.abs(verticalInset - horizontalInset) > tolerance) continue;
     const expected = normalizedExpected[corner];
     const delta = {

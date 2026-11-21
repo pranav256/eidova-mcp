@@ -57,8 +57,9 @@ export function registerDesignConfigTools({
     return { Authorization: `Bearer ${bearer}` };
   };
 
-  const textResult = (text: string) => ({
+  const textResult = (text: string, isError = false) => ({
     content: [{ type: "text" as const, text }],
+    isError,
   });
 
   /** Resolve a project to its preview fragment (where the tunable config lives). */
@@ -126,12 +127,12 @@ export function registerDesignConfigTools({
     async ({ projectId, context }) =>
       tracked("get-design-config", { projectId, context }, async () => {
         const resolved = await resolveFragmentId(projectId);
-        if ("error" in resolved) return textResult(resolved.error);
+        if ("error" in resolved) return textResult(resolved.error, true);
         const configUrl = `${APP_BASE_URL}/api/fragments/${resolved.fragmentId}/config`;
         try {
           const res = await apiFetch(configUrl, { headers: authHeaders() });
           if (!res.ok) {
-            return textResult(`Could not read the design config (HTTP ${res.status}).`);
+            return textResult(`Could not read the design config (HTTP ${res.status}).`, true);
           }
           // SAFETY: the JSON contract of this payload; the producing side owns the shape.
           const config = (await res.json()) as unknown;
@@ -139,7 +140,7 @@ export function registerDesignConfigTools({
             configMd("Design config", config, resolved.project, projectId),
           );
         } catch (err) {
-          return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`);
+          return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`, true);
         }
       }),
   );
@@ -169,7 +170,7 @@ export function registerDesignConfigTools({
     async ({ projectId, config, context }) =>
       tracked("set-design-config", { projectId, context }, async () => {
         const resolved = await resolveFragmentId(projectId);
-        if ("error" in resolved) return textResult(resolved.error);
+        if ("error" in resolved) return textResult(resolved.error, true);
         const configUrl = `${APP_BASE_URL}/api/fragments/${resolved.fragmentId}/config`;
         try {
           const res = await apiFetch(configUrl, {
@@ -180,10 +181,11 @@ export function registerDesignConfigTools({
           if (res.status === 404) {
             return textResult(
               `Could not write the design config: the project was not found or is not yours. Only the project's owner can change its config. Check the project id, or pass the API key that created it.`,
+              true,
             );
           }
           if (!res.ok) {
-            return textResult(`Could not write the design config (HTTP ${res.status}).`);
+            return textResult(`Could not write the design config (HTTP ${res.status}).`, true);
           }
           // SAFETY: the JSON contract of this payload; the producing side owns the shape.
           const updated = (await res.json()) as { config?: unknown };
@@ -191,7 +193,7 @@ export function registerDesignConfigTools({
             configMd("Design config updated", updated.config, resolved.project, projectId),
           );
         } catch (err) {
-          return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`);
+          return textResult(`Network error calling ${configUrl}: ${err instanceof Error ? err.message : String(err)}`, true);
         }
       }),
   );

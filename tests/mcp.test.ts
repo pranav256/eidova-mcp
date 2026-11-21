@@ -123,3 +123,36 @@ test('project writes are owner-isolated, durable and reject CSS injection',async
     await rm(directory,{recursive:true,force:true});
   }
 });
+
+test('config tool failures are errors and overwrites retain their annotation',async()=> {
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-config-mcp-'));
+  const store=new LocalFileStore(directory);
+  const connections=[];
+  try {
+    for(const owner of ['alice','bob',undefined]) {
+      const server=createServer(store,owner);const client=new Client({name:'config-test',version:'1'});
+      connections.push({server,client});
+      const [a,b]=InMemoryTransport.createLinkedPair();await server.connect(b);await client.connect(a);
+    }
+    const [alice,bob,anonymous]=connections;
+    const tool=(await alice.client.listTools()).tools.find(tool=>tool.name==='set-design-config')!;
+    assert.equal(tool.annotations?.destructiveHint,true);assert.equal(tool.annotations?.readOnlyHint,false);
+    const missing='00000000-0000-0000-0000-000000000000';
+    for(const name of ['get-design-config','set-design-config']) {
+      const result=await anonymous.client.callTool({name,arguments:{projectId:missing,...(name==='set-design-config'?{config:{radius:'12px'}}:{})}});
+      assert.equal(result.isError,true,name);assert.match(JSON.stringify(result),/HTTP 404/);
+    }
+    const project=await new Projects(store,'alice').create({value:'Config protocol test',designSystemId:'minimal-light'});
+    const save=await alice.client.callTool({name:'set-design-config',arguments:{projectId:project.id,config:{colors:{primary:'#123456'}}}});
+    assert.equal(save.isError,false);
+    for(const client of [bob.client,anonymous.client]) {
+      const denied=await client.callTool({name:'set-design-config',arguments:{projectId:project.id,config:{colors:{primary:'#ffffff'}}}});
+      assert.equal(denied.isError,true);assert.match(JSON.stringify(denied),/Could not write/);
+    }
+    const read=await alice.client.callTool({name:'get-design-config',arguments:{projectId:project.id}});
+    assert.equal(read.isError,false);assert.match(JSON.stringify(read),/#123456/);
+  } finally {
+    for(const {server,client} of connections){await client.close();await server.close();}
+    assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});
+  }
+});
