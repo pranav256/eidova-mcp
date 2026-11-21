@@ -34,3 +34,24 @@ public HTTP, and the unpublished npm package must not be presented as an availab
 Reconnect and check discovery: full has 42 public tools, core has 13. A core connection
 cannot call full-only tools. Review results are limited to supplied evidence; the
 public server does not run projects or provide trusted dashboard captures.
+
+## Local review commands
+
+The installed `eidova-mcp` CLI includes three local project helpers. They read the
+files you explicitly name and write JSON reports. They do not upload source or
+modify the project.
+
+```sh
+eidova-mcp review-browser http://127.0.0.1:5173 --output .work/eidova-review
+eidova-mcp preview-install minimal-light .work/project-inventory.json button input
+eidova-mcp diff-tokens before.css after.css
+```
+
+`review-browser` checks a loopback preview at 390, 1440 and 1728 pixels in light
+and dark color schemes. It saves screenshots and reports overflow, automated
+accessibility violations, page errors and critical or serious spacing findings.
+The project inventory for `preview-install` is JSON with `files`, `paths.ui`,
+`paths.lib`, `paths.css`, `paths.utils`, and optional dependency and registry maps.
+It reports new files, existing-file conflicts, missing package dependencies and
+unresolved registry dependencies. `diff-tokens` accepts two CSS files or two
+DTCG JSON exports and reports added, removed and changed tokens by mode.

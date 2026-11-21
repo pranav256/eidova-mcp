@@ -32583,6 +32583,7 @@ ${skipped.map((line) => `- ${line}`).join("\n")}` : report;
   );
 }
 export {
+  SPACING_CAPTURE_SCRIPT,
   VIDEO_COMPONENT_CATALOG,
   VIDEO_COMPONENT_FILES,
   createMcpServer,

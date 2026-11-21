@@ -32,6 +32,8 @@ Stdio defaults to full. `--help` and `--version` print CLI information; `doctor`
 
 For project instructions and downloadable client configs, see [Agent setup](docs/AGENT-SETUP.md). Merge the public [AGENTS.md starter](https://eidova.vercel.app/AGENTS.md) into existing project guidance. The [llms.txt index](https://eidova.vercel.app/llms.txt) links the machine-readable entry points. Neither file connects a client by itself.
 
+The local CLI also provides `review-browser`, `preview-install` and `diff-tokens` for rendered preview checks, install conflict reports and CSS/DTCG token comparisons. See [Agent setup](docs/AGENT-SETUP.md) for input contracts and examples.
+
 - “Find a distinctive family for this settings screen. Preserve our existing design if present and retrieve only the components we need.”
 - “Extract this supplied brand CSS and extend the existing interface consistently.”
 - “Review this form's source and copy. Use rendered DOM evidence for spacing and give specific repairs.”

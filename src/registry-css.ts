@@ -3,6 +3,7 @@ export type TokenScopes = {light: Record<string, string>; dark: Record<string, s
 
 export function mergeCssRules(target: CssRules, incoming: CssRules): CssRules {
   for (const [key, value] of Object.entries(incoming)) {
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue;
     const current = target[key];
     target[key] = typeof value === 'string' ? value : mergeCssRules(typeof current === 'object' ? current : {}, value);
   }
@@ -18,8 +19,9 @@ export function mergeCssRules(target: CssRules, incoming: CssRules): CssRules {
 export function cssRules(source: string): CssRules {
   const css = source.replace(/\/\*[\s\S]*?\*\//g, '');
   let cursor = 0;
-  function block(): CssRules {
-    const rules: CssRules = {};
+  function block(nesting = 0): CssRules {
+    if (nesting > 64) throw new Error('CSS rules are nested too deeply.');
+    const rules: CssRules = Object.create(null);
     while (cursor < css.length) {
       while (/\s/.test(css[cursor] ?? '') && cursor < css.length) cursor++;
       if (css[cursor] === '}') { cursor++; break; }
@@ -41,8 +43,8 @@ export function cssRules(source: string): CssRules {
       const delimiter = css[cursor];
       if (delimiter === '{') {
         cursor++;
-        if (statement) mergeCssRules(rules, { [statement]: block() });
-        else block();
+        if (statement) mergeCssRules(rules, { [statement]: block(nesting + 1) });
+        else block(nesting + 1);
       } else {
         if (statement && !/^@(?:import|charset|custom-variant)\b/i.test(statement)) {
           if (statement.startsWith('@')) rules[statement] = {};

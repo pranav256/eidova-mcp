@@ -1,5 +1,11 @@
 # Release verification
 
+## Local agent workflows - 21 November 2026
+
+The CLI now includes three local helpers for coding-agent workflows. `review-browser` captures a loopback preview at 390, 1440 and 1728px in light and dark schemes, then reports axe violations, page errors, overflow and critical/serious spacing findings. `preview-install` reports kit files, existing-file conflicts, package dependencies, configured registries and unresolved registry dependencies from a project inventory. `diff-tokens` compares CSS or DTCG token exports by mode and reports additions, removals and changes. The helpers write JSON and keep project source local.
+
+Focused workflow tests pass for install planning and CSS token diffs. A live website preview passed all six browser-review states with no accessibility, overflow, page-error or serious-spacing findings. The full MCP suite passes **113 tests** after the Studio removal. Playwright is a runtime dependency because `review-browser` is an installed CLI command. The CLI does not download browser binaries.
+
 ## Studio removal - 21 November 2026
 
 At the user's request, the active product is MCP plus website only. Removed the team backend, SQLite stores, native bridge/authority/collaboration, stdio flags/tools, sync/transfer/backup commands, Railway configuration and their dedicated tests/docs. The build now has only HTTP and stdio entry points. Website Studio/shared routes, navigation, Docs link, showcase promotion, CSS, proxy settings, generated metadata and feature-map entries are removed. Private recovery data, licensed resource content and the core MCP capability-key scheme are untouched. Drizzle remains a runtime dependency of the bundled design schemas.

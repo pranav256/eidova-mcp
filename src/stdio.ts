@@ -2,9 +2,22 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { parseArgs } from 'node:util';
 import { resourcePath } from './resources.js';
-const {values,positionals}=parseArgs({options:{profile:{type:'string',default:'full'},help:{type:'boolean'},version:{type:'boolean'}},allowPositionals:true});
+const argv = process.argv.slice(2);
+const command = argv[0];
+const args = argv.slice(1);
+if (['review-browser', 'preview-install', 'diff-tokens'].includes(command)) {
+  try {
+    const {runLocalCommand} = await import('./local-commands.js');
+    const result = await runLocalCommand(command, args);
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+  } catch (error) {
+    process.stderr.write((error instanceof Error ? error.message : String(error)) + '\n');
+    process.exitCode = 1;
+  }
+} else {
+const {values,positionals}=parseArgs({args: argv, options:{profile:{type:'string',default:'full'},help:{type:'boolean'},version:{type:'boolean'}},allowPositionals:true});
 if(!['full','core'].includes(values.profile!)){process.stderr.write('Use --profile full or --profile core. Run --help for examples.\n');process.exit(1);}
-if(values.help){process.stdout.write('Eidova MCP\nUsage: eidova-mcp [--profile full|core]\n       eidova-mcp doctor | --version\nPublic catalog and reviews need no key.\n');process.exit(0);}
+if(values.help){process.stdout.write('Eidova MCP\nUsage: eidova-mcp [--profile full|core]\n       eidova-mcp doctor | --version\n       eidova-mcp review-browser <loopback-url> [--output <directory>] [--ready-selector <selector>]\n       eidova-mcp preview-install <theme> <inventory.json> <component>...\n       eidova-mcp diff-tokens <before.css|json> <after.css|json>\nPublic catalog and reviews need no key.\n');process.exit(0);}
 if(values.version){process.stdout.write('0.2.0\n');process.exit(0);}
 if(positionals[0]==='doctor'&&positionals.length===1){
   try{for(const asset of ['assets/registry','content/library.json','content/design-families.json','content/workflow.md'])resourcePath(asset);}
@@ -20,3 +33,4 @@ const archiveDirectory=process.env.EIDOVA_PRIVATE_ARCHIVE ?? process.env.OPEN_DE
 const archive=archiveDirectory ? await loadPrivateArchive(archiveDirectory) : undefined;
 const server=createServer(createStore(),workspaceId((process.env.EIDOVA_WORKSPACE_KEY ?? process.env.OPEN_DESIGN_WORKSPACE_KEY),true),archive,values.profile as 'core'|'full');
 await server.connect(new StdioServerTransport());
+}
