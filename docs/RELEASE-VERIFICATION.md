@@ -1,5 +1,13 @@
 # Release verification
 
+## Studio removal - 21 November 2026
+
+At the user's request, the active product is MCP plus website only. Removed the team backend, SQLite stores, native bridge/authority/collaboration, stdio flags/tools, sync/transfer/backup commands, Railway configuration and their dedicated tests/docs. The build now has only HTTP and stdio entry points. Website Studio/shared routes, navigation, Docs link, showcase promotion, CSS, proxy settings, generated metadata and feature-map entries are removed. Private recovery data, licensed resource content and the core MCP capability-key scheme are untouched. Drizzle remains a runtime dependency of the bundled design schemas.
+
+All **111 remaining MCP tests**, both typechecks/builds, upstream regeneration, stdio and clean package installation pass. Removed test suites account for the 20-test reduction. The installed CLI rejects both retired flags and the package omits Studio build/docs files. Website checks cover **24 views** at 390/1440/1728 px in both appearances with zero Axe violations or page errors. Source, copy and rendered spacing reviews pass for home/setup and **30 showcase states/23 panels**, with no critical/serious spacing findings or sampled contrast failures. Header and showcase screenshots were visually inspected. The 42 public/13 core tools, 31 themes and 784 resources remain available.
+
+[Removal receipt](studio-removal-2026-11-21.json) binds source and rendered evidence. This source is ready for signed API-first push and hosted verification. Earlier Studio descriptions below are historical evidence, not current capabilities. npm/Registry publication remains deferred.
+
 ## Audit completion - 21 November 2026
 
 The remaining 16 November audit fixes are ready for API-first release on top of branded MCP b96c576 and website a946828. Config read/write failures return the MCP error flag, overwrites retain destructive metadata, overload responses retire rejected connections after readable 429/Retry-After responses, and inset corners outside the parent curve no longer cause false spacing failures. Regression tests preserve owner isolation and genuine corner failures. The verifier matches the approved Newsreader/system appearance, full setup, current footer and theme behavior. No website component or styling changes were needed.
@@ -96,7 +104,7 @@ The user confirmed MCP/website-only scope; native Studio production is optional 
 
 ## Acceptance boundaries
 
-Named-client five-minute workflows/context traces, npm/Registry publication, persistent Studio HTTPS hosting and the live native acceptance in [STUDIO-PARITY.md](STUDIO-PARITY.md) have not been completed. Docker image/runtime full/core/private smokes passed remote CI as recorded above; Docker remains absent on this local machine. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
+Named-client five-minute workflows/context traces and npm/Registry publication remain deferred. The optional Studio product and native bridge were subsequently removed; dated evidence below describes the earlier source. Docker image/runtime full/core/private smokes passed remote CI as recorded above; Docker remains absent on this local machine. Installed CLIs, adapter tests and catalog reads do not prove generation, plugin execution or installer release. No provider keys or paid model calls were used.
 
 Explicitly deferred work stays deferred: the optional two-family playground, trusted dashboard capture worker, public native/Shopify install kits, proprietary inspiration, hosted AI generation and account administration. Personal resource Keep/Skip choices remain the user's optional decisions. The deterministic public web core needs no model provider.
 

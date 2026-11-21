@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-21T16:43:24.695Z",
+  "scope": "Remove optional Eidova Studio product from active MCP and website; no private data deletion or publication",
+  "removed": [
+    "team workspace and shared-revision pages",
+    "header navigation, Docs link and showcase promotion",
+    "team backend, SQLite stores, native authority and stdio bridge",
+    "Studio CLI options and package scripts",
+    "sync/transfer/backup code and Railway config",
+    "integration tests, dedicated docs, feature map entries and styling"
+  ],
+  "preserved": {
+    "publicTools": 42,
+    "coreTools": 13,
+    "themes": 31,
+    "resources": 784,
+    "privateData": "untouched",
+    "licenses": "unchanged",
+    "dependencies": "Drizzle remains required by bundled upstream design schemas"
+  },
+  "sourceSha256": {
+    "src/stdio.ts": "92ece8cda02b7599a50a9d012f9eb2b6c7aebcf9be9fec36c1bad1bc011122e0",
+    "package.json": "3321c50e54b989afaf02ae58fdaa7f55bceb04086d6e7c6011475f071e24593f",
+    "Dockerfile": "a8dd76c7945cf6da592d52fcda0508d1262cd0c28da8ee786e8a6a5f7bf42bee",
+    "scripts/smoke-package.mjs": "ca390a0e7049ebaaac544a901c506912ec1d60eac13ae7abf5ec40d610fad33c",
+    "scripts/verify-showcase.mjs": "285a008ad0d1fdd3d6557cf60d9fea5d74735d538ed3ed387f1ef623e743fd2e",
+    "../eidova-website/src/main.tsx": "fac37559e12ecad7d2212acf8f052bf07fcda98c4881dd1e54fe40566c3330f8",
+    "../eidova-website/src/App.tsx": "da6301f5cfde398c797f313aae1d08779c50b26fda3d4b1beaf83a4966e9aa73",
+    "../eidova-website/src/Showcase.tsx": "254b6342b51bf5d239c4bb376b0edbd2fb1f20e74402ce19c8517abd0019eb38",
+    "../eidova-website/src/Docs.tsx": "97927f22eae40ea75a648411f845601fcca3782e01bc18098d50a6c9f0545e91",
+    "../eidova-website/src/styles.css": "054080f9fb30dd3689b4345b46dd21cec3e7e72897bdb9cdd09643b7e483c3e5",
+    "../eidova-website/src/clean.css": "b776935261d417cf0dfe24ed0c5b6e8fea46b47b8da04b0655b9ecd4b5fbef78",
+    "../eidova-website/scripts/build-metadata.mjs": "33cd653b983b03fe94b5519d69e35610bd9c2d093e6fd0e517945c8a8860221a",
+    "../eidova-website/scripts/review-redesign.mjs": "e371b2a568f8e351c4e26897245fbc4fcf0defa9e5103b924e922059e7edc3d1",
+    "../eidova-website/vercel.json": "9dd994661794b587d98ad6f1839cda066649c87e5aefec80435b108a46d1c319",
+    "../eidova-website/vite.config.ts": "217eb09d8df4cef4e80f8899131f5803192663c2aa49bb513b02382825ca63a6",
+    "../eidova-website/.better-design/feature-map.json": "bc0f38eb540762080439752f654c186844d8e1b7fd8462aa2bb7b692bc4d6fc2"
+  },
+  "checks": {
+    "tests": {
+      "passed": 111,
+      "failed": 0,
+      "removed": "20 prior tests belonged to removed Studio suites"
+    },
+    "typesAndBuilds": "both passed",
+    "stdio": "passed",
+    "package": "clean tarball install passed; no Studio dist/docs; retired flags rejected",
+    "agentSetup": "passed; dist/studio absent and no Studio rewrite",
+    "accessibility": {
+      "views": 24,
+      "violations": 0,
+      "pageErrors": []
+    },
+    "website": {
+      "widths": [
+        390,
+        1440,
+        1728
+      ],
+      "appearances": [
+        "dark",
+        "light"
+      ],
+      "copyPanels": 62,
+      "copyFailures": 0,
+      "pageErrors": [],
+      "criticalSeriousSpacing": "zero in all captured states"
+    },
+    "showcase": {
+      "states": 30,
+      "panels": 23,
+      "criticalSeriousSpacing": "zero",
+      "copyFailures": 0,
+      "pageErrors": []
+    }
+  },
+  "evidence": [
+    {
+      "path": ".work/remove-studio-20261121/website/summary.json",
+      "sha256": "8c36b5e94f585e8139677414cb41fd062b42b4bdceb0a50e4fbae286bb16d3a9"
+    },
+    {
+      "path": ".work/remove-studio-20261121/showcase/summary.json",
+      "sha256": "77d6a5f4522cfef4c0602253d707a71dd58a3fc7d6901ee1474ab1025be221c3"
+    },
+    {
+      "path": "../eidova-website/.work/redesign-1311/accessibility.json",
+      "sha256": "f14a5b088de816c014531fbce2342e6fff8f6c4d113e304dd1ef27bb8b898e03"
+    }
+  ],
+  "limits": [
+    "Local Edge/Chromium checks are not screen-reader certification or dashboard capture approval.",
+    "Historical evidence and unrelated licensed library resources retain their original names.",
+    "npm/Registry publication remains deferred."
+  ]
+}

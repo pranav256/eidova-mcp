@@ -17,6 +17,7 @@ try {
   assert.equal(entries.length,1,'Expected one packed package.');
   const packed=entries[0];
   assert.ok(packed.files.some(file=>file.path==='dist/stdio.js'));
+  assert.ok(!packed.files.some(file=>/^(?:dist|docs)\/studio/i.test(file.path)), 'Removed editor code must not ship.');
   assert.ok(packed.files.some(file=>file.path==='content/design-families.json'));
   const bundle=JSON.parse(await readFile(path.join(root,'content/open-design/index.json'),'utf8'));
   const packedPaths=new Set(packed.files.map(file=>file.path));
@@ -31,6 +32,9 @@ try {
   execFileSync(process.execPath,[npm,'install','--ignore-scripts','--no-audit','--no-fund','--no-package-lock',path.join(directory,packed.filename)],{cwd:consumer,encoding:'utf8'});
   const entry=path.join(consumer,'node_modules/eidova-mcp/dist/stdio.js');
   const version=JSON.parse(await readFile(path.join(root,'package.json'),'utf8')).version;
+  const help=execFileSync(process.execPath,[entry,'--help'],{cwd:consumer,encoding:'utf8'});
+  assert.doesNotMatch(help,/studio/i);
+  for(const option of ['--studio','--native-studio'])assert.throws(()=>execFileSync(process.execPath,[entry,option],{cwd:consumer,stdio:'pipe'}));
   assert.equal(execFileSync(process.execPath,[entry,'--version'],{cwd:consumer,encoding:'utf8'}).trim(),version);
   assert.match(execFileSync(process.execPath,[entry,'doctor'],{cwd:consumer,encoding:'utf8'}),/package assets available/);
   const asset=path.join(consumer,'node_modules/eidova-mcp/content/design-families.json');

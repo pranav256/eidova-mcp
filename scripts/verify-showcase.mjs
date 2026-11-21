@@ -59,10 +59,10 @@ try {
       assert.equal(await page.locator('#showcase-main').evaluate(node => node === document.activeElement), true);
       await page.evaluate(() => window.scrollTo(0, 0));
       for (const href of await page.locator('.showcase-chapter-nav a').evaluateAll(links => links.map(link => link.getAttribute('href')))) assert.equal(await page.locator(href).count(), 1);
-      assert.equal(await page.locator('.showcase-capabilities li').count(), 6);
+      assert.equal(await page.locator('.showcase-capabilities li').count(), 5);
       for (const href of await page.locator('.showcase-capabilities a').evaluateAll(links => links.map(link => link.getAttribute('href')))) {
-        if (href.startsWith('#')) assert.equal(await page.locator(href).count(), 1);
-        else assert.equal(href, '/studio');
+        assert.ok(href.startsWith('#'));
+        assert.equal(await page.locator(href).count(), 1);
       }
       await page.screenshot({ path: path.join(output, `${width}-${mode}-hero.png`) });
       for (const id of ['components','foundations','icons','interactions','copy-lab','tool-directory']) await page.locator('#' + id).screenshot({ path: path.join(output, `${width}-${mode}-${id}.png`) });

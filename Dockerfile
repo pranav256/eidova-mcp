@@ -15,7 +15,7 @@ RUN npm run build && npm prune --omit=dev
 FROM node:24-alpine
 WORKDIR /app
 COPY --from=build --chown=node:node /app ./
-RUN mkdir -p /app/.open-design /app/.eidova && chown node:node /app/.open-design /app/.eidova
+RUN mkdir -p /app/.open-design && chown node:node /app/.open-design
 USER node
 ENV PORT=3000
 EXPOSE 3000

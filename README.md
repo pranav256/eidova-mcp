@@ -4,9 +4,7 @@ Design-system selection, real React components, and practical UI review for codi
 
 The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 packages: 152 design systems, 115 design templates, 343 plugins, 169 skills, three framework/live-artifact templates and two catalogs. Identical assets share storage; 137 legacy links remain readable. Use `search-resources`, then `read-resource` for files, previews and licenses. The website offers direct previews, downloads and an agent prompt. Unslop supports focused interface polish. Eidova's 31 installable React kits remain available separately.
 
-The [Studio integration](docs/STUDIO.md) adds an own-backend team workspace, version-checked files, feedback, fourteen opt-in stdio tools, watched file sync, history/restore, presence, sharing and access recovery. `--native-studio` combines an installed native engine's tools and brief resources with Eidova's stdio tools. **Full OpenDesign feature parity is incomplete**: the installed native daemon has own-backend adapters and focused acceptance, while live generation, complete native workflows and installers still require verification. See the [parity matrix](docs/STUDIO-PARITY.md).
-
-**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core` are deployed and verified. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining optional acceptance.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core` are deployed and verified. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and remaining client acceptance.
 
 ## Run locally
 
@@ -62,7 +60,7 @@ The deterministic core needs no external language model. URL extraction fetches 
 
 Carry the selected theme between agent sessions with its portable **DESIGN.md**. Catalog kits link to `design://systems/<id>/design.md` and a matching HTTP download, containing exact tokens, source CSS hash, component inventory and usage rules. Search explains family fit and tradeoffs and accepts required component names. The site's component viewer offers a selected-theme prompt and document download. [Reference study and scope](docs/OPEN-DESIGN-STUDY.md).
 
-Hosted AI generation, proprietary inspiration, vendor accounts, native/Shopify install kits, credential administration and trusted dashboard browser receipts remain outside this release. The opt-in [private archive](docs/PRIVATE-ARCHIVE.md) serves an owner's existing saved responses offline; archived files are excluded from distribution.
+Hosted AI generation, proprietary inspiration, vendor accounts, Shopify install kits, credential administration and trusted dashboard browser receipts remain outside this release. The opt-in [private archive](docs/PRIVATE-ARCHIVE.md) serves an owner's existing saved responses offline; archived files are excluded from distribution.
 
 ## Verify and maintain
 

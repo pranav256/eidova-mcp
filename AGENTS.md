@@ -9,7 +9,7 @@ Run `npm run check`, focused tests (`node --import tsx --test tests/<file>.test.
 and `npm run build` for service changes. Changes to runtime adapters also need
 `npm run build:upstream`; stdio changes need `npm run smoke:stdio`.
 Read `docs/DEPLOYMENT.md` before deployment. Do not publish npm/Registry packages
-unless explicitly requested. Native Studio is optional and outside the default scope.
+unless explicitly requested. Product scope is MCP and website only; do not reintroduce a team editor or native bridge.
 
 Consumer project guidance and client configs are documented in [Agent setup](docs/AGENT-SETUP.md).
 

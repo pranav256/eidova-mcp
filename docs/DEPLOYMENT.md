@@ -2,8 +2,6 @@
 
 Version 0.2.0 is deployed on the public API and website; package/Registry publication remains separate work. The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. Setup defaults to full `/mcp`; optional `/mcp/core` is also deployed.
 
-The new [Studio team backend](STUDIO.md) is a separate Node 24+ process with persistent SQLite storage. It cannot run in Vercel functions. Its website connection uses `VITE_STUDIO_API_URL` and exact allowed origins; without that setting the production `/studio` page shows setup instructions. Configure EIDOVA_STUDIO_REGISTRATION_KEY and exact allowed origins for remote access. Signup gating, quotas and rate limiting are implemented; production load and operational validation remain outstanding.
-
 ## Local service and website
 
 Use Node 22+ for the MCP; the Vite website requires Node 22.12+. In separate terminals:
@@ -52,7 +50,7 @@ Keep previous deployment IDs, URL settings and package version before promotion.
 
 ## Eidova hosted rename
 
-The source, package, CLI and local checkout names use Eidova. GitHub repositories are now `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs. Native Studio has a separate private `pranav256/eidova-studio` repository. Existing Vercel project IDs and working hostnames remain intact. Historical review receipts retain their original names and hashes.
+The source, package, CLI and local checkout names use Eidova. GitHub repositories are now `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs. Existing Vercel project IDs and working hostnames remain intact. Historical review receipts retain their original names and hashes.
 
 The website alias `eidova.vercel.app` and API alias `eidova-mcp.vercel.app` are assigned to the existing Vercel projects. Source uses `https://eidova-mcp.vercel.app/mcp` as the canonical full endpoint and `/mcp/core` for essentials. Client connections go directly to the API; website catalog/registry rewrites and optional `/mcp` forwarding also target the branded API alias. Keep `open-design-website.vercel.app` and `open-design-mcp-liard.vercel.app` as compatibility aliases. Do not point API rewrites back to the website, which would create a loop. Preserve project IDs, deployment history, Blob store, WAF rules and old aliases.
 
