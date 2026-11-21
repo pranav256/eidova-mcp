@@ -25,3 +25,14 @@ test('install preview resolves local dependencies and flags conflicts', async ()
   assert.ok(result.dependencies.some(dependency => dependency.requested === '@radix-ui/react-slot'));
   assert.deepEqual(result.unresolvedRegistryDependencies, []);
 });
+
+test('token diff reports changed DTCG aliases in the dark group', () => {
+  const doc = (alias: string) => JSON.stringify({ dark: {
+    $extensions: { 'com.better-design.mode': 'dark' },
+    accent: { $type: 'color', $value: alias },
+  } });
+  const { changes } = diffTokens(doc('{primary}'), doc('{secondary}'), 'dtcg');
+  assert.equal(changes.length, 1);
+  assert.equal(changes[0].scope, 'dark');
+  assert.equal(changes[0].after?.value, '{secondary}');
+});

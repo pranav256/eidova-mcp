@@ -2,8 +2,7 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import axe from 'axe-core';
 import { chromium } from 'playwright';
-import { inspectSpacing } from '../vendor/upstream/runtime.mjs';
-import { captureScript } from './capture-script.js';
+import { inspectSpacing, SPACING_CAPTURE_SCRIPT } from '../vendor/upstream/runtime.mjs';
 
 export async function reviewBrowser(input: string, output: string, readySelector?: string) {
   const url = new URL(input);
@@ -36,7 +35,7 @@ export async function reviewBrowser(input: string, output: string, readySelector
         if (readySelector) await page.locator(readySelector).first().waitFor({ timeout: 10_000 });
         const screenshot = width + '-' + colorScheme + '.png';
         await page.screenshot({ path: join(directory, screenshot), animations: 'disabled', timeout: 10_000 });
-        const state = await page.evaluate(captureScript) as Parameters<typeof inspectSpacing>[0]['states'][number];
+        const state = await page.evaluate<Parameters<typeof inspectSpacing>[0]['states'][number]>(SPACING_CAPTURE_SCRIPT);
         const spacing = inspectSpacing({ states: [state] });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         await page.evaluate(axe.source);

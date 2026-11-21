@@ -4,7 +4,7 @@
 
 The CLI now includes three local helpers for coding-agent workflows. `review-browser` captures a loopback preview at 390, 1440 and 1728px in light and dark schemes, then reports axe violations, page errors, overflow and critical/serious spacing findings. `preview-install` reports kit files, existing-file conflicts, package dependencies, configured registries and unresolved registry dependencies from a project inventory. `diff-tokens` compares CSS or DTCG token exports by mode and reports additions, removals and changes. The helpers write JSON and keep project source local.
 
-Focused workflow tests pass for install planning and CSS token diffs. A live website preview passed all six browser-review states with no accessibility, overflow, page-error or serious-spacing findings. The full MCP suite passes **113 tests** after the Studio removal. Playwright is a runtime dependency because `review-browser` is an installed CLI command. The CLI does not download browser binaries.
+Focused tests cover install planning, CSS diffs and DTCG aliases. The local website preview passed all six browser states. A separate fixture with an unlabeled button reported an accessibility violation in all six views and exited with status 1. The full MCP suite passes **114 tests**. Playwright is a runtime dependency because `review-browser` is an installed CLI command. The CLI does not download browser binaries.
 
 ## Studio removal - 21 November 2026
 

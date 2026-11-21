@@ -50,8 +50,32 @@ eidova-mcp diff-tokens before.css after.css
 `review-browser` checks a loopback preview at 390, 1440 and 1728 pixels in light
 and dark color schemes. It saves screenshots and reports overflow, automated
 accessibility violations, page errors and critical or serious spacing findings.
+From the source checkout, install the browser with `npx playwright install chromium`
+on Linux or macOS (use `--with-deps` on Linux CI). On Windows the command uses Edge
+by default. Set `PLAYWRIGHT_CHANNEL=chromium` to choose installed Playwright Chromium
+instead. Use `--ready-selector` for a
+screen that loads asynchronously. The command exits with status 1 when a view
+fails. It loads same-origin assets, so serve externally hosted assets locally
+if they are needed for a representative capture.
+
 The project inventory for `preview-install` is JSON with `files`, `paths.ui`,
 `paths.lib`, `paths.css`, `paths.utils`, and optional dependency and registry maps.
-It reports new files, existing-file conflicts, missing package dependencies and
-unresolved registry dependencies. `diff-tokens` accepts two CSS files or two
-DTCG JSON exports and reports added, removed and changed tokens by mode.
+Use project-relative paths as resolved by your coding host from `components.json`
+and the project aliases. Include the current CSS and utility files in `files` if
+they exist. For example:
+
+```json
+{
+  "files": ["src/components/ui/button.tsx", "src/lib/utils.ts", "src/index.css"],
+  "paths": {"ui": "src/components/ui", "lib": "src/lib", "css": "src/index.css", "utils": "src/lib/utils.ts"},
+  "dependencies": {"@radix-ui/react-slot": "^1.5.0"},
+  "registries": {"@team": "https://registry.example.com/{name}.json"}
+}
+```
+
+The plan identifies existing files that may need merging, declared package
+versions, and registry dependencies that still need resolution. Registry URLs
+are never fetched by the preview. `diff-tokens` accepts two CSS files or two
+Eidova DTCG JSON exports and reports added, removed and changed declarations.
+CSS comparison covers `:root`, `.dark`, `:root.dark`, `html.dark`, and `@theme`.
+It compares declared values and alias references without evaluating the cascade.
