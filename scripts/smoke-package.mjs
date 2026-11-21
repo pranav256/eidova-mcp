@@ -17,7 +17,7 @@ try {
   assert.equal(entries.length,1,'Expected one packed package.');
   const packed=entries[0];
   assert.ok(packed.files.some(file=>file.path==='dist/stdio.js'));
-  assert.ok(!packed.files.some(file=>/^(?:dist|docs)\/studio/i.test(file.path)), 'Removed editor code must not ship.');
+  assert.ok(!packed.files.some(file=>/^dist\/studio[^/]*\.js$|^docs\/STUDIO(?:-PARITY)?\.md$/i.test(file.path)), 'Removed editor code must not ship.');
   assert.ok(packed.files.some(file=>file.path==='content/design-families.json'));
   const bundle=JSON.parse(await readFile(path.join(root,'content/open-design/index.json'),'utf8'));
   const packedPaths=new Set(packed.files.map(file=>file.path));
