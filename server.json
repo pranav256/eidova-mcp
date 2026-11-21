@@ -5,7 +5,7 @@
   "description": "Design families, real React kits and evidence-based review for coding agents.",
   "repository": { "url": "https://github.com/pranav256/eidova-mcp", "source": "github" },
   "version": "0.2.0",
-  "websiteUrl": "https://open-design-website.vercel.app",
+  "websiteUrl": "https://eidova.vercel.app",
   "packages": [
     {
       "registryType": "npm",
@@ -16,5 +16,5 @@
       "packageArguments": [{ "type": "named", "name": "--profile", "value": "full" }]
     }
   ],
-  "remotes": [{ "type": "streamable-http", "url": "https://open-design-mcp-liard.vercel.app/mcp" }]
+  "remotes": [{ "type": "streamable-http", "url": "https://eidova-mcp.vercel.app/mcp" }]
 }

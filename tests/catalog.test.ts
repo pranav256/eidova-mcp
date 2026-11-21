@@ -1,7 +1,26 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { catalog, designFamilies, registryItem, searchCatalog, systemWithComponents } from '../src/catalog.js';
+import { baseUrl, catalog, designFamilies, registryItem, searchCatalog, systemWithComponents } from '../src/catalog.js';
 import { publicFetch } from '../src/public-fetch.js';
+
+test('Eidova public origin overrides preserve local, self-hosted and legacy defaults',async()=>{
+  const names=['EIDOVA_BASE_URL','OPEN_DESIGN_BASE_URL','VERCEL_PROJECT_PRODUCTION_URL'] as const;
+  const previous=names.map(name=>process.env[name]);
+  try {
+    for(const name of names)delete process.env[name];
+    assert.equal(baseUrl(),'http://localhost:3000');
+    process.env.VERCEL_PROJECT_PRODUCTION_URL='old-project.vercel.app';
+    assert.equal(baseUrl(),'https://old-project.vercel.app');
+    assert.equal((await publicFetch(baseUrl()+'/registry/linear/button.json')).status,200);
+    assert.equal((await publicFetch('https://another-project.vercel.app/registry/linear/button.json')).status,403);
+    process.env.OPEN_DESIGN_BASE_URL='https://legacy.example/';
+    assert.equal(baseUrl(),'https://legacy.example');
+    process.env.EIDOVA_BASE_URL='https://eidova.vercel.app/';
+    assert.equal(baseUrl(),'https://eidova.vercel.app');
+  } finally {
+    names.forEach((name,index)=>{if(previous[index]===undefined)delete process.env[name];else process.env[name]=previous[index];});
+  }
+});
 test('all checked-in systems can be searched and produce real component source',async()=> {
   const systems=await catalog();assert.equal(systems.length,31);
   const result=await searchCatalog('minimal light',3);assert.ok(result.some(s=>s.id==='minimal-light'));

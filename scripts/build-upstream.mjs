@@ -75,8 +75,8 @@ function patch(file, original) {
     .replaceAll('issuedBy: "better-design-mcp"', 'issuedBy: "eidova-mcp"')
     .replaceAll('Better Design', 'Eidova')
     .replaceAll('written by Eidova', 'from the MIT-licensed Better Design package')
-    .replaceAll('https://better-design.com', 'https://open-design-mcp-liard.vercel.app')
-    .replaceAll('https://www.better-design.com', 'https://open-design-mcp-liard.vercel.app');
+    .replaceAll('https://better-design.com', 'https://eidova-mcp.vercel.app')
+    .replaceAll('https://www.better-design.com', 'https://eidova-mcp.vercel.app');
 }
 await build({
   entryPoints: ['scripts/upstream-entry.ts'], outfile: 'vendor/upstream/runtime.mjs',

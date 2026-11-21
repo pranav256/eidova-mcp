@@ -1,0 +1,36 @@
+# Agent setup
+
+Connect the client, then give its agent project guidance. These are separate steps:
+`AGENTS.md` is a project instruction convention, not an MCP transport or a connection file.
+The supported MCP interface already includes initialization instructions, tool discovery,
+resources, resource templates and prompts. `server.json` describes the server for Registry
+publication; publication is still deferred.
+
+## Project instructions
+
+Download the public [AGENTS.md starter](https://eidova.vercel.app/AGENTS.md), review it,
+and merge it into your project's existing `AGENTS.md`. Do not overwrite project rules.
+The repositories' root `AGENTS.md` files are contributor guidance; the public starter is
+for projects using Eidova. Save the selected kit's design context separately as `DESIGN.md`.
+
+## Client configuration
+
+The public [llms.txt index](https://eidova.vercel.app/llms.txt) links to client examples,
+project guidance and reference docs. Copy the relevant example into the client's
+configuration and merge its `eidova` entry with existing servers:
+
+| Client | Example | Destination |
+| --- | --- | --- |
+| Codex | [codex.toml](https://eidova.vercel.app/mcp-config/codex.toml) | Project `.codex/config.toml` or the user's Codex config |
+| Claude Code | [claude-code.json](https://eidova.vercel.app/mcp-config/claude-code.json) | Project `.mcp.json` |
+| Cursor | [cursor.json](https://eidova.vercel.app/mcp-config/cursor.json) | Project `.cursor/mcp.json` |
+| VS Code | [vscode.json](https://eidova.vercel.app/mcp-config/vscode.json) | Project `.vscode/mcp.json` |
+
+Examples use public HTTP without credentials. Claude Desktop's local configuration
+uses stdio instead; see [CLIENTS.md](CLIENTS.md). No npm installation is required for
+public HTTP, and the unpublished npm package must not be presented as an available
+`npx` installation.
+
+Reconnect and check discovery: full has 42 public tools, core has 13. A core connection
+cannot call full-only tools. Review results are limited to supplied evidence; the
+public server does not run projects or provide trusted dashboard captures.

@@ -170,3 +170,11 @@ or complete Better Design parity. The private vendor guidance corpus, AI
 generation, proprietary inspiration, vendor accounts, mobile/Shopify install kits
 and trusted dashboard browser receipts remain unavailable. See
 [README](../README.md) and [runtime boundaries](RUNTIME-BOUNDARIES.md).
+
+## 21 November 2026: branded endpoint and agent setup
+
+The assigned API alias https://eidova-mcp.vercel.app returned healthy 0.2.0 during release preparation. Source defaults and setup examples now use its /mcp and /mcp/core endpoints directly. Website canonical/search/social metadata uses https://eidova.vercel.app. Existing hostnames remain compatibility aliases. Vercel API EIDOVA_BASE_URL/EIDOVA_WEBSITE_URL and website VITE_MCP_URL/VITE_REGISTRY_ORIGIN were updated to these branded origins for Production and Preview.
+
+Added public AGENTS.md guidance, llms.txt, client config downloads, contributor instructions and an HTTP server.json route with Docker/Vercel packaging. An isolated export of the staged source passed Node 24 typecheck/build, upstream regeneration, all 129 standard MCP tests and the built stdio smoke. The website build and agent-setup checks passed. Earlier uncommitted stress fixes and the unrelated README wording edit remain excluded from this release.
+
+The earlier local proxy smoke passed full/core discovery (42/13), tool calls, metadata, registry downloads and setup files. Production rollout must deploy API support first, then the website, and verify exact deployed source and branded/compatibility endpoints. npm/Registry publication remains deferred. Historical hosted receipts retain their original URLs.

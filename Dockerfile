@@ -8,7 +8,7 @@ COPY scripts ./scripts
 COPY assets ./assets
 COPY content ./content
 COPY tsconfig.json tsup.config.ts ./
-COPY LICENSE NOTICE README.md SECURITY.md CHANGELOG.md ./
+COPY LICENSE NOTICE README.md SECURITY.md CHANGELOG.md server.json ./
 COPY docs ./docs
 RUN npm run build && npm prune --omit=dev
 

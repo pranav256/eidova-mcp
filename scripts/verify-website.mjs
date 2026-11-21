@@ -8,10 +8,10 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { measureTextContrast } from './browser-contrast.mjs';
 
-const origin = process.env.WEBSITE_REVIEW_URL || 'https://open-design-website.vercel.app';
+const origin = process.env.WEBSITE_REVIEW_URL || 'https://eidova.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website');
 const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website');
-const endpoint = process.env.WEBSITE_EXPECTED_MCP_URL || 'https://open-design-mcp-liard.vercel.app/mcp';
+const endpoint = process.env.WEBSITE_EXPECTED_MCP_URL || 'https://eidova-mcp.vercel.app/mcp';
 const coreEndpoint=endpoint.replace(/\/core\/?$/,'').replace(/\/$/,'')+'/core';
 // Review the matching local service when supplied; keep hosted link assertions intact.
 const reviewServiceUrl = url => process.env.MCP_REVIEW_URL ? new URL(new URL(url).pathname, process.env.MCP_REVIEW_URL).href : url;

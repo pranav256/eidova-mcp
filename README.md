@@ -6,7 +6,7 @@ The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 pa
 
 The [Studio integration](docs/STUDIO.md) adds an own-backend team workspace, version-checked files, feedback, fourteen opt-in stdio tools, watched file sync, history/restore, presence, sharing and access recovery. `--native-studio` combines an installed native engine's tools and brief resources with Eidova's stdio tools. **Full OpenDesign feature parity is incomplete**: the installed native daemon has own-backend adapters and focused acceptance, while live generation, complete native workflows and installers still require verification. See the [parity matrix](docs/STUDIO-PARITY.md).
 
-**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [full HTTP endpoint](https://open-design-mcp-liard.vercel.app/mcp) and optional `/mcp/core` are deployed. [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining native acceptance.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app) is deployed. Source now uses the [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core`; their updated defaults still need deployment and hosted verification. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and the remaining native acceptance.
 
 ## Run locally
 
@@ -31,6 +31,8 @@ node /absolute/path/eidova-mcp/dist/stdio.js doctor
 Stdio defaults to full. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. Before publication, run `npm pack` and install the resulting tarball in your consumer environment. Its installed executable is `eidova-mcp`.
 
 ## First useful tasks
+
+For project instructions and downloadable client configs, see [Agent setup](docs/AGENT-SETUP.md). Merge the public [AGENTS.md starter](https://eidova.vercel.app/AGENTS.md) into existing project guidance. The [llms.txt index](https://eidova.vercel.app/llms.txt) links the machine-readable entry points. Neither file connects a client by itself.
 
 - “Find a distinctive family for this settings screen. Preserve our existing design if present and retrieve only the components we need.”
 - “Extract this supplied brand CSS and extend the existing interface consistently.”

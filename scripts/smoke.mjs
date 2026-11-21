@@ -23,7 +23,7 @@ const calls=[
   ['search-resources',{query:'linear'}],
 ];
 if (!core) calls.push(
-  ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://open-design-website.vercel.app'}],
+  ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://eidova.vercel.app'}],
   ['find-icons',{libraryId:'lucide',query:'home'}],
   ['install-icons',{libraryId:'lucide',names:['house'],format:'svg'}],
 );

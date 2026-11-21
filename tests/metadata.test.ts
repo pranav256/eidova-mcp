@@ -13,5 +13,5 @@ test('prepared registry metadata validates against the retrieved official schema
   assert.equal(validate({...server,name:'invalid namespace'}).valid,false);
   assert.equal(server.$schema,schema.$id);
   assert.deepEqual(server.packages[0].packageArguments,[{type:'named',name:'--profile',value:'full'}]);
-  assert.deepEqual(server.remotes,[{type:'streamable-http',url:'https://open-design-mcp-liard.vercel.app/mcp'}]);
+  assert.deepEqual(server.remotes,[{type:'streamable-http',url:'https://eidova-mcp.vercel.app/mcp'}]);
 });

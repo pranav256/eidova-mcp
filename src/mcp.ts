@@ -153,7 +153,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     paramsSchema:{query:z.string().trim().min(1).max(2000),limit:z.number().int().min(1).max(8).optional(),requiredComponents:z.array(z.string().regex(/^[a-z0-9][a-z0-9_-]{0,80}$/)).min(1).max(12).optional()},
     callback:async ({query,limit=5,requiredComponents}:{query:string;limit?:number;requiredComponents?:string[]})=>{
       const results=(await searchCatalog(query,limit,requiredComponents)).filter(item=>item.matchScore>0);
-      const matches=results.map(item=>({id:item.id,name:item.title,description:item.family.description,personality:item.personality.join(', '),family:item.family.title,variant:item.variant,font:item.font,radius:item.borderRadius,matchedTerms:item.matchedTerms,useCases:item.family.useCases,tradeoff:item.family.tradeoff,previewUrl:`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://open-design-website.vercel.app'}/?specimen=${item.family.representative}`,next:{tool:'get-design-system-kit',arguments:{target:'react',designSystemId:item.id,component:requiredComponents??['button','input']}}}));
+      const matches=results.map(item=>({id:item.id,name:item.title,description:item.family.description,personality:item.personality.join(', '),family:item.family.title,variant:item.variant,font:item.font,radius:item.borderRadius,matchedTerms:item.matchedTerms,useCases:item.family.useCases,tradeoff:item.family.tradeoff,previewUrl:`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://eidova.vercel.app'}/?specimen=${item.family.representative}`,next:{tool:'get-design-system-kit',arguments:{target:'react',designSystemId:item.id,component:requiredComponents??['button','input']}}}));
       const result={buildInstructions:workflowNote,matches,...(!matches.length?{nextStep:'Try a family name, style or font, or remove component requirements; no matching systems were found.'}:{})};
       return text([workflowNote,...matches.map(item=>`${item.name} (${item.id}): ${item.useCases.join('; ')}. ${item.tradeoff}`),matches.length?`Next: get-design-system-kit with the selected designSystemId, target:react, component:${JSON.stringify(requiredComponents??['button','input'])}.`:result.nextStep].join('\n\n'),result);
     },
@@ -220,7 +220,7 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
             structured.designContext={uri:`design://systems/${info.id}/design.md`,url:`${baseUrl()}/api/design-systems/${info.id}/design.md`};
             structured.buildInstructions=String(structured.buildInstructions??'')+' Read designContext before implementation: save as DESIGN.md if absent, otherwise merge without overwriting existing rules; then read globals and only the needed components.';
           }
-          structured.familyPreviewUrl=`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://open-design-website.vercel.app'}/?specimen=${info.family.representative}`;
+          structured.familyPreviewUrl=`${(process.env.EIDOVA_WEBSITE_URL ?? process.env.OPEN_DESIGN_WEBSITE_URL)??'https://eidova.vercel.app'}/?specimen=${info.family.representative}`;
           structured.viewUrl=info.variant?`${baseUrl()}/registry/${info.id}/globals.json`:structured.familyPreviewUrl;
           structured.viewLabel=info.variant?'View tokens':'View components';
         }

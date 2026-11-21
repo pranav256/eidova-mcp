@@ -7,7 +7,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { measureTextContrast } from './browser-contrast.mjs';
 
-const origin = process.env.WEBSITE_REVIEW_URL || 'https://open-design-website.vercel.app';
+const origin = process.env.WEBSITE_REVIEW_URL || 'https://eidova.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website-themes');
 const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || 'website');
 const themes = JSON.parse(await readFile(path.join(website, 'src/catalog-themes.json'), 'utf8'));
@@ -19,7 +19,7 @@ await mkdir(dir, { recursive: true });
 const client = new Client({ name: 'eidova-theme-viewer-review', version: '0.2.0' });
 await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({ command: process.execPath, args: [path.resolve('scripts/start-private.mjs'), path.resolve(process.env.MCP_PRIVATE_ARCHIVE)] })
-  : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'https://open-design-mcp-liard.vercel.app/mcp')));
+  : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'https://eidova-mcp.vercel.app/mcp')));
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined), headless: true });
 const states = [], checks = [], errors = [], panels = [], spacing = [];
 let catalogRequests = 0;
