@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { JsonStore } from './store.js';
 
-// Compatibility contract from the MIT-licensed better-design@0.49.1 package:
+// Compatibility contract for project rules store:
 // shared/src/project-rules.ts and shared/src/schema.ts (BD-1052/BD-1056).
 export const PROJECT_RULE_MAX_BYTES = 4 * 1024;
 export const TEAM_RULES_MAX_BYTES = 32 * 1024;

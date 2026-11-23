@@ -27,7 +27,7 @@ Initial observations:
 
 - Both CLI installations completed successfully.
 - The minimal-light installation created global CSS, the utility module and the real Button/Input source files, and updated the consumer CSS.
-- Installing Airbnb AlertDialog fetched its local Button dependency and updated the Button source. The generic `utils` dependency is resolved by shadcn's standard registry; npm dependencies are installed normally. No Better Design service was needed for the tested component dependency chain.
+- Installing Airbnb AlertDialog fetched its local Button dependency and updated the Button source. The generic `utils` dependency is resolved by shadcn's standard registry; npm dependencies are installed normally. No external service was needed for the tested component dependency chain.
 - TypeScript and Vite builds passed for both states.
 
 ## Defects found by independent consumer checks
@@ -37,7 +37,7 @@ Initial observations:
 
 Before-fix evidence is retained in `.work/consumer/browser-before-fix.json` and `.work/consumer/registry-before-fix.json`.
 
-The full root check enumerated all 31 systems, fetched 3,119 aggregate item references, and confirmed zero Better Design registry dependency URLs. Before correction, 3,109 items returned successfully and 10 `_shared` items returned 404; 1,684 served CSS variable keys retained a leading `--`.
+The full root check enumerated all 31 systems, fetched 3,119 aggregate item references, and confirmed zero external registry dependency URLs. Before correction, 3,109 items returned successfully and 10 `_shared` items returned 404; 1,684 served CSS variable keys retained a leading `--`.
 
 ## Rendered checks
 
@@ -59,7 +59,7 @@ node verify-registry.mjs --expect-normalized registry-after-fix.json
 - Input background: opaque `#f5f5f5`, `[245, 245, 245, 255]`.
 - Browser errors: none. Horizontal page overflow at 390 pixels: none.
 - All 31 aggregate roots returned coherent local item references; all **3,119 referenced items** returned successfully, including the ten `_shared` entries.
-- Better Design registry dependency URL references: **0**. CSS variable names with the invalid leading `--`: **0**.
+- External registry dependency URL references: **0**. CSS variable names with the invalid leading `--`: **0**.
 
 Final machine-readable results: `.work/consumer/browser-after-fix.json` and `.work/consumer/registry-after-fix.json`.
 

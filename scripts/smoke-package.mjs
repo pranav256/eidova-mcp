@@ -36,6 +36,7 @@ try {
   assert.doesNotMatch(help,/studio/i);
   for(const option of ['--studio','--native-studio'])assert.throws(()=>execFileSync(process.execPath,[entry,option],{cwd:consumer,stdio:'pipe'}));
   assert.equal(execFileSync(process.execPath,[entry,'--version'],{cwd:consumer,encoding:'utf8'}).trim(),version);
+  execFileSync(process.execPath,['--input-type=module','-e','import {createServer} from "eidova-mcp"; import assert from "node:assert/strict"; assert.equal(typeof createServer,"function");'],{cwd:consumer,encoding:'utf8'});
   assert.match(execFileSync(process.execPath,[entry,'doctor'],{cwd:consumer,encoding:'utf8'}),/package assets available/);
   const asset=path.join(consumer,'node_modules/eidova-mcp/content/design-families.json');
   await rename(asset,asset+'.missing');

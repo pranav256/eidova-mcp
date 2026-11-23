@@ -17,10 +17,7 @@ Evidence and current MCP metadata are saved under ignored `.work/verification/`.
 The CLI works independently of MCP registration, so this investigation changed
 no Codex configuration and required no native analysis engine.
 
-A normal connected Better Design guidance request still returned the 300-call
-quota error and no guidance, with the stated reset date December 5. That response
-does not reveal the private guidance library; authentication/trial URL material
-is excluded from this public report.
+A hosted guidance request returned the 300-call quota error and no guidance, with the stated reset date December 5. That response does not reveal the private guidance library; authentication/trial URL material is excluded from this public report.
 
 ## Restored project rules
 

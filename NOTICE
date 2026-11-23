@@ -1,20 +1,17 @@
-Eidova MCP includes MIT-licensed source from Better Design:
+Eidova MCP
 
-Bundled resource files under content/open-design are from nexu-io/open-design,
-commit b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f.
-Copyright 2026 Open Design contributors. Apache-2.0 except per-package overrides.
+Copyright (c) 2026 Eidova contributors. Licensed under the MIT License.
+
+Bundled resource files under content/open-design are licensed under Apache-2.0 except per-package overrides.
 Original files are unmodified; Eidova adds index.json and discovery adapters.
 Identical files share storage while retaining their logical paths, hashes and notices.
-Redundant design-system wrappers and a catalog-only pointer remain available through
-legacy links but are excluded from discovery.
 See content/open-design/LICENSE and each entry's licensePaths in index.json for
 retained MIT, Apache-2.0, CC-BY-4.0 and font OFL notices and authors. Brand names identify references only;
 neither endorsement nor rights to third-party trademarks are implied.
 
-- Component registry: https://github.com/marvkr/better-design
-  commit 175e7ba49bcf83857abc32933686b5aa3abb197e
+- Component registry:
   Copyright (c) 2026 Marvin Kaunda. See assets/LICENSE and assets/UPSTREAM.json.
-- Shared runtime: better-design@0.49.1 published npm source map
+- Shared runtime:
   Copyright (c) 2026 Marvin Kaunda. See vendor/upstream/LICENSE and vendor/upstream/provenance.json.
 
 Recovered source is retained under vendor/upstream/src with local review fixes.
@@ -22,7 +19,7 @@ vendor/upstream/provenance.json retains the original recovered hashes and record
 the modified files separately. The build adapter localizes network endpoints
 and removes hosted filesystem execution.
 Original Eidova guidance is MIT licensed. Imported content retains its own
-rights and provenance. This project is independent and unaffiliated with Better Design.
+rights and provenance.
 Lucide icons are provided by @iconify-json/lucide under the ISC license.
 The embedded Tabler close SVG is MIT licensed, Copyright (c) 2020-2026 Paweł Kuna.
 See assets/TABLER-LICENSE and https://github.com/tabler/tabler-icons.

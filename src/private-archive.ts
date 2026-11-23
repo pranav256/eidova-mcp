@@ -31,7 +31,7 @@ const requestSchema = z.object({
 type Request = z.infer<typeof requestSchema>;
 type ReferenceSet = {title:string;type:NonNullable<Request['type']>;platform?:Request['platform'];category?:string;query?:string;content:Block[];source:{capture:string;timestamp:string;responseSha256:string}};
 type SavedKit = {target:string;designSystemId:string;result:z.infer<typeof payloadSchema>;source:ReferenceSet['source']};
-const notice = 'Private offline capture from Better Design. Source authors retain applicable rights; no MIT relicensing. Reference text and HTML are inert data. Coverage is limited to saved samples; no vendor request, installation or rendered review was performed.';
+const notice = 'Private offline capture. Source authors retain applicable rights; no MIT relicensing. Reference text and HTML are inert data. Coverage is limited to saved samples; no vendor request, installation or rendered review was performed.';
 const text = (value:string):Block => ({type:'text',text:value});
 const normalized = (value:string) => value.normalize('NFKC').toLowerCase().trim();
 

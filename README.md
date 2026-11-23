@@ -19,14 +19,19 @@ codex mcp add eidova --url http://localhost:3000/mcp
 
 The default `/mcp` profile exposes all 42 tools. Use `/mcp/core` for 13 essentials; reconnect the client after changing the URL. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
 
-For stdio use an absolute path, independently of your client's working directory:
+For stdio, you can run directly with `npx` or use an absolute path to a local build:
 
 ```sh
+# Run directly with npx
+npx -y eidova-mcp --profile full
+npx -y eidova-mcp doctor
+
+# Or from a local clone
 node /absolute/path/eidova-mcp/dist/stdio.js --profile full
 node /absolute/path/eidova-mcp/dist/stdio.js doctor
 ```
 
-Stdio defaults to full. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. Before publication, run `npm pack` and install the resulting tarball in your consumer environment. Its installed executable is `eidova-mcp`.
+Stdio defaults to full. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. In consumer environments, the installed executable is `eidova-mcp`.
 
 ## First useful tasks
 
@@ -56,11 +61,11 @@ Detailed guidance is at `design://workflow/v1`, with principle/review resources 
 
 Saving themes or team/project rules over HTTP requires a private capability key from `POST /api/workspace-key`, sent as `Authorization: Bearer <key>`. Anyone with that key can edit its workspace. Keys have no email recovery, rotation or revocation. Public custom-theme registry URLs intentionally reveal theme configuration; private rules stay owner-scoped and uncached.
 
-Local state defaults to `.open-design/state` under the working directory. Set `EIDOVA_STATE_DIR` for durable state and `EIDOVA_BASE_URL` for the HTTP origin. Hosted persistence uses private Vercel Blob conditional writes, never ephemeral function disk.
+Local state defaults to `.eidova/state` under the working directory. Set `EIDOVA_STATE_DIR` for durable state and `EIDOVA_BASE_URL` for the HTTP origin. Hosted persistence uses private Vercel Blob conditional writes, never ephemeral function disk.
 
 The deterministic core needs no external language model. URL extraction fetches bounded public CSS without rendering pages. Source review requires inline content; spacing measures supplied rendered geometry. [DTCG export](docs/DTCG.md) is a documented 2025.10 typed subset. Reviews apply to their evidence and are not accessibility certification.
 
-Carry the selected theme between agent sessions with its portable **DESIGN.md**. Catalog kits link to `design://systems/<id>/design.md` and a matching HTTP download, containing exact tokens, source CSS hash, component inventory and usage rules. Search explains family fit and tradeoffs and accepts required component names. The site's component viewer offers a selected-theme prompt and document download. [Reference study and scope](docs/OPEN-DESIGN-STUDY.md).
+Carry the selected theme between agent sessions with its portable **DESIGN.md**. Catalog kits link to `design://systems/<id>/design.md` and a matching HTTP download, containing exact tokens, source CSS hash, component inventory and usage rules. Search explains family fit and tradeoffs and accepts required component names. The site's component viewer offers a selected-theme prompt and document download. [Reference study and scope](docs/DESIGN-STUDY.md).
 
 Hosted AI generation, proprietary inspiration, vendor accounts, Shopify install kits, credential administration and trusted dashboard browser receipts remain outside this release. The opt-in [private archive](docs/PRIVATE-ARCHIVE.md) serves an owner's existing saved responses offline; archived files are excluded from distribution.
 
@@ -79,8 +84,6 @@ npm run audit:themes
 
 `npm run verify:consumers` uses the local registry and actual shadcn CLI in six disposable Vite/Next consumers. Website checks are in [deployment](docs/DEPLOYMENT.md). Edit `content/library.json` or use the [content importer](docs/CONTENT-LIBRARY.md); restart to load changes.
 
-Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Eidova is the selected name; the GitHub repositories and website alias are assigned; npm/Registry publication remains unverified.
+Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Configuration uses `EIDOVA_*` environment variables. Local state defaults to `.eidova/state` or `EIDOVA_STATE_DIR`. Branded GitHub and Vercel URLs are live.
 
-Configuration uses `EIDOVA_*`; existing `OPEN_DESIGN_*` settings remain fallback aliases. Local `.open-design/state` and the private Blob `open-design/state` prefix are retained so saved workspaces remain accessible. Old review-rule resource links still resolve to the renamed rules. Branded GitHub and Vercel URLs are live; previous hosted aliases remain compatible after the coordinated [hosted rename](docs/DEPLOYMENT.md#eidova-hosted-rename).
-
-This independent MIT project is unaffiliated with Better Design. Copyright, Tabler's embedded SVG license and Lucide's ISC notice are retained in [NOTICE](NOTICE) and bundled licenses. Supplemental icons use local Lucide; some specialist registry components retain their original Iconify dependencies.
+This independent open-source project is licensed under the MIT License. Copyright, Tabler's embedded SVG license and Lucide's ISC notice are retained in [NOTICE](NOTICE) and bundled licenses. Supplemental icons use local Lucide; some specialist registry components retain their original Iconify dependencies.

@@ -1,6 +1,5 @@
 # Eidova resource library
 
-Imported from https://github.com/nexu-io/open-design at `b4ec310921f49ae512de1f0a1f3a4e7ce3d05f2f`.
 The curated library contains **784 packages**: 152 design systems, 115 design
 templates, 343 official plugin packages, 169 skills, three framework/live-artifact
 templates, and two source catalogs. Its 7,188 logical file records share 6,406 stored files (139,052,651 bytes, excluding root notices and the generated index).
@@ -112,7 +111,7 @@ does not claim every linked workflow or preview interaction runs without them.
 Refresh from the reviewed, clean checkout, running in the MCP repository:
 
 ```sh
-npm run resources:import -- ../.reference/nexu-open-design ../eidova-website
+npm run resources:import -- <source-dir> ../eidova-website
 ```
 
 The importer verifies the revision, clean tracked source, regular files, path safety,

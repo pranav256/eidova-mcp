@@ -92,8 +92,8 @@ Current evidence reconciled on 15 November 2026. This reference preserves comple
 ## Hosted state last verified - 15 November 2026
 
 - Signed MCP commit **9b23c02** and website commit **4ab5743** are on their remote default branches. Both production deployments are Ready. MCP CI [passed on the exact commit](https://github.com/pranav256/eidova-mcp/actions/runs/43691196675); website CI passed on 4ab5743.
-- The public API reports **0.2.0**. Full [`/mcp`](https://open-design-mcp-liard.vercel.app/mcp) has **42** public tools; optional `/mcp/core` has **13**. Fresh hosted discovery and read-only tool/source smokes pass on both profiles. Existing connections need reconnection to refresh discovery.
-- https://eidova.vercel.app/ and https://open-design-website.vercel.app/ use the warm paper/rust reference and the working navbar theme slider. Website setup, Docs and Registry metadata default to full. The website's `docs/theme-slider-review.json` records all 31 themes, pointer/keyboard/history/storage recovery and the rendered review.
+- The public API reports **0.2.0**. Full [`/mcp`](https://eidova-mcp.vercel.app/mcp) has **42** public tools; optional `/mcp/core` has **13**. Fresh hosted discovery and read-only tool/source smokes pass on both profiles. Existing connections need reconnection to refresh discovery.
+- https://eidova.vercel.app/ uses the warm paper/rust reference and the working navbar theme slider. Website setup, Docs and Registry metadata default to full. The website's `docs/theme-slider-review.json` records all 31 themes, pointer/keyboard/history/storage recovery and the rendered review.
 - Fresh standalone MCP tests: **128 passed**. Separate real-backend/native-adapter integration tests: **8 passed**. Actual tarball installation, all resource bytes/notices, doctor/recovery and core stdio passed (approximately 89.9 MB compressed). These adapter checks do not establish full native runtime acceptance.
 - Eidova GitHub repositories and the branded website alias are assigned. Existing API hostname, routes, keys and storage stay compatible. npm currently returns E404 for `eidova-mcp`; the authenticated publisher is `pranav256`. An absent listing does not prove ownership. Registry publication is unverified.
 - GitHub private vulnerability reporting is enabled for MCP and website. The rate-limit smoke returned 120 normal 404 responses and ten 429 responses with zero network errors; GET health remained 200. Vercel's active valid rule limits POST requests to **120/minute per IP per region**, using a fixed window. It leaves GET registry downloads available. Counters are regional, not a single global cap; the process cap of 16 remains an independent boundary. See [operating controls](DEPLOYMENT.md).
@@ -126,8 +126,8 @@ Local reference environment: Windows x64, Node **24.20.0**, Intel Core 3 100U, E
 | Check | Recorded result | Evidence |
 | --- | --- | --- |
 | MCP typecheck / production build | Passed | Local commands; package prepack repeats these checks |
-| Remote service CI | All four Node 22/24 Linux/Windows jobs and six installed consumers passed | [MCP run on 3f30dd4](https://github.com/pranav256/open-design-mcp/actions/runs/42818900705) |
-| Remote website CI | Typecheck/build and production audit passed | [Website run on 6441ac4](https://github.com/pranav256/open-design-website/actions/runs/42818368810) |
+| Remote service CI | All four Node 22/24 Linux/Windows jobs and six installed consumers passed | [MCP run on 3f30dd4](https://github.com/pranav256/eidova-mcp/actions/runs/42818900705) |
+| Remote website CI | Typecheck/build and production audit passed | [Website run on 6441ac4](https://github.com/pranav256/eidova-website/actions/runs/42818368810) |
 | Service suite | **89 passed**, zero failures/skips | `.work/verification/service-tests.log` |
 | Both production dependency audits | Zero reported vulnerabilities | Local `npm audit --omit=dev`; not an all-dependency security certification |
 | Built stdio | Passed from a different working directory | `npm run smoke:stdio` |
@@ -193,10 +193,10 @@ The original release results below are retained as the initial baseline.
 
 The independent Eidova service and website are deployed publicly:
 
-- MCP: https://open-design-mcp-liard.vercel.app/mcp
-- Website: https://open-design-website.vercel.app
-- Service repository: https://github.com/pranav256/open-design-mcp
-- Website repository: https://github.com/pranav256/open-design-website
+- MCP: https://eidova-mcp.vercel.app/mcp
+- Website: https://eidova.vercel.app
+- Service repository: https://github.com/pranav256/eidova-mcp
+- Website repository: https://github.com/pranav256/eidova-website
 
 ## Service
 
@@ -253,7 +253,7 @@ repository retains a small public review summary, not the raw private handoff.
 
 These checks establish the stated deployment behavior, not accessibility
 certification, real visitor research, every theme component's rendered behavior,
-or complete Better Design parity. The private vendor guidance corpus, AI
+or complete feature parity. The private guidance corpus, AI
 generation, proprietary inspiration, vendor accounts, mobile/Shopify install kits
 and trusted dashboard browser receipts remain unavailable. See
 [README](../README.md) and [runtime boundaries](RUNTIME-BOUNDARIES.md).

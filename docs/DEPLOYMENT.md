@@ -48,13 +48,13 @@ The Node API functions have a 60-second maximum. Link a **private** Vercel Blob 
 
 Keep previous deployment IDs, URL settings and package version before promotion. Retain the same Blob store, capability scheme and state paths. The 16-request process cap is local to an instance. On 15 November 2026 Vercel firewall version 1 (`waf_cC9Yii5SCOuF`) activated a valid fixed-window rule for all POST requests: 120/minute per IP per region, returning HTTP 429. A bounded smoke against an absent route returned 120 normal 404 responses and ten 429 responses; GET `/health` remained 200. GET registry downloads do not match the rule. Vercel counters are regional, so this is not a single global limit. Shared proxy/NAT clients share an IP's allowance; monitor firewall events and adjust deliberately. The Hobby project uses its included single rate-limit rule. To roll back this control, deactivate the named `Eidova POST rate limit` rule without changing source, keys or data. API deployments do not replace project firewall settings.
 
-## Eidova hosted rename
+## Hosting and endpoints
 
-The source, package, CLI and local checkout names use Eidova. GitHub repositories are now `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs. Existing Vercel project IDs and working hostnames remain intact. Historical review receipts retain their original names and hashes.
+The source, package, CLI and local checkout names use Eidova. GitHub repositories are `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs.
 
-The website alias `eidova.vercel.app` and API alias `eidova-mcp.vercel.app` are assigned to the existing Vercel projects. Source uses `https://eidova-mcp.vercel.app/mcp` as the canonical full endpoint and `/mcp/core` for essentials. Client connections go directly to the API; website catalog/registry rewrites and optional `/mcp` forwarding also target the branded API alias. Keep `open-design-website.vercel.app` and `open-design-mcp-liard.vercel.app` as compatibility aliases. Do not point API rewrites back to the website, which would create a loop. Preserve project IDs, deployment history, Blob store, WAF rules and old aliases.
+The website alias `eidova.vercel.app` and API alias `eidova-mcp.vercel.app` are assigned to the Vercel projects. Source uses `https://eidova-mcp.vercel.app/mcp` as the canonical full endpoint and `/mcp/core` for essentials. Client connections go directly to the API; website catalog/registry rewrites and optional `/mcp` forwarding also target the branded API alias. Do not point API rewrites back to the website, which would create a loop.
 
-Before production rollout, set API `EIDOVA_BASE_URL=https://eidova-mcp.vercel.app` and `EIDOVA_WEBSITE_URL=https://eidova.vercel.app`, and website `VITE_MCP_URL=https://eidova-mcp.vercel.app/mcp`, `VITE_REGISTRY_ORIGIN=https://eidova-mcp.vercel.app`. Existing environment overrides take precedence over source defaults. Deploy API support for `/server.json` first, then the website routing and assets. Verify POST initialization/discovery and tool calls on branded full/core, registry downloads, `/server.json`, website `/AGENTS.md`, `/llms.txt` and the old aliases before declaring the rename live. Keep the API's WAF enforcement in the request path.
+Before production rollout, set API `EIDOVA_BASE_URL=https://eidova-mcp.vercel.app` and `EIDOVA_WEBSITE_URL=https://eidova.vercel.app`, and website `VITE_MCP_URL=https://eidova-mcp.vercel.app/mcp`, `VITE_REGISTRY_ORIGIN=https://eidova-mcp.vercel.app`. Existing environment overrides take precedence over source defaults. Deploy API support for `/server.json` first, then the website routing and assets. Verify POST initialization/discovery and tool calls on branded full/core, registry downloads, `/server.json`, website `/AGENTS.md` and `/llms.txt`. Keep the API's WAF enforcement in the request path.
 
 After the new aliases work, update website build variables and `vercel.json` rewrites, API `EIDOVA_BASE_URL` and `EIDOVA_WEBSITE_URL`, `server.json`, defaults and setup documentation together. Deploy the API before the website and verify health, MCP discovery, catalog and registry URLs. Do not point clients at unassigned hostnames or switch the existing storage prefixes or Docker volume during the rename.
 
@@ -100,7 +100,7 @@ For npm, move the intended dist-tag back to the previous tested version; do not 
 
 ```sh
 docker build -t eidova-mcp .
-docker run --rm -p 3000:3000 -v open-design-state:/app/.open-design \
+docker run --rm -p 3000:3000 -v eidova-state:/app/.eidova \
   -e EIDOVA_BASE_URL=http://localhost:3000 eidova-mcp
 ```
 
