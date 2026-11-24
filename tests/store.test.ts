@@ -224,9 +224,9 @@ test("storage failures are not misreported as success or treated as missing data
 test("Blob refuses malformed and oversized responses", async () => {
   const transport = new FakeBlobTransport();
   const store = new VercelBlobStore({ token: "test-token", transport });
-  transport.documents.set("open-design/state/broken.json", { bytes: Buffer.from("{"), revision: 1 });
+  transport.documents.set("eidova/state/broken.json", { bytes: Buffer.from("{"), revision: 1 });
   await assert.rejects(store.get("broken"), /not valid UTF-8 JSON/);
-  transport.documents.set("open-design/state/large.json", { bytes: Buffer.from("x".repeat(MAX_DOCUMENT_BYTES + 1)), revision: 1 });
+  transport.documents.set("eidova/state/large.json", { bytes: Buffer.from("x".repeat(MAX_DOCUMENT_BYTES + 1)), revision: 1 });
   await assert.rejects(store.get("large"), RangeError);
 });
 
@@ -254,7 +254,7 @@ test("Eidova state settings override legacy aliases without moving existing data
     delete process.env.VERCEL;
     delete process.env.EIDOVA_STATE_DIR;
     delete process.env.OPEN_DESIGN_STATE_DIR;
-    assert.equal((createStore() as LocalFileStore).directory, resolve(".open-design/state"));
+    assert.equal((createStore() as LocalFileStore).directory, resolve(".eidova/state"));
     process.env.OPEN_DESIGN_STATE_DIR = "legacy-state";
     assert.equal((createStore() as LocalFileStore).directory, resolve("legacy-state"));
     process.env.EIDOVA_STATE_DIR = "eidova-state";

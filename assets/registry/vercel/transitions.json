@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/vercel/notification-badge.json",
-    "https://www.better-design.com/registry/vercel/menu-dropdown.json",
-    "https://www.better-design.com/registry/vercel/panel-reveal.json",
-    "https://www.better-design.com/registry/vercel/card-resize.json",
-    "https://www.better-design.com/registry/vercel/icon-swap.json",
-    "https://www.better-design.com/registry/vercel/text-swap.json",
-    "https://www.better-design.com/registry/vercel/modal-transition.json",
-    "https://www.better-design.com/registry/vercel/page-slide.json",
-    "https://www.better-design.com/registry/vercel/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/vercel/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/vercel/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

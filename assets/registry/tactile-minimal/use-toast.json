@@ -9,6 +9,6 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/tactile-minimal/toast.json"
+    "https://eidova-mcp.vercel.app/registry/tactile-minimal/toast.json"
   ]
 }

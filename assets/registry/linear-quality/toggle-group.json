@@ -19,7 +19,7 @@
     "motion"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/linear-quality/toggle.json",
+    "https://eidova-mcp.vercel.app/registry/linear-quality/toggle.json",
     "utils"
   ]
 }

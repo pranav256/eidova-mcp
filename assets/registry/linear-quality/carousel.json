@@ -13,7 +13,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/linear-quality/button.json",
+    "https://eidova-mcp.vercel.app/registry/linear-quality/button.json",
     "utils"
   ]
 }

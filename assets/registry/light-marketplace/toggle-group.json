@@ -19,7 +19,7 @@
     "motion"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/light-marketplace/toggle.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/toggle.json",
     "utils"
   ]
 }

@@ -14,7 +14,7 @@
     "react-hook-form"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/figma/label.json",
+    "https://eidova-mcp.vercel.app/registry/figma/label.json",
     "utils"
   ]
 }

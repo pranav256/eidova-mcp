@@ -14,7 +14,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/figma/dialog.json",
+    "https://eidova-mcp.vercel.app/registry/figma/dialog.json",
     "utils"
   ]
 }

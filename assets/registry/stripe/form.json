@@ -14,7 +14,7 @@
     "react-hook-form"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/stripe/label.json",
+    "https://eidova-mcp.vercel.app/registry/stripe/label.json",
     "utils"
   ]
 }

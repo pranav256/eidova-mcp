@@ -12,7 +12,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/editorial-dark/button.json",
+    "https://eidova-mcp.vercel.app/registry/editorial-dark/button.json",
     "utils"
   ]
 }

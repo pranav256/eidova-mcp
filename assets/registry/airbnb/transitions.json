@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/airbnb/notification-badge.json",
-    "https://www.better-design.com/registry/airbnb/menu-dropdown.json",
-    "https://www.better-design.com/registry/airbnb/panel-reveal.json",
-    "https://www.better-design.com/registry/airbnb/card-resize.json",
-    "https://www.better-design.com/registry/airbnb/icon-swap.json",
-    "https://www.better-design.com/registry/airbnb/text-swap.json",
-    "https://www.better-design.com/registry/airbnb/modal-transition.json",
-    "https://www.better-design.com/registry/airbnb/page-slide.json",
-    "https://www.better-design.com/registry/airbnb/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/airbnb/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

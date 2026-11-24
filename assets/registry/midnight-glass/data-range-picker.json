@@ -14,9 +14,9 @@
     "react-day-picker"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/midnight-glass/button.json",
-    "https://www.better-design.com/registry/midnight-glass/calendar.json",
-    "https://www.better-design.com/registry/midnight-glass/popover.json",
+    "https://eidova-mcp.vercel.app/registry/midnight-glass/button.json",
+    "https://eidova-mcp.vercel.app/registry/midnight-glass/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/midnight-glass/popover.json",
     "utils"
   ]
 }

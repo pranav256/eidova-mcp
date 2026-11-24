@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/light-marketplace/toast.json",
-    "https://www.better-design.com/registry/light-marketplace/use-toast.json"
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/toast.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/use-toast.json"
   ]
 }

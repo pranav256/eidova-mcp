@@ -19,7 +19,7 @@
     "motion"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/supabase/toggle.json",
+    "https://eidova-mcp.vercel.app/registry/supabase/toggle.json",
     "utils"
   ]
 }

@@ -13,9 +13,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/editorial-dark/button.json",
-    "https://www.better-design.com/registry/editorial-dark/calendar.json",
-    "https://www.better-design.com/registry/editorial-dark/popover.json",
+    "https://eidova-mcp.vercel.app/registry/editorial-dark/button.json",
+    "https://eidova-mcp.vercel.app/registry/editorial-dark/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/editorial-dark/popover.json",
     "utils"
   ]
 }

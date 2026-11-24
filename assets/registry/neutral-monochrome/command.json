@@ -14,7 +14,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/neutral-monochrome/dialog.json",
+    "https://eidova-mcp.vercel.app/registry/neutral-monochrome/dialog.json",
     "utils"
   ]
 }

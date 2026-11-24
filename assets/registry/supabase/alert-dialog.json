@@ -12,7 +12,7 @@
     "@radix-ui/react-alert-dialog"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/supabase/button.json",
+    "https://eidova-mcp.vercel.app/registry/supabase/button.json",
     "utils"
   ]
 }

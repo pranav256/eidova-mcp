@@ -3,12 +3,6 @@
 .env*
 .work
 .eidova
-.open-design
-node_modules
-dist
-public
-research
-better-design
 local_design
 website
 site

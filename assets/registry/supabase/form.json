@@ -14,7 +14,7 @@
     "react-hook-form"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/supabase/label.json",
+    "https://eidova-mcp.vercel.app/registry/supabase/label.json",
     "utils"
   ]
 }

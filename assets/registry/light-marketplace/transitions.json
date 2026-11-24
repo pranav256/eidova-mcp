@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/light-marketplace/notification-badge.json",
-    "https://www.better-design.com/registry/light-marketplace/menu-dropdown.json",
-    "https://www.better-design.com/registry/light-marketplace/panel-reveal.json",
-    "https://www.better-design.com/registry/light-marketplace/card-resize.json",
-    "https://www.better-design.com/registry/light-marketplace/icon-swap.json",
-    "https://www.better-design.com/registry/light-marketplace/text-swap.json",
-    "https://www.better-design.com/registry/light-marketplace/modal-transition.json",
-    "https://www.better-design.com/registry/light-marketplace/page-slide.json",
-    "https://www.better-design.com/registry/light-marketplace/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

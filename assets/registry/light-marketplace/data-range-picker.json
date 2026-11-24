@@ -13,9 +13,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/light-marketplace/button.json",
-    "https://www.better-design.com/registry/light-marketplace/calendar.json",
-    "https://www.better-design.com/registry/light-marketplace/popover.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/button.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/light-marketplace/popover.json",
     "utils"
   ]
 }

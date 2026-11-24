@@ -14,7 +14,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/notion/dialog.json",
+    "https://eidova-mcp.vercel.app/registry/notion/dialog.json",
     "utils"
   ]
 }

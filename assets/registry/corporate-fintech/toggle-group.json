@@ -19,7 +19,7 @@
     "motion"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/corporate-fintech/toggle.json",
+    "https://eidova-mcp.vercel.app/registry/corporate-fintech/toggle.json",
     "utils"
   ]
 }

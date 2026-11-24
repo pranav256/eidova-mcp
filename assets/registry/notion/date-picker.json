@@ -12,9 +12,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/notion/button.json",
-    "https://www.better-design.com/registry/notion/calendar.json",
-    "https://www.better-design.com/registry/notion/popover.json",
+    "https://eidova-mcp.vercel.app/registry/notion/button.json",
+    "https://eidova-mcp.vercel.app/registry/notion/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/notion/popover.json",
     "utils"
   ]
 }

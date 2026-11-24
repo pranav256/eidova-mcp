@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/vibrant-dark/notification-badge.json",
-    "https://www.better-design.com/registry/vibrant-dark/menu-dropdown.json",
-    "https://www.better-design.com/registry/vibrant-dark/panel-reveal.json",
-    "https://www.better-design.com/registry/vibrant-dark/card-resize.json",
-    "https://www.better-design.com/registry/vibrant-dark/icon-swap.json",
-    "https://www.better-design.com/registry/vibrant-dark/text-swap.json",
-    "https://www.better-design.com/registry/vibrant-dark/modal-transition.json",
-    "https://www.better-design.com/registry/vibrant-dark/page-slide.json",
-    "https://www.better-design.com/registry/vibrant-dark/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

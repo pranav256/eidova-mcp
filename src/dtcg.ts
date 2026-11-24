@@ -15,7 +15,11 @@ export function normalizeDtcg(input:string) {
       if(key.startsWith('$')||!value||typeof value!=='object'||Array.isArray(value))continue;
       const node=value as Record<string,unknown>,next=[...path,key];
       if(Object.hasOwn(node,'$value'))tokens.set(next.join('.'),{token:node as Token,parent:group,key,mode,original:structuredClone(node) as Token});
-      else collect(node,next,(node.$extensions as Record<string,unknown>|undefined)?.['com.better-design.mode']==='dark'?next.join('.'):mode);
+      else {
+        const ext = node.$extensions as Record<string, unknown> | undefined;
+        const isDark = ext?.['io.eidova.mode'] === 'dark' || ext?.['com.better-design.mode'] === 'dark';
+        collect(node, next, isDark ? next.join('.') : mode);
+      }
     }
   }
   collect(document);

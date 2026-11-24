@@ -12,9 +12,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/dark-orange/button.json",
-    "https://www.better-design.com/registry/dark-orange/command.json",
-    "https://www.better-design.com/registry/dark-orange/popover.json",
+    "https://eidova-mcp.vercel.app/registry/dark-orange/button.json",
+    "https://eidova-mcp.vercel.app/registry/dark-orange/command.json",
+    "https://eidova-mcp.vercel.app/registry/dark-orange/popover.json",
     "utils"
   ]
 }

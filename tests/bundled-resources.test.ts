@@ -42,7 +42,7 @@ test('the curated library includes distinct templates, plugins and their origina
 });
 
 test('curation preserves legacy links, shared bytes and the complete licensed craft workflow', async () => {
-  const catalog=JSON.parse(await readFile(resourcePath('content/open-design/index.json'),'utf8'));
+  const catalog=JSON.parse(await readFile(resourcePath('content/eidova/index.json'),'utf8'));
   assert.equal(catalog.legacyEntries.length,137);
   for(const entry of catalog.legacyEntries) {
     assert.ok(await findBundledEntry(entry.kind,entry.id));
@@ -77,7 +77,7 @@ test('all imported files retain hashes, entrypoints and retrievable license noti
   assert.equal(entries.filter(entry=>entry.kind==='design-systems').length,152);
   assert.equal(entries.filter(entry=>entry.kind==='skills').length,169);
   assert.equal(new Set(entries.map(entry=>entry.kind+'/'+entry.id)).size,784);
-  assert.match(await readFile(resourcePath('content/open-design/LICENSE'),'utf8'),/Apache License/);
+  assert.match(await readFile(resourcePath('content/eidova/LICENSE'),'utf8'),/Apache License/);
   for(const entry of entries) {
     assert.ok(entry.name && entry.description);
     assert.ok(entry.files.some(file=>file.path===entry.entrypoint));
@@ -127,7 +127,7 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
     assert.equal(reassembled,(await bundledFile('design-systems','airbnb','DESIGN-zh.md'))!.bytes.toString('utf8'));
     for(const uri of ['file:///etc/passwd','https://example.com','design://open-design/skills/missing','design://open-design/design-systems/linear-app/files/%2E%2E%2FLICENSE','design://open-design/design-systems/linear-app/files/%ZZ'])assert.ok((await client.callTool({name:'read-resource',arguments:{uri}})).isError,uri);
     for(const extra of [{offset:-1},{offset:10000000},{limit:24001}])assert.ok((await client.callTool({name:'read-resource',arguments:{uri:translatedUri,...extra}})).isError);
-    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/open-design\/[^/]+\//.test(resource.uri)).length,784);
+    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/(?:eidova|open-design)\/[^/]+\//.test(resource.uri)).length,784);
     assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/license'})),/Apache License/);
     const entry=(await bundledEntries()).find(entry=>entry.id==='linear-app')!;
     const manifest=await client.readResource({uri:'design://open-design/design-systems/linear-app'});

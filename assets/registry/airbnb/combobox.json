@@ -12,9 +12,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/airbnb/button.json",
-    "https://www.better-design.com/registry/airbnb/command.json",
-    "https://www.better-design.com/registry/airbnb/popover.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/button.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/command.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/popover.json",
     "utils"
   ]
 }

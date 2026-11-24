@@ -13,9 +13,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/figma/button.json",
-    "https://www.better-design.com/registry/figma/calendar.json",
-    "https://www.better-design.com/registry/figma/popover.json",
+    "https://eidova-mcp.vercel.app/registry/figma/button.json",
+    "https://eidova-mcp.vercel.app/registry/figma/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/figma/popover.json",
     "utils"
   ]
 }

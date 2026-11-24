@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/apple/notification-badge.json",
-    "https://www.better-design.com/registry/apple/menu-dropdown.json",
-    "https://www.better-design.com/registry/apple/panel-reveal.json",
-    "https://www.better-design.com/registry/apple/card-resize.json",
-    "https://www.better-design.com/registry/apple/icon-swap.json",
-    "https://www.better-design.com/registry/apple/text-swap.json",
-    "https://www.better-design.com/registry/apple/modal-transition.json",
-    "https://www.better-design.com/registry/apple/page-slide.json",
-    "https://www.better-design.com/registry/apple/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/apple/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/apple/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/apple/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/apple/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/apple/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/apple/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/apple/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/apple/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/apple/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

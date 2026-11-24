@@ -103,8 +103,7 @@ async function queued<T>(identity: string, operation: () => Promise<T>): Promise
 export class LocalFileStore implements JsonStore {
   readonly directory: string;
 
-  // Keep the existing state location so a brand rename cannot hide saved workspaces.
-  constructor(directory = ".open-design/state") {
+  constructor(directory = ".eidova/state") {
     this.directory = resolve(directory);
   }
 
@@ -232,8 +231,7 @@ export class VercelBlobStore implements JsonStore {
     }
     this.token = token;
     this.transport = options.transport ?? { get: getBlob, put: putBlob };
-    // Existing private Blob documents use this prefix; changing it would strand saved workspaces.
-    this.prefix = options.prefix ?? "open-design/state";
+    this.prefix = options.prefix ?? "eidova/state";
     validateKey(this.prefix);
     this.queueIdentity = createHash("sha256").update(token).digest("hex");
   }
@@ -324,5 +322,5 @@ export class VercelBlobStore implements JsonStore {
 export function createStore(options: { localDirectory?: string; blobToken?: string } = {}): JsonStore {
   return process.env.VERCEL
     ? new VercelBlobStore({ token: options.blobToken })
-    : new LocalFileStore(options.localDirectory ?? (process.env.EIDOVA_STATE_DIR ?? process.env.OPEN_DESIGN_STATE_DIR) ?? ".open-design/state");
+    : new LocalFileStore(options.localDirectory ?? (process.env.EIDOVA_STATE_DIR ?? process.env.OPEN_DESIGN_STATE_DIR) ?? ".eidova/state");
 }

@@ -10,11 +10,7 @@ dist/
 .local-design/
 .venv/
 .work/
-.eidova
-.open-design/
-site/evidence/
-research/
-better-design/
+.eidova/
 local_design/
 .env*
 !.env.example

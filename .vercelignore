@@ -1,13 +1,7 @@
 /.git
 /.work
 /research
-/better-design
-/local_design
-/node_modules
-/tests
-/docs
 /.eidova
-/.open-design
 /.env*
 /vendor/upstream/src
 /vendor/upstream/provenance.json

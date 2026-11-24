@@ -1,6 +1,6 @@
 {
   "name": "design-systems",
-  "baseUrl": "https://www.better-design.com/registry",
+  "baseUrl": "https://eidova-mcp.vercel.app/registry",
   "styles": [
     {
       "name": "apple",

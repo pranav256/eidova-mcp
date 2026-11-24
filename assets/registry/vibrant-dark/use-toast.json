@@ -9,6 +9,6 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/vibrant-dark/toast.json"
+    "https://eidova-mcp.vercel.app/registry/vibrant-dark/toast.json"
   ]
 }

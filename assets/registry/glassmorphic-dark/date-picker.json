@@ -12,9 +12,9 @@
     "@iconify/react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/glassmorphic-dark/button.json",
-    "https://www.better-design.com/registry/glassmorphic-dark/calendar.json",
-    "https://www.better-design.com/registry/glassmorphic-dark/popover.json",
+    "https://eidova-mcp.vercel.app/registry/glassmorphic-dark/button.json",
+    "https://eidova-mcp.vercel.app/registry/glassmorphic-dark/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/glassmorphic-dark/popover.json",
     "utils"
   ]
 }

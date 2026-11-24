@@ -14,7 +14,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/linear-quality/dialog.json",
+    "https://eidova-mcp.vercel.app/registry/linear-quality/dialog.json",
     "utils"
   ]
 }

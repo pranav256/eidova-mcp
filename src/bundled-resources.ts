@@ -6,9 +6,9 @@ import { baseUrl } from './catalog.js';
 export const bundledKinds = ['design-systems','design-templates','plugins','templates','catalogs','skills'] as const;
 export type BundledEntry = {kind:typeof bundledKinds[number];id:string;sourcePath?:string;repository?:string;revision?:string;name:string;description:string;category:string;license:string;entrypoint:string;sourceUrl:string;preview?:{type:'html';path:string}|{type:'image'|'video';url:string};attributionUris?:string[];licensePaths:string[];files:{path:string;storagePath?:string;bytes:number;sha256:string;binary:boolean;mimeType?:string}[]};
 type Bundle = {repository:string;revision:string;entries:BundledEntry[];legacyEntries?:BundledEntry[]};
-const bundle = readFile(resourcePath('content/open-design/index.json'), 'utf8').then(text => JSON.parse(text) as Bundle);
+const bundle = readFile(resourcePath('content/eidova/index.json'), 'utf8').then(text => JSON.parse(text) as Bundle);
 export const resourceNote = 'Eidova bundled systems, components, templates, plugin manifests and assets. Read the manifest, entrypoint, build instructions and licenses; retrieve companion files as needed. Some packages link to external workflows or media. File reads return data, and HTML previews run in an isolated sandbox. Existing project rules and user permissions still apply.';
-export const entryUri = (entry:Pick<BundledEntry,'kind'|'id'>) => `design://open-design/${entry.kind}/${entry.id}`;
+export const entryUri = (entry:Pick<BundledEntry,'kind'|'id'>) => `design://eidova/${entry.kind}/${entry.id}`;
 export const fileUri = (entry:Pick<BundledEntry,'kind'|'id'>, file:string) => `${entryUri(entry)}/files/${file.split('/').map(encodeURIComponent).join('/')}`;
 const sourcePath = (entry:BundledEntry) => entry.sourcePath ?? `${entry.kind}/${entry.id}`;
 const allEntries = bundle.then(({entries,legacyEntries=[]}) => [...entries,...legacyEntries]);
@@ -35,7 +35,7 @@ export async function bundledManifest(entry:BundledEntry) {
   const endpoint=`${baseUrl()}/api/resources/${entry.kind}/${entry.id}`;
   return { ...entry, repository, revision, note:resourceNote,
     ...(entry.preview?.type==='html'?{preview:{...entry.preview,url:`${endpoint}/preview?path=${encodeURIComponent(entry.preview.path)}`}}:{}),
-    licenses:entry.licensePaths.map(path => {const relative=path.split('/').slice(2).join('/');return {path,uri:path==='LICENSE'?'design://open-design/license':fileUri(entry,relative),sourceUrl:`${repository}/blob/${revision}/${path==='LICENSE'?path:sourcePath(entry)+'/'+relative}`};}),
+    licenses:entry.licensePaths.map(path => {const relative=path.split('/').slice(2).join('/');return {path,uri:path==='LICENSE'?'design://eidova/license':fileUri(entry,relative),sourceUrl:`${repository}/blob/${revision}/${path==='LICENSE'?path:sourcePath(entry)+'/'+relative}`};}),
     files:entry.files.map(file => ({...file,uri:fileUri(entry,file.path),url:`${endpoint}/file?path=${encodeURIComponent(file.path)}`,...(file.mimeType==='text/html'?{previewUrl:`${endpoint}/preview?path=${encodeURIComponent(file.path)}`}:{})})) };
 }
 export async function bundledFile(kind:string, id:string, file:string) {
@@ -44,7 +44,7 @@ export async function bundledFile(kind:string, id:string, file:string) {
   const safePath = (value:string) => !/[\\:\x00-\x1f]/.test(value) && !value.split('/').some(part => !part || part === '.' || part === '..');
   const storagePath = metadata?.storagePath ?? `${entry ? sourcePath(entry) : ''}/${file}`;
   if (!metadata || !safePath(file) || !safePath(storagePath)) return null;
-  const bytes = await readFile(resourcePath(`content/open-design/${storagePath}`));
+  const bytes = await readFile(resourcePath(`content/eidova/${storagePath}`));
   if (bytes.length !== metadata.bytes || createHash('sha256').update(bytes).digest('hex') !== metadata.sha256) throw new Error('Bundled resource integrity check failed.');
   return {bytes,metadata};
 }
@@ -52,11 +52,11 @@ export async function bundledFile(kind:string, id:string, file:string) {
 export async function readBundledResource(uri:string, offset=0, limit=12000) {
   if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<1||limit>24000) throw new Error('Use a nonnegative offset and a limit from 1 to 24000 characters.');
   let bytes:Buffer, path:string, sha256:string, url:string;
-  if(uri==='design://open-design/license') {
-    bytes=await readFile(resourcePath('content/open-design/LICENSE'));
+  if(uri==='design://eidova/license'||uri==='design://open-design/license') {
+    bytes=await readFile(resourcePath('content/eidova/LICENSE'));
     path='LICENSE';sha256=createHash('sha256').update(bytes).digest('hex');url=`${baseUrl()}/api/resources/license`;
   } else {
-    const match=uri.match(/^design:\/\/open-design\/([a-z-]+)\/([a-z0-9-]+)(?:\/files\/(.+))?$/);
+    const match=uri.match(/^design:\/\/(?:eidova|open-design)\/([a-z-]+)\/([a-z0-9-]+)(?:\/files\/(.+))?$/);
     if(!match)throw new Error('Use a bundled resource URI returned by search-resources.');
     const [,kind,id,encodedPath]=match;
     const entry=await findBundledEntry(kind,id);

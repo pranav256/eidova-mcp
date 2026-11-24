@@ -34,7 +34,7 @@ jobs:
           docker volume create eidova-smoke-state
           trap 'docker logs eidova-smoke; docker rm -f eidova-smoke; docker volume rm eidova-smoke-state' EXIT
           docker run -d --name eidova-smoke -p 3000:3000 \
-            -v eidova-smoke-state:/app/.open-design \
+            -v eidova-smoke-state:/app/.eidova \
             -e EIDOVA_BASE_URL=http://localhost:3000 eidova-smoke
           curl --fail --silent --retry 30 --retry-all-errors --retry-delay 1 http://localhost:3000/health
           npm run smoke -- http://localhost:3000/mcp

@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/inset-dark/notification-badge.json",
-    "https://www.better-design.com/registry/inset-dark/menu-dropdown.json",
-    "https://www.better-design.com/registry/inset-dark/panel-reveal.json",
-    "https://www.better-design.com/registry/inset-dark/card-resize.json",
-    "https://www.better-design.com/registry/inset-dark/icon-swap.json",
-    "https://www.better-design.com/registry/inset-dark/text-swap.json",
-    "https://www.better-design.com/registry/inset-dark/modal-transition.json",
-    "https://www.better-design.com/registry/inset-dark/page-slide.json",
-    "https://www.better-design.com/registry/inset-dark/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/inset-dark/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/inset-dark/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

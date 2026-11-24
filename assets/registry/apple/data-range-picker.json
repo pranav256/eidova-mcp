@@ -13,9 +13,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/apple/button.json",
-    "https://www.better-design.com/registry/apple/calendar.json",
-    "https://www.better-design.com/registry/apple/popover.json",
+    "https://eidova-mcp.vercel.app/registry/apple/button.json",
+    "https://eidova-mcp.vercel.app/registry/apple/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/apple/popover.json",
     "utils"
   ]
 }

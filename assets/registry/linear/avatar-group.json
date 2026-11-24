@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/linear/avatar.json",
+    "https://eidova-mcp.vercel.app/registry/linear/avatar.json",
     "utils"
   ]
 }

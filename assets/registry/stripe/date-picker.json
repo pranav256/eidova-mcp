@@ -12,9 +12,9 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/stripe/button.json",
-    "https://www.better-design.com/registry/stripe/calendar.json",
-    "https://www.better-design.com/registry/stripe/popover.json",
+    "https://eidova-mcp.vercel.app/registry/stripe/button.json",
+    "https://eidova-mcp.vercel.app/registry/stripe/calendar.json",
+    "https://eidova-mcp.vercel.app/registry/stripe/popover.json",
     "utils"
   ]
 }

@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/airbnb/toast.json",
-    "https://www.better-design.com/registry/airbnb/use-toast.json"
+    "https://eidova-mcp.vercel.app/registry/airbnb/toast.json",
+    "https://eidova-mcp.vercel.app/registry/airbnb/use-toast.json"
   ]
 }

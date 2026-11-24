@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/dark-orange/card.json",
+    "https://eidova-mcp.vercel.app/registry/dark-orange/card.json",
     "utils"
   ]
 }

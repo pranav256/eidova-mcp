@@ -3,15 +3,15 @@
   "type": "registry:ui",
   "files": [],
   "registryDependencies": [
-    "https://www.better-design.com/registry/lumen-dark/notification-badge.json",
-    "https://www.better-design.com/registry/lumen-dark/menu-dropdown.json",
-    "https://www.better-design.com/registry/lumen-dark/panel-reveal.json",
-    "https://www.better-design.com/registry/lumen-dark/card-resize.json",
-    "https://www.better-design.com/registry/lumen-dark/icon-swap.json",
-    "https://www.better-design.com/registry/lumen-dark/text-swap.json",
-    "https://www.better-design.com/registry/lumen-dark/modal-transition.json",
-    "https://www.better-design.com/registry/lumen-dark/page-slide.json",
-    "https://www.better-design.com/registry/lumen-dark/number-pop-in.json"
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/notification-badge.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/menu-dropdown.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/panel-reveal.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/card-resize.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/icon-swap.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/text-swap.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/modal-transition.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/page-slide.json",
+    "https://eidova-mcp.vercel.app/registry/lumen-dark/number-pop-in.json"
   ],
   "meta": {
     "shared": true,

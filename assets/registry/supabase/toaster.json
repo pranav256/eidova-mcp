@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/supabase/toast.json",
-    "https://www.better-design.com/registry/supabase/use-toast.json"
+    "https://eidova-mcp.vercel.app/registry/supabase/toast.json",
+    "https://eidova-mcp.vercel.app/registry/supabase/use-toast.json"
   ]
 }

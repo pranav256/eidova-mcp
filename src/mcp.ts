@@ -239,16 +239,29 @@ export function createServer(store: JsonStore, identity?: string, privateArchive
     if(profile==='core'&&!coreTools.has(name))tool.remove();
   }
   const workflow=awaitWorkflow;
-  server.registerResource('open-design-license','design://open-design/license',{mimeType:'text/plain',description:'Apache-2.0 license for the bundled OpenDesign content; package overrides are linked in each manifest.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/open-design/LICENSE'),'utf8')}]}));
-  server.registerResource('open-design-bundles',new ResourceTemplate('design://open-design/{kind}/{id}',{
+  server.registerResource('eidova-license','design://eidova/license',{mimeType:'text/plain',description:'Apache-2.0 license for the bundled Eidova content; package overrides are linked in each manifest.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/eidova/LICENSE'),'utf8')}]}));
+  server.registerResource('eidova-bundles',new ResourceTemplate('design://eidova/{kind}/{id}',{
     list:async()=>({resources:(await bundledEntries()).map(entry=>({uri:entryUri(entry),name:`Eidova: ${entry.name} (${entry.kind})`,mimeType:'application/json',description:entry.description}))}),
   }),{mimeType:'application/json',description:resourceNote},async(uri,{kind,id})=>{
     const entry=await findBundledEntry(String(kind),String(id));
     if(!entry)throw new Error('Bundled resource not found.');
     return {contents:[{uri:uri.href,mimeType:'application/json',text:JSON.stringify(await bundledManifest(entry))}]};
   });
-  server.registerResource('open-design-file',new ResourceTemplate('design://open-design/{kind}/{id}/files/{+file}',{list:undefined}),
+  server.registerResource('eidova-file',new ResourceTemplate('design://eidova/{kind}/{id}/files/{+file}',{list:undefined}),
     {description:'Verbatim bundled file. Read its package manifest for provenance, hashes and licenses; no code is executed.'},async(uri,{kind,id,file})=>{
+      const result=await bundledFile(String(kind),String(id),String(file));
+      if(!result)throw new Error('Bundled file not found.');
+      return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:result.metadata.mimeType??'application/octet-stream',blob:result.bytes.toString('base64')}:{mimeType:result.metadata.mimeType??'text/plain',text:result.bytes.toString('utf8')})}]};
+    });
+  // Legacy aliases for backward compatibility
+  server.registerResource('open-design-license','design://open-design/license',{mimeType:'text/plain',description:'Legacy alias for design://eidova/license.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/eidova/LICENSE'),'utf8')}]}));
+  server.registerResource('open-design-bundles',new ResourceTemplate('design://open-design/{kind}/{id}',{list:undefined}),{mimeType:'application/json',description:'Legacy resource alias.'},async(uri,{kind,id})=>{
+    const entry=await findBundledEntry(String(kind),String(id));
+    if(!entry)throw new Error('Bundled resource not found.');
+    return {contents:[{uri:uri.href,mimeType:'application/json',text:JSON.stringify(await bundledManifest(entry))}]};
+  });
+  server.registerResource('open-design-file',new ResourceTemplate('design://open-design/{kind}/{id}/files/{+file}',{list:undefined}),
+    {description:'Legacy file alias.'},async(uri,{kind,id,file})=>{
       const result=await bundledFile(String(kind),String(id),String(file));
       if(!result)throw new Error('Bundled file not found.');
       return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:result.metadata.mimeType??'application/octet-stream',blob:result.bytes.toString('base64')}:{mimeType:result.metadata.mimeType??'text/plain',text:result.bytes.toString('utf8')})}]};

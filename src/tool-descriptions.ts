@@ -43,4 +43,4 @@ export const toolDescriptions:Record<string,string> = {
 };
 
 export const coreTools=new Set(['get-capabilities','search-resources','read-resource','find-design-system','get-design-system-kit','extract-design-system','extract-from-url','get-ui-principle','get-ux-principle','get-review-rules','review-ui-code','check-comprehension','inspect-spacing']);
-export const workflowNote='Keep the product’s existing design. Otherwise choose a family and install its actual kit. Load UI guidance before styling and UX guidance before behavior. For polish, audit with design://open-design/skills/unslop. Review source, copy and rendered spacing; fix critical/serious findings. Source checks are not visual approval. Full workflow: design://workflow/v1.';
+export const workflowNote='Keep the product’s existing design. Otherwise choose a family and install its actual kit. Load UI guidance before styling and UX guidance before behavior. Review source, copy and rendered spacing; fix critical/serious findings. Source checks are not visual approval. Full workflow: design://workflow/v1.';

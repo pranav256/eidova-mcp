@@ -29,7 +29,7 @@ test("every advertised guidance domain has original usable content", async () =>
 });
 
 test('craft, targets and recovery guidance remain practical and retrievable', async () => {
-  assert.match((await getPrincipleByTopic('polish','ui'))!.content,/design:\/\/open-design\/skills\/unslop/);
+  assert.match((await getPrincipleByTopic('polish','ui'))!.content,/established design tokens/);
   const accessibility=(await getPrincipleByTopic('accessibility','ui'))!.content;
   assert.match(accessibility,/24 by 24/);assert.match(accessibility,/44 by 44/);assert.match(accessibility,/entirely obscured/);
   assert.match((await getPrincipleByTopic('errors','ux'))!.content,/summary linked to affected fields/);

@@ -12,7 +12,7 @@
     "@radix-ui/react-alert-dialog"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/cinematic-dark/button.json",
+    "https://eidova-mcp.vercel.app/registry/cinematic-dark/button.json",
     "utils"
   ]
 }

@@ -14,7 +14,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/minimal-light/dialog.json",
+    "https://eidova-mcp.vercel.app/registry/minimal-light/dialog.json",
     "utils"
   ]
 }

@@ -9,6 +9,6 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/linear/toast.json"
+    "https://eidova-mcp.vercel.app/registry/linear/toast.json"
   ]
 }

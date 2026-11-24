@@ -9,7 +9,7 @@
     }
   ],
   "registryDependencies": [
-    "https://www.better-design.com/registry/supabase/card.json",
+    "https://eidova-mcp.vercel.app/registry/supabase/card.json",
     "utils"
   ]
 }

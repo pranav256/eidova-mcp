@@ -58,7 +58,7 @@ app.get('/api/resources/:kind/:id',async (req,res)=>{
 });
 app.get('/api/resources/license',async (_req,res)=>{
   res.setHeader('Cache-Control','public,max-age=300');
-  res.attachment('LICENSE');res.type('text/plain').send(await readFile(resourcePath('content/open-design/LICENSE')));
+  res.attachment('LICENSE');res.type('text/plain').send(await readFile(resourcePath('content/eidova/LICENSE')));
 });
 app.get('/api/resources/:kind/:id/file',async (req,res)=>{
   if(typeof req.query.path!=='string'){res.status(400).json({error:'Supply the path listed in the resource manifest'});return;}
