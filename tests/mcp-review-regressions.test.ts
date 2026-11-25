@@ -7,18 +7,32 @@ import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {createServer} from '../src/mcp.js';
 import {LocalFileStore} from '../src/store.js';
+import {workflowNote} from '../src/tool-descriptions.js';
 
 test('built MCP review retains reference mode, auto-margin evidence and authored CSS',async()=>{
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-review-'));
-  const server=createServer(new LocalFileStore(directory));
+  const server=createServer(new LocalFileStore(directory),undefined,undefined,'full');
   const client=new Client({name:'review-regressions',version:'1'});
   const[a,b]=InMemoryTransport.createLinkedPair();
   try {
     await server.connect(b);await client.connect(a);
+    const extracted=await client.callTool({name:'extract-design-system',arguments:{css:':root { --primary: #123456; --radius: 8px; }'}});
+    assert.ok(!extracted.isError);
+    const instructions=String((extracted.structuredContent as {buildInstructions:string}).buildInstructions);
+    assert.ok(instructions.includes(workflowNote));
+    assert.doesNotMatch(instructions,/Required, in this order|never skipped|Show the summary, the records/);
+    const ambiguous=await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',projectId:'00000000-0000-0000-0000-000000000000',component:'button'}});
+    assert.equal(ambiguous.isError,true);assert.match(JSON.stringify(ambiguous),/Use designSystemId or projectId/);
+    const preview=await client.callTool({name:'preview-design-system',arguments:{designSystemId:'minimal-light'}});
+    assert.ok(!preview.isError);assert.doesNotMatch(JSON.stringify(preview),/shotUrl/);
+    assert.deepEqual(JSON.parse((preview.content as {text:string}[])[0].text),preview.structuredContent);
+    const anonymousRules=await client.callTool({name:'get-team-rules',arguments:{}});
+    assert.match(JSON.stringify(anonymousRules),/private workspace/);
+    assert.doesNotMatch(JSON.stringify(anonymousRules),/set-team-rules|dashboard\/settings/);
     const refused=await client.callTool({name:'extract-from-url',arguments:{url:'http://127.0.0.1/private'}});
     assert.equal(refused.isError,true);assert.match(JSON.stringify(refused),/Private, local and reserved/);
     assert.ok(!(await client.callTool({name:'get-review-rules',arguments:{category:'comprehension'}})).isError);
-    const copy=await client.callTool({name:'check-comprehension',arguments:{screen:'Clip reference',surface:'reference',code:'<h4>Your moments</h4><a href="#install"><h2>Get Hooky</h2><svg /></a>'+Array.from({length:15},()=>'<p>Choose how the clips appear before saving.</p>').join('')}});
+    const copy=await client.callTool({name:'check-comprehension',arguments:{screen:'Clip reference',surface:'reference',code:'<h4>Your moments</h4><a href="#install"><h2>Get Eidova</h2><svg /></a>'+Array.from({length:15},()=>'<p>Choose how the clips appear before saving.</p>').join('')}});
     const comprehension=copy.structuredContent as {surface:string;verdict:string;words:number;budgetWords:number};
     assert.equal(comprehension.verdict,'pass');assert.equal(comprehension.surface,'reference');
     assert.ok(comprehension.words>60);assert.ok(comprehension.budgetWords<10);

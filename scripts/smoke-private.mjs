@@ -9,7 +9,7 @@ const keyB = randomBytes(32).toString('base64url');
 const clients = [];
 async function clientFor(key) {
   const client = new Client({name:'private-state-verification',version:'1'});
-  await client.connect(new StreamableHTTPClientTransport(new URL(`${origin}/mcp`),{requestInit:{headers:{Authorization:`Bearer ${key}`}}}));
+  await client.connect(new StreamableHTTPClientTransport(new URL(`${origin}/mcp/full`),{requestInit:{headers:{Authorization:`Bearer ${key}`}}}));
   clients.push(client); return client;
 }
 const asText = result => JSON.stringify(result);

@@ -4,7 +4,7 @@ import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = fileURLToPath(new URL('../content/open-design/', import.meta.url));
+const root = fileURLToPath(new URL('../content/eidova/', import.meta.url));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const sourcePath = entry => entry.sourcePath ?? `${entry.kind}/${entry.id}`;
 function diskPath(relative) {
@@ -41,26 +41,26 @@ async function importUnslop() {
 
 export async function curateResources(website) {
   const catalog = JSON.parse(await readFile(diskPath('index.json'), 'utf8'));
-  const all = [...catalog.entries, ...catalog.legacyEntries ?? []];
+  const all = catalog.entries;
   if (!all.some(entry => entry.kind === 'skills' && entry.id === 'unslop')) all.push(await importUnslop());
   const systems = new Map(all.filter(entry => entry.kind === 'design-systems').map(entry => [entry.id, entry]));
-  const legacyEntries = all.filter(entry => {
+  const excluded = new Set(all.filter(entry => {
     if (entry.kind === 'skills' && entry.id === 'ui-ux-pro-max') return true;
     if (entry.kind !== 'plugins' || !entry.id.startsWith('design-systems-')) return false;
     const system = systems.get(entry.id.slice('design-systems-'.length));
     const payload = entry.files.filter(file => !['README.md','open-design.json'].includes(file.path));
     return system && payload.length && payload.every(file => system.files.some(original => original.path === file.path && original.sha256 === file.sha256 && original.bytes === file.bytes));
-  });
-  assert.equal(legacyEntries.length, 137, 'Review curation when the pinned inventory changes.');
-  const entries = all.filter(entry => !legacyEntries.includes(entry));
+  }));
+  const entries = all.filter(entry => !excluded.has(entry));
   assert.equal(entries.length, 784);
   const storage = new Map(), remove = new Map();
-  for (const entry of [...entries, ...legacyEntries]) for (const file of entry.files) {
+  for (const entry of all) for (const file of entry.files) {
     const logicalPath = `${sourcePath(entry)}/${file.path}`;
     const current = file.storagePath ?? logicalPath;
     const bytes = await readFile(diskPath(current));
     assert.equal(bytes.length, file.bytes);
     assert.equal(hash(bytes), file.sha256, `Integrity: ${current}`);
+    if (excluded.has(entry)) { remove.set(current, file.bytes); continue; }
     const key = `${file.sha256}:${file.bytes}`;
     const retained = storage.get(key) ?? current;
     storage.set(key, retained);
@@ -69,10 +69,10 @@ export async function curateResources(website) {
     if (current !== retained) remove.set(current, file.bytes);
   }
   for (const retained of storage.values()) remove.delete(retained);
-  await writeFile(diskPath('index.json'), JSON.stringify({...catalog,entries,legacyEntries}, null, 2) + '\n');
+  await writeFile(diskPath('index.json'), JSON.stringify({...catalog,entries}, null, 2) + '\n');
   if (website) await writeFile(path.resolve(website,'src/resource-catalog.json'), JSON.stringify({entries:entries.map(({kind,id,name,description,category,license,entrypoint,preview,files}) => ({kind,id,name,description,category,license,entrypoint,...preview?{preview}:{},fileCount:files.length}))}, null, 2) + '\n');
   for (const relative of remove.keys()) await unlink(diskPath(relative));
-  return {packages:entries.length,legacyLinks:legacyEntries.length,removedCopies:remove.size,savedBytes:[...remove.values()].reduce((sum,bytes) => sum + bytes, 0)};
+  return {packages:entries.length,removedEntries:excluded.size,removedCopies:remove.size,savedBytes:[...remove.values()].reduce((sum,bytes) => sum + bytes, 0)};
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await curateResources(process.argv[2])));

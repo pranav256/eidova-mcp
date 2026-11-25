@@ -11,8 +11,7 @@ import { measureTextContrast } from './browser-contrast.mjs';
 const origin = process.env.WEBSITE_REVIEW_URL || 'https://eidova.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website');
 const website = path.resolve(process.env.WEBSITE_SOURCE_DIR || '../eidova-website');
-const endpoint = (process.env.WEBSITE_EXPECTED_MCP_URL || 'https://eidova-mcp.vercel.app/mcp').replace(/\/core\/?$/,'').replace(/\/$/,'');
-const coreEndpoint=endpoint.replace(/\/core\/?$/,'').replace(/\/$/,'')+'/core';
+const coreEndpoint = (process.env.WEBSITE_EXPECTED_MCP_URL || 'https://eidova-mcp.vercel.app/mcp').replace(/\/full\/?$/,'').replace(/\/$/,'');
 // Review the matching local service when supplied; keep hosted link assertions intact.
 const reviewServiceUrl = url => process.env.MCP_REVIEW_URL ? new URL(new URL(url).pathname, process.env.MCP_REVIEW_URL).href : url;
 const families=JSON.parse(await readFile(path.join(website,'src/design-families.json'),'utf8'));
@@ -29,7 +28,7 @@ const save = (name, value) => writeFile(path.join(dir,name+'.json'),JSON.stringi
 const client = new Client({ name: 'eidova-website-review', version: '1' });
 await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({command:process.execPath,args:[path.resolve('scripts/start-private.mjs'),path.resolve(process.env.MCP_PRIVATE_ARCHIVE)]})
-  : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || endpoint)));
+  : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || coreEndpoint + '/full')));
 const browser = await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || (process.platform==='win32'?'msedge':undefined),headless:true});
 const states = [], expandedStates = [], handoffStates = [], panels = [], contrasts = [], errors = [];
 const knownTerms = ['MCP','UI','HTTP','JSON','MIT','React','Geist','mcpServers','registry','token','tokens','API','CSS','IBM','SF','FX','Sans','Mono','DM','workspace','session','VS'];
@@ -119,15 +118,16 @@ async function verifyBehavior(page) {
     await page.getByRole('button',{name:label}).click();
     await page.locator('.copy-feedback').filter({hasText:'Copied to clipboard.'}).waitFor();
     const text=await page.evaluate(()=>navigator.clipboard.readText());
-    if(name==='Codex')assert.equal(text,'codex mcp add eidova --url '+endpoint);
-    else if(name==='Claude Code')assert.equal(text,'claude mcp add --transport http eidova '+endpoint);
-    else if(name==='Cursor')assert.equal(JSON.parse(text).mcpServers['eidova'].url,endpoint);
-    else if(name==='VS Code')assert.deepEqual(JSON.parse(text).servers['eidova'],{type:'http',url:endpoint});
-    else assert.equal(text,endpoint);
+    if(name==='Codex')assert.equal(text,'codex mcp add eidova --url '+coreEndpoint);
+    else if(name==='Claude Code')assert.equal(text,'claude mcp add --transport http eidova '+coreEndpoint);
+    else if(name==='Cursor')assert.equal(JSON.parse(text).mcpServers['eidova'].url,coreEndpoint);
+    else if(name==='VS Code')assert.deepEqual(JSON.parse(text).servers['eidova'],{type:'http',url:coreEndpoint});
+    else assert.equal(text,coreEndpoint);
   }
   panels.push({screen:'Tool options',headline:'Tool options',body:await page.locator('.profile-note').allTextContents(),actions:await page.locator('.profile-picker button').allTextContents()});
-  await page.getByRole('button',{name:'All tools · 42 tools',exact:true}).click();
-  assert.equal(await page.locator('#mcp-endpoint').inputValue(),endpoint.replace(/\/core\/?$/,'').replace(/\/$/,''));
+  assert.equal(await page.getByRole('button',{name:'Essentials · 13 tools',exact:true}).getAttribute('aria-pressed'),'true');
+  await page.getByRole('button',{name:'All tools · 41 tools',exact:true}).click();
+  assert.equal(await page.locator('#mcp-endpoint').inputValue(),coreEndpoint+'/full');
   await page.getByRole('button',{name:'Essentials · 13 tools',exact:true}).click();
   assert.equal(await page.locator('#mcp-endpoint').inputValue(),coreEndpoint);
   await page.getByRole('button',{name:'Copy server URL',exact:true}).click();
@@ -157,7 +157,7 @@ async function verifyBehavior(page) {
 try {
   const rules = await client.callTool({name:'get-review-rules',arguments:{category:'all',context:'Review Eidova website redesign using its own MCP'}});
   await save('rules',rules);
-  const paths = ['App.tsx','main.tsx','theme.ts','theme.css','clean.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
+  const paths = ['App.tsx','Docs.tsx','docs.css','main.tsx','theme.ts','theme.css','clean.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
   const files = await Promise.all(paths.map(async p => ({path:p,content:await readFile(path.join(website,'src',p),'utf8')})));
   const source = await client.callTool({name:'review-ui-code',arguments:{files}}); await save('source',source);
   assert.ok(!source.isError);

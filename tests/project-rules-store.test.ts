@@ -4,13 +4,9 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { ProjectRulesStore, type ProjectRuleEntry, type ProjectRuleInput, type ProjectRuleRequest, type ProjectScreenContext } from '../src/project-rules-store.js';
+import { ProjectRulesStore, type ProjectRuleEntry, type ProjectRuleInput } from '../src/project-rules-store.js';
 import { createProvider } from '../src/provider.js';
 import { LocalFileStore, MAX_DOCUMENT_BYTES, type JsonStore } from '../src/store.js';
-// The shipped algorithm is an independent compatibility oracle, used only in tests.
-const { selectScreenContext } = await import(new URL('../vendor/upstream/src/project-rules.ts', import.meta.url).href) as {
-  selectScreenContext(entries: readonly ProjectRuleEntry[], request: ProjectRuleRequest): ProjectScreenContext;
-};
 
 class BoundedMemoryStore implements JsonStore {
   readonly records = new Map<string, unknown>();
@@ -37,7 +33,7 @@ async function fixture() {
   } };
 }
 
-test('project rule context matches the shipped screen/part selection and persists across providers', async () => {
+test('project rule context matches screen/part fixtures and persists across providers', async () => {
   const f = await fixture();
   const entries: ProjectRuleEntry[] = [
     { kind: 'guidelines', screen: '', part: '', markdown: 'Keep the chosen brand.' },
@@ -49,11 +45,17 @@ test('project rule context matches the shipped screen/part selection and persist
     { kind: 'spec', screen: 'sign up', part: 'input', markdown: 'Keep email after errors.' },
     { kind: 'spec', screen: 'billing', part: '', markdown: 'Show billing history.' },
   ];
+  const [guidelines, ban, button, input, dialog, signup, signupInput] = entries;
+  const cases = [
+    {request: {}, expected: {guidelines: guidelines.markdown, rules: [ban], specs: [], otherParts: ['button', 'dialog', 'input'], specScreens: ['billing', 'sign up']}},
+    {request: {screen: ' SIGN   UP ', parts: [' Button ']}, expected: {guidelines: guidelines.markdown, rules: [ban, button, input], specs: [signup, signupInput], otherParts: ['dialog'], specScreens: ['billing']}},
+    {request: {screen: 'billing', parts: ['dialog']}, expected: {guidelines: guidelines.markdown, rules: [ban, dialog], specs: [entries[7]], otherParts: ['button', 'input'], specScreens: ['sign up']}},
+  ];
   try {
     for (const entry of entries) assert.equal(await f.alice.save(f.projectId, entry), 'saved');
     const fresh = createProvider(new LocalFileStore(f.directory), 'alice');
-    for (const request of [{}, { screen: ' SIGN   UP ', parts: [' Button '] }, { screen: 'billing', parts: ['dialog'] }]) {
-      assert.deepEqual(await fresh.getProjectScreenContext('caller-cannot-change-owner', f.projectId, request), selectScreenContext(entries, request));
+    for (const {request, expected} of cases) {
+      assert.deepEqual(await fresh.getProjectScreenContext('caller-cannot-change-owner', f.projectId, request), expected);
     }
     await assert.rejects(createProvider(f.store, 'bob').getProjectScreenContext('alice', f.projectId, {}), /not found/);
     await assert.rejects(createProvider(f.store).getProjectScreenContext('alice', f.projectId, {}), /workspace key/);

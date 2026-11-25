@@ -9,6 +9,22 @@ import {createServer} from '../src/mcp.js';
 import {LocalFileStore} from '../src/store.js';
 import {getReviewRules} from '../src/guidance.js';
 
+test('core is the default and capability discovery matches the registered tools',async()=>{
+  const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-default-profile-'));
+  const server=createServer(new LocalFileStore(directory));
+  const client=new Client({name:'default-profile-test',version:'1'});const[a,b]=InMemoryTransport.createLinkedPair();
+  try {
+    await server.connect(b);await client.connect(a);
+    const tools=(await client.listTools()).tools;
+    assert.equal(tools.length,13);assert.ok(tools.every(tool=>tool.annotations?.readOnlyHint));
+    const result=await client.callTool({name:'get-capabilities',arguments:{}});
+    const capabilities=JSON.parse((result.content as {text:string}[])[0].text);
+    assert.equal(capabilities.profile,'core');
+    assert.deepEqual(capabilities.tools.sort(),tools.map(tool=>tool.name).sort());
+    assert.match(capabilities.fullEndpoint,/\/mcp\/full$/);assert.match(capabilities.coreEndpoint,/\/mcp$/);
+  } finally {await client.close();await server.close();assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});}
+});
+
 test('core discovery is small, typed, read-only and preserves executable validation',async()=>{
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-profile-'));
   const server=createServer(new LocalFileStore(directory),undefined,undefined,'core');
@@ -31,28 +47,29 @@ test('core discovery is small, typed, read-only and preserves executable validat
     assert.match(String(details.viewUrl),/specimen=minimal-light/);
     assert.doesNotMatch(String(details.installCommand),/ -o\b/);
     assert.equal((await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',component:'missing-component'}})).isError,true);
-    const table=await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'lumen-dark',components:['table']}});
+    const table=await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'lumen-dark',component:['table']}});
     assert.ok(!table.isError);
     const tableKit=table.structuredContent as {componentFiles:{path:string;content:string}[];installCommand:string};
     assert.ok(tableKit.componentFiles.some(file=>file.path.endsWith('/table.tsx')));
     assert.match(tableKit.installCommand,/\/table\.json/);
     assert.doesNotMatch(tableKit.installCommand,/\/all\.json/);
-    for (const selection of [{components:[]},{component:['button','missing-component']},{component:'button',components:['table']}]) {
+    assert.ok(!Object.hasOwn(list.tools.find(tool=>tool.name==='get-design-system-kit')!.inputSchema.properties!,'components'));
+    for (const selection of [{component:[]},{component:['button','missing-component']}]) {
       assert.equal((await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',...selection}})).isError,true);
     }
     assert.equal((await client.callTool({name:'find-design-system',arguments:{query:' ',limit:99}})).isError,true);
     const resource=await client.readResource({uri:'design://principles/ux/forms'});assert.match(JSON.stringify(resource),/label/i);
     const rules=await getReviewRules();const rule=await client.readResource({uri:'design://review-rules/'+encodeURIComponent(rules[0].id)});assert.match(JSON.stringify(rule),/content/);
-    const legacy=await client.readResource({uri:'design://review-rules/'+encodeURIComponent(rules[0].id.replace(/^rule\/eidova\//,'rule/open-design/'))});assert.ok('text' in legacy.contents[0]&&'text' in rule.contents[0]);assert.equal(legacy.contents[0].text,rule.contents[0].text);
+    await assert.rejects(client.readResource({uri:'design://review-rules/'+encodeURIComponent(rules[0].id.replace(/^rule\/eidova\//,'rule/open-design/'))}),/not found/);
     const workflow=await client.readResource({uri:'design://workflow/v1'});assert.match(JSON.stringify(workflow),/version 1/);
     assert.equal((await client.listPrompts()).prompts.length,3);
     assert.match(JSON.stringify(await client.getPrompt({name:'choose-theme'})),/existing product design/);
   } finally {await client.close();await server.close();assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});}
 });
 
-test('full profile preserves discovery and stays within the compatibility budget',async()=>{
+test('full profile preserves discovery and stays within the size budget',async()=>{
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-full-profile-'));
-  const server=createServer(new LocalFileStore(directory),'owner');const client=new Client({name:'full-client',version:'1'});const[a,b]=InMemoryTransport.createLinkedPair();
-  try {await server.connect(b);await client.connect(a);const list=await client.listTools();assert.equal(list.tools.length,43);assert.ok(Buffer.byteLength(JSON.stringify(list))<=70*1024);assert.ok(list.tools.some(tool=>tool.name==='set-team-rules'));assert.ok((client.getInstructions()??'').length<1000);}
+  const server=createServer(new LocalFileStore(directory),'owner',undefined,'full');const client=new Client({name:'full-client',version:'1'});const[a,b]=InMemoryTransport.createLinkedPair();
+  try {await server.connect(b);await client.connect(a);const list=await client.listTools();assert.equal(list.tools.length,42);assert.ok(Buffer.byteLength(JSON.stringify(list))<=70*1024);assert.ok(list.tools.some(tool=>tool.name==='set-team-rules'));assert.ok((client.getInstructions()??'').length<1000);}
   finally {await client.close();await server.close();assert.equal(path.dirname(directory),os.tmpdir());await rm(directory,{recursive:true,force:true});}
 });

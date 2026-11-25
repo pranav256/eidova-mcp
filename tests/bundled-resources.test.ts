@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
+import path from 'node:path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { bundledEntries, bundledFile, bundledManifest, bundledPreviewFile, findBundledEntry, fileUri, searchResources } from '../src/bundled-resources.js';
@@ -41,13 +42,17 @@ test('the curated library includes distinct templates, plugins and their origina
   assert.equal((await searchResources('infographic','plugins')).matches.every(entry=>entry.kind==='plugins'),true);
 });
 
-test('curation preserves legacy links, shared bytes and the complete licensed craft workflow', async () => {
+test('curation keeps only current resources, shared bytes and the complete licensed craft workflow', async () => {
   const catalog=JSON.parse(await readFile(resourcePath('content/eidova/index.json'),'utf8'));
-  assert.equal(catalog.legacyEntries.length,137);
-  for(const entry of catalog.legacyEntries) {
-    assert.ok(await findBundledEntry(entry.kind,entry.id));
-    assert.ok(!(await bundledEntries()).some(active=>active.kind===entry.kind&&active.id===entry.id));
-    for(const file of entry.files)assert.ok(await bundledFile(entry.kind,entry.id,file.path));
+  assert.ok(!Object.hasOwn(catalog,'legacyEntries'));
+  assert.equal(await findBundledEntry('plugins','design-systems-airbnb'),undefined);
+  assert.equal(await findBundledEntry('skills','ui-ux-pro-max'),undefined);
+  const root=resourcePath('content/eidova');
+  const referenced=new Set(catalog.entries.flatMap((entry:any)=>entry.files.map((file:any)=>file.storagePath??`${entry.sourcePath??entry.kind+'/'+entry.id}/${file.path}`)));
+  const documents=new Set(['index.json','LICENSE','design-systems/README.md','design-templates/AGENTS.md','skills/README.md']);
+  for(const file of await readdir(root,{recursive:true,withFileTypes:true})) if(file.isFile()) {
+    const relative=path.relative(root,path.join(file.parentPath,file.name)).replaceAll('\\','/');
+    assert.ok(referenced.has(relative)||documents.has(relative),`Unreferenced resource: ${relative}`);
   }
   for(const id of ['arc','canva','discord','duolingo','github','huggingface','openai'])assert.ok((await bundledEntries()).some(entry=>entry.kind==='plugins'&&entry.id==='design-systems-'+id));
   const image='assets/hero.png';
@@ -120,17 +125,22 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
     assert.equal(next.tool,'read-resource');
     const toolManifest=await readTool(next.arguments.uri);
     assert.ok(toolManifest.files.some((file:{path:string})=>file.path==='tokens.css'));
-    assert.match((await readTool('design://open-design/license')).text,/Apache License/);
-    const translatedUri='design://open-design/design-systems/airbnb/files/DESIGN-zh.md';
+    assert.match((await readTool('design://eidova/license')).text,/Apache License/);
+    for(const uri of ['design://open-design/license','design://open-design/design-systems/linear-app']) {
+      assert.equal((await client.callTool({name:'read-resource',arguments:{uri}})).isError,true);
+      await assert.rejects(client.readResource({uri}),/not found/);
+    }
+    assert.equal((await fetch(origin+'/api/resources/plugins/design-systems-airbnb')).status,404);
+    const translatedUri='design://eidova/design-systems/airbnb/files/DESIGN-zh.md';
     let offset=0,reassembled='';
     do {const page=await readTool(translatedUri,{offset,limit:1000});reassembled+=page.text;if(page.nextOffset===null)break;assert.ok(page.nextOffset>offset);offset=page.nextOffset;}while(true);
     assert.equal(reassembled,(await bundledFile('design-systems','airbnb','DESIGN-zh.md'))!.bytes.toString('utf8'));
-    for(const uri of ['file:///etc/passwd','https://example.com','design://open-design/skills/missing','design://open-design/design-systems/linear-app/files/%2E%2E%2FLICENSE','design://open-design/design-systems/linear-app/files/%ZZ'])assert.ok((await client.callTool({name:'read-resource',arguments:{uri}})).isError,uri);
+    for(const uri of ['file:///etc/passwd','https://example.com','design://eidova/skills/missing','design://eidova/design-systems/linear-app/files/%2E%2E%2FLICENSE','design://eidova/design-systems/linear-app/files/%ZZ'])assert.ok((await client.callTool({name:'read-resource',arguments:{uri}})).isError,uri);
     for(const extra of [{offset:-1},{offset:10000000},{limit:24001}])assert.ok((await client.callTool({name:'read-resource',arguments:{uri:translatedUri,...extra}})).isError);
-    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/(?:eidova|open-design)\/[^/]+\//.test(resource.uri)).length,784);
-    assert.match(JSON.stringify(await client.readResource({uri:'design://open-design/license'})),/Apache License/);
+    assert.equal((await client.listResources()).resources.filter(resource=>/^design:\/\/eidova\/[^/]+\//.test(resource.uri)).length,784);
+    assert.match(JSON.stringify(await client.readResource({uri:'design://eidova/license'})),/Apache License/);
     const entry=(await bundledEntries()).find(entry=>entry.id==='linear-app')!;
-    const manifest=await client.readResource({uri:'design://open-design/design-systems/linear-app'});
+    const manifest=await client.readResource({uri:'design://eidova/design-systems/linear-app'});
     assert.equal((manifest.contents[0] as {text:string}).text,JSON.stringify(await bundledManifest(entry)));
     for(const name of ['DESIGN.md','tokens.css','components.html','source/evidence.md']) {
       const expected=(await bundledFile(entry.kind,entry.id,name))!;
@@ -156,7 +166,7 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
       assert.ok(!(await client.callTool({name:'search-resources',arguments:{kind}})).isError,kind);
       assert.equal((await fetch(origin+'/api/resources?kind='+kind)).status,200);
     }
-    const templateUri='design://open-design/design-templates/aster-atelier/files/example.html';
+    const templateUri='design://eidova/design-templates/aster-atelier/files/example.html';
     assert.match((await readTool(templateUri)).text,/<!doctype html>/i);
     const preview=await fetch(origin+'/api/resources/design-templates/aster-atelier/preview?path=example.html');
     assert.equal(preview.status,200);
@@ -183,8 +193,8 @@ test('core MCP search, manifests, nested files and HTTP downloads expose the sam
     assert.equal((await fetch(origin+'/api/resources?kind=other')).status,400);
     assert.equal((await fetch(origin+'/api/resources?offset=-1')).status,400);
     assert.equal((await (await fetch(origin+'/api/resources?query=linear')).json()).matches[0].id,'linear-app');
-    await assert.rejects(client.readResource({uri:'design://open-design/skills/missing'}),/not found/);
-    await assert.rejects(client.readResource({uri:'design://open-design/design-systems/linear-app/files/%2E%2E%2FLICENSE'}),/not found/);
+    await assert.rejects(client.readResource({uri:'design://eidova/skills/missing'}),/not found/);
+    await assert.rejects(client.readResource({uri:'design://eidova/design-systems/linear-app/files/%2E%2E%2FLICENSE'}),/not found/);
     assert.ok((await client.callTool({name:'search-resources',arguments:{limit:1000}})).isError);
   } finally {await client.close();await server.close();await new Promise<void>((resolve,reject)=>listener.close(error=>error?reject(error):resolve()));}
 });

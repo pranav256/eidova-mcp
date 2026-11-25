@@ -12,7 +12,7 @@ import { Projects } from '../src/projects.js';
 test('MCP advertises working tools and refuses server filesystem reads',async()=> {
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-mcp-'));
   const store=new LocalFileStore(directory);
-  const server=createServer(store);
+  const server=createServer(store,undefined,undefined,'full');
   const client=new Client({name:'test-client',version:'0.1.0'});
   const [clientTransport,serverTransport]=InMemoryTransport.createLinkedPair();
   try {
@@ -56,7 +56,7 @@ test('MCP project rule schemas retain approval, screen selection and owner isola
   const store=new LocalFileStore(directory);
   const project=await new Projects(store,'alice').create({value:'Rules protocol test',designSystemId:'minimal-light'});
   async function connect(owner:string) {
-    const server=createServer(store,owner); const client=new Client({name:'project-rule-test',version:'1'});
+    const server=createServer(store,owner,undefined,'full'); const client=new Client({name:'project-rule-test',version:'1'});
     const [a,b]=InMemoryTransport.createLinkedPair(); await server.connect(b); await client.connect(a);
     return {server,client};
   }
@@ -83,7 +83,7 @@ test('approved workspace rules report saved and are visible only to their owner'
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-rules-'));
   const store=new LocalFileStore(directory);
   async function connected(owner: string) {
-    const server=createServer(store,owner);
+    const server=createServer(store,owner,undefined,'full');
     const client=new Client({name:'rules-test',version:'1'});
     const [a,b]=InMemoryTransport.createLinkedPair();
     await server.connect(b);await client.connect(a);
@@ -130,7 +130,7 @@ test('config tool failures are errors and overwrites retain their annotation',as
   const connections=[];
   try {
     for(const owner of ['alice','bob',undefined]) {
-      const server=createServer(store,owner);const client=new Client({name:'config-test',version:'1'});
+      const server=createServer(store,owner,undefined,'full');const client=new Client({name:'config-test',version:'1'});
       connections.push({server,client});
       const [a,b]=InMemoryTransport.createLinkedPair();await server.connect(b);await client.connect(a);
     }

@@ -1,8 +1,7 @@
 # MCP regressions — 12 November 2026
 
-The Hooky run exposed failures in public extraction, scoped component requests
-and deterministic reviews. These fixes change the MCP implementation; no Hooky
-website changes are included.
+Recorded integration tests exposed failures in public extraction, scoped component
+requests and deterministic reviews. These fixes change the Eidova MCP implementation.
 
 - Public extraction honors both Node DNS callback shapes, including `all:true`
   under automatic family selection. It still returns only the pinned validated
@@ -10,13 +9,13 @@ website changes are included.
   retains existing byte/time limits. The previously failing public URL returned
   HTTP 200 and completed extraction through the built stdio tool on Node 24.20.0.
   Refused or failed HTTP extractions now return `isError:true` to MCP callers.
-  The live Hooky response currently reports zero recognized tokens and
+  The recorded extraction response currently reports zero recognized tokens and
   `themeMode:"none"`; fetch success does not imply a tokenized brand. Supplied
   token CSS is covered by a separate extraction regression.
-- React kits accept `component` or the compatibility alias `components`.
-  Empty/conflicting selections fail validation, and any unknown name fails the
+- React kits accept `component` as a name or a list of names.
+  Empty selections fail validation, and any unknown name fails the
   whole selection. Existing singular selections and non-React callers remain
-  supported. `lumen-dark` with `components:["table"]` returns Table source and a
+  supported. `lumen-dark` with `component:["table"]` returns Table source and a
   Table registry command, without an aggregate `all.json` install.
 - Copy extraction recognizes h1–h6 and reads a link's accessible literal text
   before removing nested headings. Common uppercase English words are not
@@ -38,7 +37,7 @@ website changes are included.
 
 Verification: 123 standalone tests, TypeScript check, upstream rebuild and MCP
 production build passed. Built stdio and installed-package smoke passed. Replayed
-the six recorded 390/1440/1728 Hooky DOM snapshots through both the old and rebuilt
+the six recorded 390/1440/1728 recorded DOM snapshots through both the old and rebuilt
 reviewers: 34 serious findings became zero (32 scroll descendants and two inline
 table-text comparisons); all 34 moderate findings remained. Fresh Edge/Chromium
 fixtures at those widths verified the returned capture script and MCP schema,
@@ -56,7 +55,7 @@ list is conservative. Authored selector families do not prove that every runtime
 variant exists; verify actual states. Browsers without CSS Typed OM may not
 report stylesheet auto margins, so older captures can still report gap drift.
 Complex transforms/containing blocks and nested JSX need rendered evidence.
-No deployment or whole-product Studio acceptance was performed here.
+No deployment or end-to-end product acceptance was performed here.
 
 ## Hosting follow-up — 12 November 2026
 
@@ -69,7 +68,7 @@ commits and their dates were preserved.
 The API and website were then promoted to their existing public Vercel URLs,
 with both projects linked to their Eidova GitHub repositories. Public MCP
 discovery and the website's 31-theme catalog proxy passed. The website's
-[production review](https://github.com/pranav256/eidova-website/blob/main/docs/production-review.json)
+[production review](https://github.com/pranav256/eidova-website/blob/main/docs/REVIEW.md)
 records the rendered acceptance scope and documented rule exceptions.
 
 After session access was restored, the hosted MCP smoke and full production

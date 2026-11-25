@@ -95,14 +95,7 @@ test('duplicate previous issues and incomplete recheck inputs are rejected witho
   assert.equal(partial.verdict, 'incomplete');
 });
 
-test('legacy task and observations still rank evidence without asserting complete testing', async () => {
-  const brief = await output({ task: 'Create a workspace' });
-  assert.equal(brief.status, 'needs-observations');
-  const ranked = await output({ task: 'Create a workspace', observations: [
-    { scenario: 'keyboard', problem: 'Missing label', severity: 'moderate', evidence: 'Observed the form.' },
-    { scenario: 'error', problem: 'Cannot retry', severity: 'critical', evidence: 'Retry does not exist.' },
-  ] });
-  assert.equal(ranked.findings[0].severity, 'critical');
-  assert.equal(ranked.tested, false);
-  assert.equal(ranked.verdict, 'incomplete');
+test('first-visit calls require a step and reject the removed observations input', async () => {
+  assert.equal((await handleFirstVisit({ task: 'Create a workspace' })).isError, true);
+  assert.equal((await handleFirstVisit({ step: 'rank', walks: emptyWalks(), observations: [] })).isError, true);
 });

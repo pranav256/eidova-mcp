@@ -6,6 +6,8 @@ Supported values: `color` (OKLCH), `dimension` (px/rem), `shadow` (including ins
 
 Exact simple variables such as `var(--primary)` resolve to typed aliases. Chained references work; mode-scoped references prefer their mode. A token that also owns children uses `DEFAULT`. Cycles and missing targets remain unsupported instead of dangling aliases. CSS fallbacks, `calc()`, arbitrary composites, general color-space conversion and arbitrary input DTCG documents are outside this subset.
 
+Dark-mode groups use `$extensions["io.eidova.mode"] = "dark"`.
+
 The report includes format version, valid typed-token count, alias count and unsupported count. No `$schema` is advertised as certification. Tests export all 31 actual kits, verify live alias targets/types, preserve CSS, and cover modes, cycles, invalid values and prototype-sensitive names.
 
 Reference: [DTCG format 2025.10](https://www.designtokens.org/tr/2025.10/format/). Extend `src/dtcg.ts` and `tests/dtcg.test.ts` together; retain unsupported originals.

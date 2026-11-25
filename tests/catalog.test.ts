@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { baseUrl, catalog, designFamilies, registryItem, searchCatalog, systemWithComponents } from '../src/catalog.js';
 import { publicFetch } from '../src/public-fetch.js';
 
-test('Eidova public origin overrides preserve local, self-hosted and legacy defaults',async()=>{
+test('Eidova public origin uses current settings and ignores old names',async()=>{
   const names=['EIDOVA_BASE_URL','OPEN_DESIGN_BASE_URL','VERCEL_PROJECT_PRODUCTION_URL'] as const;
   const previous=names.map(name=>process.env[name]);
   try {
@@ -14,7 +14,7 @@ test('Eidova public origin overrides preserve local, self-hosted and legacy defa
     assert.equal((await publicFetch(baseUrl()+'/registry/linear/button.json')).status,200);
     assert.equal((await publicFetch('https://another-project.vercel.app/registry/linear/button.json')).status,403);
     process.env.OPEN_DESIGN_BASE_URL='https://legacy.example/';
-    assert.equal(baseUrl(),'https://legacy.example');
+    assert.equal(baseUrl(),'https://old-project.vercel.app');
     process.env.EIDOVA_BASE_URL='https://eidova.vercel.app/';
     assert.equal(baseUrl(),'https://eidova.vercel.app');
   } finally {

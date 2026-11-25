@@ -18,7 +18,7 @@ test('DTCG exports resolve typed aliases, keep mode scope and preserve unsupport
     calc:{$value:'calc(1rem - 4px)'},font:{$type:'fontFamily',$value:['var(--missing-font)','sans-serif']},
     cycleA:{$value:'var(--cycleB)'},cycleB:{$value:'var(--cycleA)'},
     badWeight:{$type:'fontWeight',$value:5000},
-    dark:{$extensions:{'com.better-design.mode':'dark'},color:{$type:'color',$value:{colorSpace:'oklch',components:[0.1,0,0]}},alias:{$value:'var(--color)'}},
+    dark:{$extensions:{'io.eidova.mode':'dark'},color:{$type:'color',$value:{colorSpace:'oklch',components:[0.1,0,0]}},alias:{$value:'var(--color)'}},
   }));
   const document=result.document as Record<string,any>;
   assert.equal(document.alias.$type,'color');assert.equal(document.alias.$value,'{color}');assert.equal(document.chained.$value,'{alias}');assert.equal(document.dark.alias.$value,'{dark.color}');
@@ -44,7 +44,7 @@ test('unsupported token names and types cannot change prototypes or lose source'
 
 test('all 31 public kits export typed DTCG with live aliases and original CSS',async()=>{
   const directory=await mkdtemp(path.join(os.tmpdir(),'eidova-dtcg-'));
-  const server=createServer(new LocalFileStore(directory));
+  const server=createServer(new LocalFileStore(directory),undefined,undefined,'full');
   const client=new Client({name:'dtcg-catalog-test',version:'1'});
   const[a,b]=InMemoryTransport.createLinkedPair();
   try {

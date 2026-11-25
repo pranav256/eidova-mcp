@@ -11,6 +11,7 @@ dist/
 .venv/
 .work/
 .eidova/
+/.better-design/
 local_design/
 .env*
 !.env.example

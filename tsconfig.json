@@ -12,13 +12,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@better-design/shared/*": [
-        "vendor/upstream/src/*"
-      ]
-    }
+    "resolveJsonModule": true
   },
   "include": [
     "src",

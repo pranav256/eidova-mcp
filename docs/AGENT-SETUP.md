@@ -31,7 +31,7 @@ uses stdio instead; see [CLIENTS.md](CLIENTS.md). No npm installation is require
 public HTTP, and the unpublished npm package must not be presented as an available
 `npx` installation.
 
-Reconnect and check discovery: full has 42 public tools, core has 13. A core connection
+Reconnect and check discovery: full has 41 public tools, core has 13. A core connection
 cannot call full-only tools. Review results are limited to supplied evidence; the
 public server does not run projects or provide trusted dashboard captures.
 

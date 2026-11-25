@@ -11,8 +11,8 @@ the linked articles and standards remain with their respective rights holders.
 | [Focus visibility](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) | Test focused controls under sticky content and overlays |
 | [Error summaries](https://design-system.service.gov.uk/components/error-summary/) | Preserve inputs, link summary messages to fields and give actionable corrections |
 
-For interface craft, the complete pinned Unslop skill is available at
-`design://open-design/skills/unslop`. Its source credits and CC BY 4.0 terms
+For interface craft, the pinned interface-polish workflow is available at
+`design://eidova/skills/unslop`. Its source credits and CC BY 4.0 terms
 are preserved in the bundled files and NOTICE. Site copy describes Eidova's
 behavior; technical source and license records remain available without promotional copy.
 

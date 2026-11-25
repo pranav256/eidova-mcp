@@ -19,18 +19,13 @@ const previousSchema = z.object({
   id: z.string().trim().min(1).max(120), page: label, element: label,
   kind: z.enum(kinds), severity: z.enum(severities), walks: z.array(walkName).min(1).max(5),
 }).strict();
-const legacyObservationSchema = z.object({
-  scenario: label, problem: label, severity: z.enum(['critical', 'serious', 'moderate']), evidence: z.string().trim().min(1).max(5000),
-}).strict();
-
 export const firstVisitInputSchema = z.object({
-  step: z.enum(['brief', 'rank', 'recheck']).optional(),
+  step: z.enum(['brief', 'rank', 'recheck']),
   task: label.optional(),
   url: z.string().max(4000).url().refine(value => ['http:', 'https:'].includes(new URL(value).protocol), 'Use an HTTP or HTTPS URL.').optional(),
   walks: z.array(walkSchema).max(10).optional(),
   previous: z.array(previousSchema).max(500).optional(),
   context: z.string().max(280).optional(),
-  observations: z.array(legacyObservationSchema).max(100).optional(),
 }).strict();
 
 type Walk = z.infer<typeof walkSchema>;
@@ -114,13 +109,6 @@ export async function handleFirstVisit(input: unknown): Promise<ToolResult> {
   const parsed = firstVisitInputSchema.safeParse(input);
   if (!parsed.success) return error(`Invalid first-visit input: ${parsed.error.issues.map(issue => `${issue.path.join('.') || 'input'}: ${issue.message}`).join('; ')}`);
   const args = parsed.data;
-  if (!args.step) {
-    if (!args.task) return error('Supply step with its inputs, or task for the legacy observations mode.');
-    if (!args.observations?.length) return result({ status: 'needs-observations', task: args.task, url: args.url, walks: scenarios, tested: false, nextStep: 'Run the five walks yourself and provide their observations. This service has not opened the page.' });
-    const findings = [...args.observations].sort((a, b) => ['critical', 'serious', 'moderate'].indexOf(a.severity) - ['critical', 'serious', 'moderate'].indexOf(b.severity));
-    return result({ status: 'reviewed-observations', tested: false, findings, verdict: 'incomplete', note: 'Legacy observations do not establish that all five conditions were applied or tasks finished.' });
-  }
-  if (args.observations) return error('Use walks with step, or omit step for legacy observations.');
   if (args.step === 'brief') {
     if (!args.task || !args.url) return error('The brief step needs task and url.');
     return result({

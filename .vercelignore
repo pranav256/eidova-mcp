@@ -2,6 +2,7 @@
 /.work
 /research
 /.eidova
+/.better-design
 /.env*
 /vendor/upstream/src
 /vendor/upstream/provenance.json

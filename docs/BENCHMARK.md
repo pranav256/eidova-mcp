@@ -1,6 +1,8 @@
 # Context and latency benchmark
 
-21 November 2026 revalidation on Node 24.20.0/Windows measured full public discovery at **54,065 UTF-8 bytes**, owner discovery at **55,073 bytes**, core at **21,800 bytes** and initialization instructions at **364 bytes**. All workflow and size budgets pass. Warm catalog/guidance p95 were **2.46/0.75 ms** on this local run. The updated receipt is recorded under `revalidation` in [stress-fixes-2026-11-16.json](stress-fixes-2026-11-16.json); the earlier measurements below retain their original scope.
+25 November 2026 reliability revalidation on Node 24.20.0/Windows measured **41 public full tools at 51,530 UTF-8 bytes**, **42 owner tools at 52,543 bytes**, and **13 default core tools at 21,632 bytes**. Initialization instructions were **305 bytes**. All workflow and size budgets passed. Local warm catalog/guidance p95 were **3.09/1.16 ms**. The [candidate report](BENCHMARK-CANDIDATE.json) records this run; the measurements below describe earlier runs.
+
+21 November 2026 revalidation on Node 24.20.0/Windows measured full public discovery at **54,065 UTF-8 bytes**, owner discovery at **55,073 bytes**, core at **21,800 bytes** and initialization instructions at **364 bytes**. All workflow and size budgets pass. Warm catalog/guidance p95 were **2.46/0.75 ms** on this local run. These measurements describe that dated local run; the earlier measurements below retain their original scope.
 
 The SDK `InMemoryTransport` benchmark compares original discovery/handlers with the candidate. It measures anonymous/owner discovery, initialization, representative calls, cold/warm latency and six workflows: choose/install, preserve a brand, review a form, supplied spacing, owner rules and invalid input. Five public workflows also run through core using plain tools without resources/prompts or deferred discovery.
 
@@ -24,6 +26,6 @@ npm run benchmark -- --check docs/BENCHMARK-CANDIDATE.json
 
 Checks enforce core discovery ≤32 KiB, full ≤70 KiB, default search ≤8 KiB, focused guidance ≤4 KiB, six workflow reductions ≥50%, and local warm catalog/guidance p95 ≤200ms. Each warm measurement uses 20 successful calls after the public workflow; the nearest-rank p95 is the 19th sorted sample. Assert-based fixtures use disposable state and exclude credentials/source from reports.
 
-The final local run measured warm catalog p95 **0.77ms** and guidance p95 **0.21ms**. Discovery includes the resource search/reader: 13 core, 42 public full and 43 owner tools.
+The earlier candidate run measured warm catalog p95 **0.77ms** and guidance p95 **0.21ms**, with 13 core, 42 public full and 43 owner tools. Those counts predate removal of dashboard finalization; the current contract is recorded above.
 
 Reference: Node 24.20.0, Windows, Intel Core 3 100U. Exact samples/timings are in [baseline](BENCHMARK-BASELINE.json) and [candidate](BENCHMARK-CANDIDATE.json). Hardware and concurrent work affect latency; these are not hosted uptime or latency guarantees.

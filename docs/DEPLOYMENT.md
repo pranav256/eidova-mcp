@@ -1,6 +1,6 @@
 # Self-host and release
 
-Version 0.2.0 is deployed on the public API and website; package/Registry publication remains separate work. The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. Setup defaults to full `/mcp`; optional `/mcp/core` is also deployed.
+This revision is local and has not been deployed or published. The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. This revision defaults to core `/mcp`, with full at `/mcp/full`; verify these contracts when deploying.
 
 ## Local service and website
 
@@ -18,7 +18,7 @@ $env:EIDOVA_WEBSITE_URL='http://127.0.0.1:5174'
 npm start
 ```
 
-Set `EIDOVA_STATE_DIR` to an absolute durable directory when local persistence is needed; otherwise state lives under the service working directory. Existing capability keys/state need no migration. Use stdio `--profile core` for public design work or the default full profile for owner features.
+Set `EIDOVA_STATE_DIR` to an absolute durable directory when local persistence is needed; otherwise state lives under the service working directory. Existing capability keys/state need no migration. Stdio defaults to core; use `--profile full` for specialist tools and owner features.
 
 ```powershell
 # eidova-website
@@ -40,11 +40,11 @@ The Node API functions have a 60-second maximum. Link a **private** Vercel Blob 
 | --- | --- |
 | API `EIDOVA_BASE_URL` | Public API origin; otherwise uses the Vercel production project hostname |
 | API `EIDOVA_WEBSITE_URL` | Website origin used for family specimen links |
-| Website `VITE_MCP_URL` | The same API origin plus `/mcp`; UI derives `/mcp/core` |
+| Website `VITE_MCP_URL` | The same API origin plus `/mcp`; UI derives `/mcp/full` |
 | Website `VITE_REGISTRY_ORIGIN` | The same API origin |
 | Website `vercel.json` rewrites | `/api/catalog` and `/registry/*` point to that API |
 | Local `MCP_PROXY_ORIGIN` | Development/local-preview API origin |
-| `server.json` remotes | Public full URL, verified after deployment |
+| `server.json` remotes | Public core URL, verified after deployment |
 
 Keep previous deployment IDs, URL settings and package version before promotion. Retain the same Blob store, capability scheme and state paths. The 16-request process cap is local to an instance. On 15 November 2026 Vercel firewall version 1 (`waf_cC9Yii5SCOuF`) activated a valid fixed-window rule for all POST requests: 120/minute per IP per region, returning HTTP 429. A bounded smoke against an absent route returned 120 normal 404 responses and ten 429 responses; GET `/health` remained 200. GET registry downloads do not match the rule. Vercel counters are regional, so this is not a single global limit. Shared proxy/NAT clients share an IP's allowance; monitor firewall events and adjust deliberately. The Hobby project uses its included single rate-limit rule. To roll back this control, deactivate the named `Eidova POST rate limit` rule without changing source, keys or data. API deployments do not replace project firewall settings.
 
@@ -52,24 +52,22 @@ Keep previous deployment IDs, URL settings and package version before promotion.
 
 The source, package, CLI and local checkout names use Eidova. GitHub repositories are `pranav256/eidova-mcp` and `pranav256/eidova-website`; local remotes and current repository metadata use those canonical URLs.
 
-The website alias `eidova.vercel.app` and API alias `eidova-mcp.vercel.app` are assigned to the Vercel projects. Source uses `https://eidova-mcp.vercel.app/mcp` as the canonical full endpoint and `/mcp/core` for essentials. Client connections go directly to the API; website catalog/registry rewrites and optional `/mcp` forwarding also target the branded API alias. Do not point API rewrites back to the website, which would create a loop.
+The website alias `eidova.vercel.app` and API alias `eidova-mcp.vercel.app` are assigned to the Vercel projects. Source uses `https://eidova-mcp.vercel.app/mcp` as the canonical core endpoint and `/mcp/full` for the full profile. Client connections go directly to the API; website catalog/registry rewrites and optional `/mcp` forwarding also target the branded API alias. Do not point API rewrites back to the website, which would create a loop.
 
 Before production rollout, set API `EIDOVA_BASE_URL=https://eidova-mcp.vercel.app` and `EIDOVA_WEBSITE_URL=https://eidova.vercel.app`, and website `VITE_MCP_URL=https://eidova-mcp.vercel.app/mcp`, `VITE_REGISTRY_ORIGIN=https://eidova-mcp.vercel.app`. Existing environment overrides take precedence over source defaults. Deploy API support for `/server.json` first, then the website routing and assets. Verify POST initialization/discovery and tool calls on branded full/core, registry downloads, `/server.json`, website `/AGENTS.md` and `/llms.txt`. Keep the API's WAF enforcement in the request path.
 
-After the new aliases work, update website build variables and `vercel.json` rewrites, API `EIDOVA_BASE_URL` and `EIDOVA_WEBSITE_URL`, `server.json`, defaults and setup documentation together. Deploy the API before the website and verify health, MCP discovery, catalog and registry URLs. Do not point clients at unassigned hostnames or switch the existing storage prefixes or Docker volume during the rename.
-
 ## Release sequence
 
-npm/Registry publication was deferred by the user on 15 November 2026. The tested `eidova-mcp@0.2.0` tarball was built from signed source `e7c63c4`; its SHA-1 is `7f769037660a726a769c8a10326f906ff6eae12e`. A retained local copy is `.work/release-publish/eidova-mcp-0.2.0.tgz`; that ignored artifact is not part of the repository or production deployment. Publication returned E403 because npm requires publishing 2FA or a granular token with bypass 2FA. No version was published. The official Registry publisher 1.8.9 validated `server.json` and authenticated as the matching GitHub owner; package-backed Registry publication waits for npm. Resume the sequence below with fresh credentials and complete the named-client acceptance in [CLIENTS.md](CLIENTS.md). Do not describe the deferred host timings/context traces as measured.
+This revision has not been published to npm or the MCP Registry. Verify package and namespace ownership, and confirm publishing authentication with `npm whoami` before release. Use an authenticated npm account with the required 2FA, or a configured trusted publisher; never store publishing tokens in source. Build a fresh tarball from the reviewed commit instead of reusing scratch artifacts. Publish Registry metadata only after the npm package is available. Complete the client acceptance in [CLIENTS.md](CLIENTS.md); unmeasured host timings and context traces remain unmeasured.
 
 1. Finish remote CI and named-client walkthroughs; record client versions, profile, first-task time and context traces. Resolve naming/package/namespace ownership before publishing metadata.
 2. Build the exact MCP commit; run tests, stdio/package smoke, benchmark and theme audit. Stage it with separate disposable state/Blob records.
 3. Verify staging `/health`, full and core initialize/discovery, recovery, registry source and owner isolation. `npm run smoke -- <staging-origin>/mcp` is read-only. `smoke:private` creates disposable records; use it only within the authorized environment.
 4. Point a website preview's build variables and proxy rewrites at that staged API. Sync catalog metadata/specimens when registry source changes and run the website, isolated-viewer and specimen checks below.
-5. With release authorization, promote the API and verify `/mcp/core` before promoting the matching website. Preserve old routes and all 31 registry IDs. Invalidate affected public caches or allow the 300-second TTL to expire.
+5. With release authorization, promote the API and verify `/mcp` before promoting the matching website. Keep the current routes and all 31 registry IDs. Invalidate affected public caches or allow the 300-second TTL to expire.
 6. Publish the tested tarball and verified Registry metadata only after namespace/package ownership and the remote URL are confirmed. Never republish an npm version; use a new version for a repair.
 
-No trusted dashboard worker is included. The current previews are workspace settings forms and member lists, not dashboards. A future dashboard needs a genuine service-owned capture and VALID receipt.
+No trusted dashboard worker is included. For dashboards, review complete source and fixtures, inspect rendered states and verify navigation and task behavior in the browser. Report any unverified states.
 
 ## Verification and reproducibility
 
@@ -79,7 +77,7 @@ From MCP with the sibling website checkout:
 $env:WEBSITE_REVIEW_URL='http://127.0.0.1:5174'
 $env:WEBSITE_SOURCE_DIR='../eidova-website'
 $env:WEBSITE_EXPECTED_MCP_URL='http://localhost:3000/mcp'
-$env:MCP_REVIEW_URL='http://localhost:3000/mcp'
+$env:MCP_REVIEW_URL='http://localhost:3000/mcp/full'
 node scripts/verify-website.mjs
 node scripts/verify-website-themes.mjs
 node scripts/verify-specimens.mjs
@@ -92,7 +90,7 @@ The browser scripts use Edge on Windows or installed Playwright Chromium elsewhe
 
 ## Rollback
 
-Re-promote the recorded previous API and website deployments, restore their coordinated URL settings, and verify the previous full endpoint and registry links. Keep the same persistent store and capability keys; this candidate adds no destructive schema migration. Reconnect clients changed to core to full if rolling back to a release without core. Wait out/invalidate public caches and verify returned versions before declaring recovery.
+Re-promote the recorded previous API and website deployments, restore their coordinated URL settings, and verify the supported endpoints and registry links. Keep the same persistent store and capability keys; this candidate adds no destructive schema migration. Reconnect clients and check discovery after a rollback. Wait out/invalidate public caches and verify returned versions before declaring recovery.
 
 For npm, move the intended dist-tag back to the previous tested version; do not unpublish installed versions or replace a tarball. Forward fixes receive a new version. Preserve local state/Blob data and any authorized backups; package rollback is separate from user-data deletion.
 
@@ -104,4 +102,4 @@ docker run --rm -p 3000:3000 -v eidova-state:/app/.eidova \
   -e EIDOVA_BASE_URL=http://localhost:3000 eidova-mcp
 ```
 
-Docker is absent from the local machine. The 15 November remote CI passed the actual Docker build and full/core/private runtime smokes; the Linux Node 24 CI job repeats them for subsequent pushes. Local Docker absence does not negate that dated remote evidence. Vercel production API/website deployments and full/core hosted checks pass; verify the exact source of future deployments separately. The local Node builds, clean consumers and package evidence are in [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).
+Docker is absent from the local machine. The 15 November remote CI passed the Docker build and full/core/private runtime smokes; that dated evidence predates this revision. The Linux Node 24 CI job repeats those checks for subsequent pushes. Verify Docker and hosted API/website behavior for this revision during release. The local Node builds, clean consumers and package evidence are in [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md). Key loss, lack of revocation and security reporting are documented in [SECURITY.md](../SECURITY.md).

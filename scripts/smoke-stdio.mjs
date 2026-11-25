@@ -7,6 +7,15 @@ import os from 'node:os';
 const client=new Client({name:'stdio-package-verification',version:'1'});
 try {
   await client.connect(new StdioClientTransport({command:process.execPath,args:[fileURLToPath(new URL('../dist/stdio.js',import.meta.url))],cwd:os.tmpdir()}));
+  assert.equal((await client.listTools()).tools.length,13,'Stdio defaults to the core profile.');
+  const kit=await client.callTool({name:'get-design-system-kit',arguments:{target:'react',designSystemId:'minimal-light',component:['button']}});
+  assert.ok(!kit.isError);
+  const origin=new URL(kit.structuredContent.designContext.url).origin;
+  assert.match(origin,/^http:\/\/127\.0\.0\.1:\d+$/);
+  assert.ok(kit.structuredContent.installCommand.includes(origin+'/registry/'));
+  const component=await fetch(origin+'/registry/minimal-light/button.json');assert.equal(component.status,200);
+  assert.ok((await component.json()).files.length>0);
+  assert.equal((await fetch(kit.structuredContent.designContext.url)).status,200);
   const catalog=await client.callTool({name:'find-design-system',arguments:{query:'minimal light'}});
   assert.ok(!catalog.isError);assert.match(JSON.stringify(catalog),/minimal-light/);
   const content=await client.callTool({name:'get-ui-principle',arguments:{topic:'spacing'}});

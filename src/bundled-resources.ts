@@ -5,20 +5,20 @@ import { baseUrl } from './catalog.js';
 
 export const bundledKinds = ['design-systems','design-templates','plugins','templates','catalogs','skills'] as const;
 export type BundledEntry = {kind:typeof bundledKinds[number];id:string;sourcePath?:string;repository?:string;revision?:string;name:string;description:string;category:string;license:string;entrypoint:string;sourceUrl:string;preview?:{type:'html';path:string}|{type:'image'|'video';url:string};attributionUris?:string[];licensePaths:string[];files:{path:string;storagePath?:string;bytes:number;sha256:string;binary:boolean;mimeType?:string}[]};
-type Bundle = {repository:string;revision:string;entries:BundledEntry[];legacyEntries?:BundledEntry[]};
-const bundle = readFile(resourcePath('content/eidova/index.json'), 'utf8').then(text => JSON.parse(text) as Bundle);
+type Bundle = {repository:string;revision:string;entries:BundledEntry[]};
+const bundle = JSON.parse(await readFile(resourcePath('content/eidova/index.json'), 'utf8')) as Bundle;
+if(!bundle||!Array.isArray(bundle.entries))throw new Error('Invalid bundled resource index: expected an entries array.');
 export const resourceNote = 'Eidova bundled systems, components, templates, plugin manifests and assets. Read the manifest, entrypoint, build instructions and licenses; retrieve companion files as needed. Some packages link to external workflows or media. File reads return data, and HTML previews run in an isolated sandbox. Existing project rules and user permissions still apply.';
 export const entryUri = (entry:Pick<BundledEntry,'kind'|'id'>) => `design://eidova/${entry.kind}/${entry.id}`;
 export const fileUri = (entry:Pick<BundledEntry,'kind'|'id'>, file:string) => `${entryUri(entry)}/files/${file.split('/').map(encodeURIComponent).join('/')}`;
 const sourcePath = (entry:BundledEntry) => entry.sourcePath ?? `${entry.kind}/${entry.id}`;
-const allEntries = bundle.then(({entries,legacyEntries=[]}) => [...entries,...legacyEntries]);
-const previewFiles = allEntries.then(entries => new Map<string,{entry:BundledEntry;path:string}>(entries.flatMap(entry => entry.files.map(file => [`${sourcePath(entry)}/${file.path}`, {entry,path:file.path}] as const))));
+const previewFiles = new Map<string,{entry:BundledEntry;path:string}>(bundle.entries.flatMap(entry => entry.files.map(file => [`${sourcePath(entry)}/${file.path}`, {entry,path:file.path}] as const)));
 export async function bundledPreviewFile(path:string) {
-  const match=(await previewFiles).get(path);
+  const match=previewFiles.get(path);
   return match ? bundledFile(match.entry.kind,match.entry.id,match.path) : null;
 }
-export async function bundledEntries() {return (await bundle).entries;}
-export async function findBundledEntry(kind:string, id:string) {return (await allEntries).find(entry => entry.kind === kind && entry.id === id);}
+export async function bundledEntries() {return bundle.entries;}
+export async function findBundledEntry(kind:string, id:string) {return (await bundledEntries()).find(entry => entry.kind === kind && entry.id === id);}
 export async function searchResources(query='', kind?:string, limit=8, offset=0) {
   const terms = query.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
   const entries = (await bundledEntries()).filter(entry => !kind || entry.kind === kind).map(entry => {
@@ -30,7 +30,7 @@ export async function searchResources(query='', kind?:string, limit=8, offset=0)
     matches:entries.slice(offset,offset+limit).map(({entry:{files,licensePaths,...entry}}) => ({...entry,fileCount:files.length,uri:entryUri(entry),entrypointUri:fileUri(entry,entry.entrypoint),next:{tool:'read-resource',arguments:{uri:entryUri(entry)}}}))};
 }
 export async function bundledManifest(entry:BundledEntry) {
-  const catalog = await bundle;
+  const catalog = bundle;
   const repository = entry.repository ?? catalog.repository, revision = entry.revision ?? catalog.revision;
   const endpoint=`${baseUrl()}/api/resources/${entry.kind}/${entry.id}`;
   return { ...entry, repository, revision, note:resourceNote,
@@ -52,11 +52,11 @@ export async function bundledFile(kind:string, id:string, file:string) {
 export async function readBundledResource(uri:string, offset=0, limit=12000) {
   if(!Number.isInteger(offset)||offset<0||!Number.isInteger(limit)||limit<1||limit>24000) throw new Error('Use a nonnegative offset and a limit from 1 to 24000 characters.');
   let bytes:Buffer, path:string, sha256:string, url:string;
-  if(uri==='design://eidova/license'||uri==='design://open-design/license') {
+  if(uri==='design://eidova/license') {
     bytes=await readFile(resourcePath('content/eidova/LICENSE'));
     path='LICENSE';sha256=createHash('sha256').update(bytes).digest('hex');url=`${baseUrl()}/api/resources/license`;
   } else {
-    const match=uri.match(/^design:\/\/(?:eidova|open-design)\/([a-z-]+)\/([a-z0-9-]+)(?:\/files\/(.+))?$/);
+    const match=uri.match(/^design:\/\/eidova\/([a-z-]+)\/([a-z0-9-]+)(?:\/files\/(.+))?$/);
     if(!match)throw new Error('Use a bundled resource URI returned by search-resources.');
     const [,kind,id,encodedPath]=match;
     const entry=await findBundledEntry(kind,id);

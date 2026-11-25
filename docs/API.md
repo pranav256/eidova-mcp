@@ -1,13 +1,13 @@
 # Public API — 0.2.0
 
-These routes describe the 0.2.0 API. The last verified hosted release serves the full 42-tool `/mcp` profile, the 13-tool `/mcp/core` profile and component previews. See [release evidence](RELEASE-VERIFICATION.md) for dates and local changes awaiting deployment, and [deployment](DEPLOYMENT.md) for coordinated promotion.
+These routes describe the 0.2.0 API. This source defaults to the 13-tool `/mcp` profile and offers the 41-tool `/mcp/full` profile. Deployment must be verified separately. See [release evidence](RELEASE-VERIFICATION.md) for dates and local changes awaiting deployment, and [deployment](DEPLOYMENT.md) for coordinated promotion.
 
 | Route | Method | Result |
 | --- | --- | --- |
 | `/` | GET | Service metadata and website/repository links |
 | `/health` | GET | Health and API version |
-| `/mcp`, `/api/mcp` | POST | Full MCP, stateless Streamable HTTP |
-| `/mcp/core`, `/api/mcp/core` | POST | Core MCP, 13 typed read-only tools |
+| `/mcp/full` | POST | Full MCP, 41 public tools |
+| `/mcp` | POST | Core MCP, 13 typed read-only tools |
 | `/api/catalog` | GET | All 31 compatible IDs with family/variant metadata |
 | `/api/design-systems/{id}/design.md` | GET | Portable DESIGN.md attachment with exact tokens, CSS hash and usage rules |
 | `/registry/{system}/{component}.json` | GET | shadcn item with local dependency closure |
@@ -22,9 +22,9 @@ These routes describe the 0.2.0 API. The last verified hosted release serves the
 | `/api/v1/brand-extract/from-url?url=...` | GET | Bounded public CSS extraction |
 | `/api/v1/project-rules/{id}?screen=...&parts=...` | GET, owner key | Private selected rules/context |
 | `/api/v1/project-rules/{id}` | PUT, owner key | Save a slot; conflicting replacement requires `replaceExisting: true` |
-| `/design-systems/{id}`, `/projects/{id}`, `/preview/{id}` | GET | Retained JSON metadata endpoints |
+| `/design-systems/{id}`, `/projects/{id}` | GET | JSON metadata endpoints |
 
-MCP uses POST, not a browser GET or legacy SSE connection. GET on MCP routes returns 405. Initialize each stateless connection; there is no persistent session ID. Core/full selection is fixed before connecting. Full discovery has 42 anonymous tools and 43 with an owner key; core stays at 13. Exact schemas, resources and prompts are discoverable through the protocol. A missing tool in core requires reconnecting to full.
+MCP uses POST, not a browser GET or legacy SSE connection. GET on MCP routes returns 405. Initialize each stateless connection; there is no persistent session ID. Core/full selection is fixed before connecting. Full discovery has 41 anonymous tools and 42 with an owner key; core stays at 13. Exact schemas, resources and prompts are discoverable through the protocol. A missing tool in core requires reconnecting to full.
 
 `find-design-system` accepts `query`, optional `limit` (1–8) and optional `requiredComponents` (1–12 exact registry names). Results include actual matched terms, family use cases and tradeoffs. Required components are hard constraints; an unknown component produces no matches. Ranking is lexical, ignores common brief filler, and preserves exact ID selection. Suitability is editorial guidance, not user research.
 

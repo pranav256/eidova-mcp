@@ -8,9 +8,9 @@ test('all heading levels and headings inside links retain their visible names',(
     const copy=extractScreenCopy(`<section><${tag}>Your moments</${tag}><p>Choose a clip.</p></section>`);
     assert.equal(copy.headline,'Your moments');
   }
-  const report=analyzeComprehension({screen:'Install',code:'<a href="#install"><h2>Stay creative.<br><span>Get hooky.</span></h2><svg /></a><button><svg /></button>'});
-  assert.equal(report.copy.headline,'Stay creative. Get hooky.');
-  assert.deepEqual(report.copy.actions,['Stay creative. Get hooky.']);
+  const report=analyzeComprehension({screen:'Install',code:'<a href="#install"><h2>Stay creative.<br><span>Get Eidova.</span></h2><svg /></a><button><svg /></button>'});
+  assert.equal(report.copy.headline,'Stay creative. Get Eidova.');
+  assert.deepEqual(report.copy.actions,['Stay creative. Get Eidova.']);
   const unlabelled=report.findings.find(finding=>finding.evidence.includes('icon-only'))!;
   assert.match(unlabelled.problem,/1 control/);
 });

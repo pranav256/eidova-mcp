@@ -20,7 +20,7 @@ export type CatalogSystem = {
   variant: boolean;
 };
 
-const assetsDirectory = process.env.EIDOVA_ASSETS_DIR ?? process.env.OPEN_DESIGN_ASSETS_DIR;
+const assetsDirectory = process.env.EIDOVA_ASSETS_DIR;
 const REGISTRY_ROOT = assetsDirectory ? path.resolve(assetsDirectory) : resourcePath('assets/registry');
 const slug = /^[a-z0-9][a-z0-9_-]{0,80}$/;
 const cache = new Map<string, RegistryItem>();
@@ -38,7 +38,7 @@ const tags: Record<string, string> = {
   'editorial-dark': 'editorial expressive dark', 'light-marketplace': 'commerce warm light marketplace',
 };
 
-export const baseUrl = () => ((process.env.EIDOVA_BASE_URL ?? process.env.OPEN_DESIGN_BASE_URL) ??
+export const baseUrl = () => (process.env.EIDOVA_BASE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000')).replace(/\/$/, '');
 
 export async function sourceItem(system: string, component: string): Promise<RegistryItem> {

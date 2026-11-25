@@ -10,5 +10,6 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const directory=path.resolve(archive);
 process.env.EIDOVA_CONTENT_LIBRARY=path.join(directory,'effective-library.json');
 process.env.EIDOVA_PRIVATE_ARCHIVE=directory;
-process.env.EIDOVA_STATE_DIR ??= process.env.OPEN_DESIGN_STATE_DIR ?? path.join(root,'.open-design/state');
+process.env.EIDOVA_STATE_DIR ??= path.join(root,'.eidova/state');
+process.argv=[process.execPath,path.join(root,'dist/stdio.js'),'--profile','full'];
 await import(pathToFileURL(path.join(root,'dist/stdio.js')).href);

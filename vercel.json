@@ -49,10 +49,6 @@
     {
       "source": "/projects/:path*",
       "destination": "/api/index"
-    },
-    {
-      "source": "/preview/:path*",
-      "destination": "/api/index"
     }
   ]
 }

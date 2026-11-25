@@ -3,7 +3,8 @@ import { searchCatalog, systemWithComponents } from './catalog.js';
 import { iconLibrary, iconNames } from './icons.js';
 import { listPrinciples, getPrincipleByTopic, searchPrinciples, getReviewRules } from './guidance.js';
 import type { JsonStore } from './store.js';
-import { ProjectRulesStore, TEAM_RULES_MAX_BYTES, type ProjectRuleInput, type ProjectRuleRequest } from './project-rules-store.js';
+import { ProjectRulesStore, type ProjectRuleInput, type ProjectRuleRequest } from './project-rules-store.js';
+import { TEAM_RULES_MAX_BYTES } from './schema.js';
 
 export function workspaceId(key?: string, local = false) {
   if (local && !key) return 'local';

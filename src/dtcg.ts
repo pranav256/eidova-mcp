@@ -17,7 +17,7 @@ export function normalizeDtcg(input:string) {
       if(Object.hasOwn(node,'$value'))tokens.set(next.join('.'),{token:node as Token,parent:group,key,mode,original:structuredClone(node) as Token});
       else {
         const ext = node.$extensions as Record<string, unknown> | undefined;
-        const isDark = ext?.['io.eidova.mode'] === 'dark' || ext?.['com.better-design.mode'] === 'dark';
+        const isDark = ext?.['io.eidova.mode'] === 'dark';
         collect(node, next, isDark ? next.join('.') : mode);
       }
     }

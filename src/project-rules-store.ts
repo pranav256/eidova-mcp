@@ -1,14 +1,8 @@
 import { createHash, randomUUID } from 'node:crypto';
 import type { JsonStore } from './store.js';
+import { PROJECT_RULE_MAX_BYTES, TEAM_RULES_MAX_BYTES, PROJECT_RULE_NAME_MAX_CHARS, PROJECT_RULES_MAX_PER_PROJECT, projectRuleKindValues } from './schema.js';
 
-// Compatibility contract for project rules store:
-// shared/src/project-rules.ts and shared/src/schema.ts (BD-1052/BD-1056).
-export const PROJECT_RULE_MAX_BYTES = 4 * 1024;
-export const TEAM_RULES_MAX_BYTES = 32 * 1024;
-export const PROJECT_RULE_NAME_MAX_CHARS = 120;
-export const PROJECT_RULES_MAX_PER_PROJECT = 500;
-export const projectRuleKinds = ['guidelines', 'use', 'never', 'pairing', 'spec'] as const;
-export type ProjectRuleKind = typeof projectRuleKinds[number];
+export type ProjectRuleKind = typeof projectRuleKindValues[number];
 export type ProjectRuleInput = { kind?: ProjectRuleKind; screen?: string; part?: string; markdown: string };
 export type ProjectRuleEntry = { kind: ProjectRuleKind; screen: string; part: string; markdown: string };
 export type ProjectRuleRequest = { screen?: string; parts?: readonly string[] };
@@ -33,7 +27,7 @@ function ruleEntry(input: ProjectRuleInput): ProjectRuleEntry {
   const part = normalizeName(input.part);
   const kind = input.kind ?? (screen ? 'spec' : part ? undefined : 'guidelines');
   if (!kind) throw new TypeError('Name the kind of rule for this part: "use", "never" or "pairing".');
-  if (!projectRuleKinds.includes(kind)) throw new TypeError('Unknown project rule kind.');
+  if (!projectRuleKindValues.includes(kind)) throw new TypeError('Unknown project rule kind.');
   if (kind === 'spec' && !screen) throw new TypeError('A spec needs the screen it belongs to.');
   if (kind !== 'spec' && screen) throw new TypeError('Only a spec belongs to one screen.');
   if (kind === 'guidelines' && part) throw new TypeError('Guidelines cover the whole project, so they take no part.');

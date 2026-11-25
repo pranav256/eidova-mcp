@@ -247,7 +247,7 @@ test("hosted configuration never falls back to ephemeral local function disk", a
   }
 });
 
-test("Eidova state settings override legacy aliases without moving existing data", () => {
+test("Eidova state settings use current names and explicit directory overrides", () => {
   const keys = ["VERCEL", "EIDOVA_STATE_DIR", "OPEN_DESIGN_STATE_DIR"] as const;
   const previous = keys.map(key => process.env[key]);
   try {
@@ -256,7 +256,7 @@ test("Eidova state settings override legacy aliases without moving existing data
     delete process.env.OPEN_DESIGN_STATE_DIR;
     assert.equal((createStore() as LocalFileStore).directory, resolve(".eidova/state"));
     process.env.OPEN_DESIGN_STATE_DIR = "legacy-state";
-    assert.equal((createStore() as LocalFileStore).directory, resolve("legacy-state"));
+    assert.equal((createStore() as LocalFileStore).directory, resolve(".eidova/state"));
     process.env.EIDOVA_STATE_DIR = "eidova-state";
     assert.equal((createStore() as LocalFileStore).directory, resolve("eidova-state"));
     assert.equal((createStore({localDirectory:"explicit-state"}) as LocalFileStore).directory, resolve("explicit-state"));

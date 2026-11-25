@@ -12,7 +12,7 @@ const website=path.resolve(process.env.WEBSITE_SOURCE_DIR || '../eidova-website'
 const output=path.resolve(process.argv[2] || '.work/resource-library-review');await mkdir(output,{recursive:true});
 const save=(name,data)=>writeFile(path.join(output,name+'.json'),JSON.stringify(data,null,2));
 const client=new Client({name:'resource-library-review',version:'1'});
-await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'http://127.0.0.1:3000/mcp')));
+await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'http://127.0.0.1:3000/mcp/full')));
 const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || (process.platform==='win32'?'msedge':undefined),headless:true});
 const states=[],panels=[],errors=[],contrasts=[];
 try {
@@ -59,7 +59,7 @@ try {
       const [download]=await Promise.all([page.waitForEvent('download'),section.getByRole('link',{name:'Download DESIGN.md',exact:true}).click()]);
       assert.equal(download.suggestedFilename(),'DESIGN.md');
       const bytes=await readFile(await download.path());
-      const original=await readFile('content/open-design/design-systems/linear-app/DESIGN.md');assert.deepEqual(bytes,original);
+      const original=await readFile('content/eidova/design-systems/linear-app/DESIGN.md');assert.deepEqual(bytes,original);
       await section.scrollIntoViewIfNeeded();state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} open resource`;states.push(state);
       await section.screenshot({path:path.join(output,`${width}-${mode}-open.png`)});
       contrasts.push({width,mode,failures:(await page.evaluate(measureTextContrast)).filter(item=>item.ratio<item.minimum)});
@@ -75,15 +75,15 @@ try {
       assert.equal(await reader.getByLabel('Contents of DESIGN.md').textContent(),original.toString('utf8'));
       await reader.getByRole('button',{name:'Copy agent prompt',exact:true}).click();
       await reader.getByRole('status').filter({hasText:'Copied to clipboard.'}).waitFor();
-      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/read-resource.*design:\/\/open-design\/design-systems\/linear-app/);
+      assert.match(await page.evaluate(()=>navigator.clipboard.readText()),/read-resource.*design:\/\/eidova\/design-systems\/linear-app/);
       await reader.getByLabel('File',{exact:true}).selectOption('components.html');
       await reader.getByLabel('Contents of components.html').waitFor();
-      assert.equal(await reader.getByLabel('Contents of components.html').textContent(),await readFile('content/open-design/design-systems/linear-app/components.html','utf8'));
+      assert.equal(await reader.getByLabel('Contents of components.html').textContent(),await readFile('content/eidova/design-systems/linear-app/components.html','utf8'));
       assert.equal(await reader.locator('iframe').count(),0);
       await reader.getByLabel('File',{exact:true}).selectOption('tokens.css');
       await reader.getByLabel('Contents of tokens.css').waitFor();
       const [tokensDownload]=await Promise.all([page.waitForEvent('download'),reader.getByRole('link',{name:'Download file',exact:true}).click()]);
-      assert.deepEqual(await readFile(await tokensDownload.path()),await readFile('content/open-design/design-systems/linear-app/tokens.css'));
+      assert.deepEqual(await readFile(await tokensDownload.path()),await readFile('content/eidova/design-systems/linear-app/tokens.css'));
       await reader.getByRole('button',{name:'Copy agent prompt',exact:true}).waitFor();
       state=await page.evaluate(capture.structuredContent.captureScript);state.name=`${width} ${mode} resource reader`;states.push(state);
       await reader.screenshot({path:path.join(output,`${width}-${mode}-reader.png`)});
@@ -130,7 +130,7 @@ try {
       if(width===390&&mode==='dark')panels.push(await templateReader.locator('.resource-preview-controls').evaluate(node=>({screen:'Original design preview',headline:'Preview design',body:[...node.querySelectorAll('p')].map(p=>p.textContent),actions:[...node.querySelectorAll('button')].map(b=>b.textContent)})));
       await templateReader.getByRole('button',{name:'Read source',exact:true}).click();
       await templateReader.getByLabel('Contents of example.html').waitFor();
-      assert.equal(await templateReader.getByLabel('Contents of example.html').textContent(),await readFile('content/open-design/design-templates/aster-atelier/example.html','utf8'));
+      assert.equal(await templateReader.getByLabel('Contents of example.html').textContent(),await readFile('content/eidova/design-templates/aster-atelier/example.html','utf8'));
       await templateReader.getByRole('button',{name:'Preview design',exact:true}).click();
       await preview.waitFor({state:'visible'});
       const restoredFrame=await (await preview.elementHandle()).contentFrame();
@@ -145,7 +145,7 @@ try {
       await largeReader.locator('.resource-file-image').waitFor();await largeReader.locator('.resource-file-image').evaluate(node=>node.decode());
       assert.ok(await largeReader.locator('.resource-file-image').evaluate(node=>node.naturalWidth>0));
       const [largeDownload]=await Promise.all([page.waitForEvent('download'),largeReader.getByRole('link',{name:'Download file',exact:true}).click()]);
-      assert.deepEqual(await readFile(await largeDownload.path()),await readFile('content/open-design/design-templates/open-design-landing/assets/hero.png'));
+      assert.deepEqual(await readFile(await largeDownload.path()),await readFile('content/eidova/design-templates/open-design-landing/assets/hero.png'));
       await largeReader.getByRole('button',{name:'Close reader'}).click();
       await search.fill('');await section.getByLabel('Resource type',{exact:true}).selectOption('plugins');
       assert.match(await section.locator('.result-count').textContent(),/of 343 resources/);
@@ -198,8 +198,8 @@ try {
       for(let attempt=0;!pending&&attempt<500;attempt++)await page.waitForTimeout(10);
       assert.ok(pending,'Delayed file request should start within five seconds.');
       await reader.getByLabel('File',{exact:true}).selectOption('tokens.css');await reader.getByLabel('Contents of tokens.css').waitFor();
-      await pending.fulfill({status:200,headers:{'content-type':'application/octet-stream'},body:await readFile('content/open-design/design-systems/linear-app/USAGE.md')}).catch(()=>{});
-      assert.equal(await reader.getByLabel('Contents of tokens.css').textContent(),await readFile('content/open-design/design-systems/linear-app/tokens.css','utf8'));
+      await pending.fulfill({status:200,headers:{'content-type':'application/octet-stream'},body:await readFile('content/eidova/design-systems/linear-app/USAGE.md')}).catch(()=>{});
+      assert.equal(await reader.getByLabel('Contents of tokens.css').textContent(),await readFile('content/eidova/design-systems/linear-app/tokens.css','utf8'));
       await page.unroute(fileUrl);
       await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new Error('denied');}}}));
       await reader.getByRole('button',{name:'Copy agent prompt',exact:true}).click();

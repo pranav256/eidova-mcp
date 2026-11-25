@@ -5,8 +5,8 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 
-const endpoint = process.argv[2] ?? 'http://localhost:3000/mcp';
-const website = resolve(process.argv[3] ?? 'website');
+const endpoint = process.argv[2] ?? 'http://localhost:3000/mcp/full';
+const website = resolve(process.argv[3] ?? '../eidova-website');
 const output = resolve('.work/verification');
 await mkdir(output, { recursive: true });
 const client = new Client({ name: 'eidova-website-source-review', version: '0.1.0' });

@@ -101,8 +101,8 @@ test('private and public MCP instances keep separate schemas and return archived
   await capture(directory,5,'get-design-system-kit',{target:'swiftui',designSystemId:'linear'},nativeResult());
   await capture(directory,6,'get-design-system-kit',{target:'shopify',designSystemId:'linear'},{content:[text('Synthetic Shopify kit')],structuredContent:{status:'completed',name:'Linear',tokensCss:':root{}',themeFiles:[{path:'snippets/fixture.liquid',content:'Fixture'}]}});
   const archive=await loadPrivateArchive(directory);const store=new LocalFileStore(join(directory,'state'));
-  assert.throws(()=>createServer(store,undefined,archive),/private local workspace/);
-  const privateServer=createServer(store,'local',archive);const publicServer=createServer(store);
+  assert.throws(()=>createServer(store,undefined,archive,'full'),/private local workspace/);
+  const privateServer=createServer(store,'local',archive,'full');const publicServer=createServer(store,undefined,undefined,'full');
   const privateClient=new Client({name:'private-fixture',version:'1'});const publicClient=new Client({name:'public-fixture',version:'1'});
   const [privateA,privateB]=InMemoryTransport.createLinkedPair();const [publicA,publicB]=InMemoryTransport.createLinkedPair();
   try {

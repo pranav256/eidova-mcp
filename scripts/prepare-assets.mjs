@@ -1,7 +1,7 @@
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 const source = process.argv[2];
-if (!source) throw new Error('Usage: node scripts/prepare-assets.mjs <checkout-of-marvkr/better-design-at-pinned-commit>');
+if (!source) throw new Error('Usage: node scripts/prepare-assets.mjs <pinned-registry-checkout>');
 const license = await readFile(path.join(source,'LICENSE'),'utf8');
 if (!license.includes('MIT License')) throw new Error('Expected upstream MIT license.');
 await mkdir('assets', { recursive: true });

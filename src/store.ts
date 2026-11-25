@@ -322,5 +322,5 @@ export class VercelBlobStore implements JsonStore {
 export function createStore(options: { localDirectory?: string; blobToken?: string } = {}): JsonStore {
   return process.env.VERCEL
     ? new VercelBlobStore({ token: options.blobToken })
-    : new LocalFileStore(options.localDirectory ?? (process.env.EIDOVA_STATE_DIR ?? process.env.OPEN_DESIGN_STATE_DIR) ?? ".eidova/state");
+    : new LocalFileStore(options.localDirectory ?? process.env.EIDOVA_STATE_DIR ?? ".eidova/state");
 }

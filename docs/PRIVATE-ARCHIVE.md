@@ -12,7 +12,7 @@ Build the server with `npm run build`, then launch stdio with both paths set:
 ```powershell
 $env:EIDOVA_CONTENT_LIBRARY = 'C:/private/archive/effective-library.json'
 $env:EIDOVA_PRIVATE_ARCHIVE = 'C:/private/archive'
-node D:/Projects/better-design-rea/dist/stdio.js
+node D:/Projects/eidova-mcp/dist/stdio.js
 ```
 
 Alternatively, the committed launcher configures both paths from an archive
@@ -26,7 +26,7 @@ Register it in Codex with absolute paths (substitute your Node installation,
 checkout and private archive directory):
 
 ```powershell
-codex mcp add eidova -- 'C:/Program Files/nodejs/node.exe' D:/Projects/better-design-rea/scripts/start-private.mjs C:/private/archive
+codex mcp add eidova -- 'C:/Program Files/nodejs/node.exe' D:/Projects/eidova-mcp/scripts/start-private.mjs C:/private/archive
 ```
 
 `codex mcp get eidova` shows the saved configuration. The

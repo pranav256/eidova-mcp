@@ -12,6 +12,13 @@ test('prepared registry metadata validates against the retrieved official schema
   assert.equal(npm.name,'eidova-mcp');assert.equal(npm.mcpName,'io.github.pranav256/eidova');assert.equal(server.title,'Eidova MCP');assert.deepEqual(npm.bin,{'eidova-mcp':'dist/stdio.js'});
   assert.equal(validate({...server,name:'invalid namespace'}).valid,false);
   assert.equal(server.$schema,schema.$id);
-  assert.deepEqual(server.packages[0].packageArguments,[{type:'named',name:'--profile',value:'full'}]);
+  assert.deepEqual(server.packages[0].packageArguments,[{type:'named',name:'--profile',value:'core'}]);
   assert.deepEqual(server.remotes,[{type:'streamable-http',url:'https://eidova-mcp.vercel.app/mcp'}]);
+});
+
+test('runtime and package omit the unused upstream database dependencies',async()=>{
+  const runtime=await readFile(new URL('../vendor/upstream/runtime.mjs',import.meta.url),'utf8');
+  assert.doesNotMatch(runtime,/from ["']drizzle-(?:orm|zod)(?:["'/])/);
+  const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
+  for(const name of ['drizzle-orm','drizzle-zod']) assert.ok(!(name in pkg.dependencies));
 });

@@ -11,14 +11,14 @@ PREFIX = '../../shared/src/'
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('source_map', type=Path, help='Published better-design@0.49.1 dist/index.js.map')
+    parser.add_argument('source_map', type=Path, help='Pinned runtime source map')
     parser.add_argument('license', type=Path, help='MIT license for that package')
     args = parser.parse_args()
     map_path = args.source_map.resolve()
     if 'MIT License' not in args.license.read_text(encoding='utf-8'):
         raise ValueError('Expected the upstream MIT license')
     if hashlib.sha256(map_path.read_bytes()).hexdigest() != '0ed332448cb3f1d9744153b041e88b30255de43523402cb7b5df7f922a77a333':
-        raise ValueError('Source map does not match the recorded better-design@0.49.1 artifact')
+        raise ValueError('Source map does not match the recorded runtime artifact')
     source_map = json.loads(map_path.read_text(encoding='utf-8'))
     records = []
     for name, content in zip(source_map['sources'], source_map['sourcesContent'], strict=True):

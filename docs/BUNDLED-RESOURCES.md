@@ -2,20 +2,20 @@
 
 The curated library contains **784 packages**: 152 design systems, 115 design
 templates, 343 official plugin packages, 169 skills, three framework/live-artifact
-templates, and two source catalogs. Its 7,188 logical file records share 6,406 stored files (139,052,651 bytes, excluding root notices and the generated index).
-782 duplicate file copies were removed, saving 36,967,093 bytes. Original bytes are preserved,
+templates, and two source catalogs. Its active file records share deduplicated storage; the generated index records exact sizes and hashes.
+Identical file contents share storage. Original bytes are preserved,
 including companions, previews, scripts, images and license notices. The single repository `.gitignore` is omitted because npm excludes it; the index records that exclusion. Per-file SHA-256
-hashes, sizes and MIME types live in `content/open-design/index.json` and are checked
+hashes, sizes and MIME types live in `content/eidova/index.json` and are checked
 on reads. `sourcePath` preserves logical preview paths; `storagePath` points to shared bytes inside the bundle. Reads validate both paths and verify hashes and sizes.
 Plugin IDs include their source group to avoid collisions with the main systems
-and templates. Main design packages rank before compatibility plugins on tied searches.
+and templates. Main design packages rank before plugin packages on tied searches.
 
-136 redundant system wrappers and one catalog-only pointer are excluded from search, resource lists and capability counts. Their manifests, files and previews remain readable through existing URIs and HTTP routes. Seven wrappers with distinct payloads remain in discovery. Unslop includes its complete references, scripts, CC BY 4.0 license and credits; its manifest records its own repository and pinned revision. Run `node scripts/curate-resources.mjs ../eidova-website` for idempotent curation; the source importer runs the same step.
+136 redundant system wrappers and one catalog-only pointer are removed from the index and storage. Only current resource IDs and design://eidova URIs are supported. Seven wrappers with distinct payloads remain in discovery. Unslop includes its complete references, scripts, CC BY 4.0 license and credits; its manifest records its own repository and pinned revision. Run `node scripts/curate-resources.mjs ../eidova-website` for idempotent curation; the source importer runs the same step.
 
 Root Apache-2.0 terms, package MIT/Apache/CC-BY-4.0 declarations, font OFL notices,
 and source attribution files remain available. Each plugin manifest and its original
 template metadata retain author, publisher and license information. Video packages
-also link `design://open-design/catalogs/video-attributions`.
+also link `design://eidova/catalogs/video-attributions`.
 
 These are reference packages, separate from Eidova's 31 installable React registry IDs.
 Some skills are curated pointers, not complete workflows. External tools, services,
@@ -23,7 +23,7 @@ fonts and dependencies mentioned by the source are not bundled merely because a
 document links them. Included local assets, fonts, audio and video are preserved.
 No imported scripts, HTML or skills execute on the server.
 
-Both core (13 tools) and full (42 public / 43 owner tools) include `search-resources` and `read-resource`. Search first:
+Both core (13 tools) and full (41 public / 42 owner tools) include `search-resources` and `read-resource`. Search first:
 
 ```json
 {"query":"linear","kind":"design-systems","limit":8,"offset":0}
@@ -38,8 +38,8 @@ Search results include a ready-to-call `next` instruction for `read-resource`. C
 that only support tools can read the manifest and then any file URI from it:
 
 ```json
-{"uri":"design://open-design/design-systems/linear-app"}
-{"uri":"design://open-design/design-systems/linear-app/files/DESIGN.md","offset":0,"limit":12000}
+{"uri":"design://eidova/design-systems/linear-app"}
+{"uri":"design://eidova/design-systems/linear-app/files/DESIGN.md","offset":0,"limit":12000}
 ```
 
 Text pages default to 12,000 Unicode code points (maximum 24,000). Use the returned
@@ -51,11 +51,11 @@ URIs, never arbitrary URLs or local paths.
 
 The same content is available through native MCP `resources/read`:
 
-- `design://open-design/design-systems/linear-app`: manifest, provenance and file URIs.
-- `design://open-design/design-systems/linear-app/files/DESIGN.md`: verbatim main document.
-- `design://open-design/design-systems/linear-app/files/source/evidence.md`: companion file.
-- `design://open-design/skills/frontend-design/files/SKILL.md`: original skill.
-- `design://open-design/license`: root Apache-2.0 license; entry manifests link overrides.
+- `design://eidova/design-systems/linear-app`: manifest, provenance and file URIs.
+- `design://eidova/design-systems/linear-app/files/DESIGN.md`: verbatim main document.
+- `design://eidova/design-systems/linear-app/files/source/evidence.md`: companion file.
+- `design://eidova/skills/frontend-design/files/SKILL.md`: original skill.
+- `design://eidova/license`: root Apache-2.0 license; entry manifests link overrides.
 
 All 784 manifests appear in `resources/list`; file bodies load only on demand. Binary
 files use correctly typed MCP base64 blobs, text files use text content. Returned instructions are
@@ -74,8 +74,8 @@ Search kinds are `design-systems`, `design-templates`, `plugins`, `templates`,
 ```json
 {"query":"aster atelier","kind":"design-templates"}
 {"query":"image templates infographic","kind":"plugins"}
-{"uri":"design://open-design/design-templates/aster-atelier/files/example.html"}
-{"uri":"design://open-design/plugins/video-templates-frame-build-minimal"}
+{"uri":"design://eidova/design-templates/aster-atelier/files/example.html"}
+{"uri":"design://eidova/plugins/video-templates-frame-build-minimal"}
 ```
 
 Only indexed package/file paths are accepted. Downloads force attachment delivery,
@@ -124,7 +124,7 @@ Deploy the MCP before the website so its download routes are available.
 
 All 124 regression tests pass without an environment preload. The three complete-library integration tests include hashes for all 7,173 indexed files, every package's entrypoint and license paths, MCP/HTTP parity, Unicode pagination, nested and binary resources, sandboxed preview delivery and invalid paths. The 7,177 imported originals also include supporting root notices and documentation. The staged Git blobs were independently checked against all indexed originals. MCP TypeScript/build, website TypeScript/build and built stdio smoke pass.
 
-Website source, copy, contrast and interaction checks pass across 36 rendered states at 390, 1440 and 1728 widths in both appearances; all 12 copy panels pass. Checks include exact downloads, literal HTML, sandbox isolation, preview retry, large images, font/video assets, malformed responses, stale requests, clipboard denial, keyboard focus and Escape dismissal inside a preview. Eidova naming and the labeled type filter cover the full catalog, including both source catalogs. The receipt preserves two adjudications: no house Select exists for the labeled native controls, and the existing theme search intentionally reserves unequal space for its icon and Clear button. No unresolved critical/serious findings remain. Evidence: the website's `docs/full-library-review.json`; reproduction: `node scripts/verify-resource-library.mjs` with local website/MCP URLs. These checks are not real-user research or client-host walkthroughs. This continuation did not deploy the changed library or repeat full native Studio acceptance.
+Website source, copy, contrast and interaction checks pass across 36 rendered states at 390, 1440 and 1728 widths in both appearances; all 12 copy panels pass. Checks include exact downloads, literal HTML, sandbox isolation, preview retry, large images, font/video assets, malformed responses, stale requests, clipboard denial, keyboard focus and Escape dismissal inside a preview. Eidova naming and the labeled type filter cover the full catalog, including both source catalogs. The receipt preserves two adjudications: no house Select exists for the labeled native controls, and the existing theme search intentionally reserves unequal space for its icon and Clear button. No unresolved critical/serious findings remain. Evidence: the website's `docs/full-library-review.json`; reproduction: `node scripts/verify-resource-library.mjs` with local website/MCP URLs. These checks are not real-user research or client-host walkthroughs. This continuation did not deploy the changed library or repeat end-to-end product acceptance.
 
 Fresh package smoke passes archive-content and private-path checks, installation into an empty consumer directory containing spaces, packaged diagnostics, core MCP discovery and original template/font reads. The tested tarball contains 10,389 files and all required notices. Package evidence is in `.work/verification/2026-11-13/library-release/package.log`; the full regression log is `library-release-tests.log` in the parent verification directory. npm/Registry publication remains separate from this package-install check.
 

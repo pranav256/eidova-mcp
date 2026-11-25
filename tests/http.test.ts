@@ -23,7 +23,7 @@ test('HTTP full/core profiles reconnect statelessly and keep private responses o
     assert.deepEqual(manifest.remotes,[{type:'streamable-http',url:'https://eidova-mcp.vercel.app/mcp'}]);
     const catalog=await fetch(origin+'/api/catalog');const etag=catalog.headers.get('etag');assert.ok(etag);assert.match(catalog.headers.get('cache-control')!,/public/);
     assert.equal((await fetch(origin+'/api/catalog',{headers:{'if-none-match':etag},cache:'force-cache'})).status,304);
-    for(const[path,count,owner]of [['/mcp',42,false],['/mcp/core',13,false],['/api/mcp/core',13,false],['/mcp',43,true]] as const) {
+    for(const[path,count,owner]of [['/mcp',13,false],['/mcp',13,true],['/mcp/full',41,false],['/mcp/full',42,true]] as const) {
       const client=new Client({name:'http-test',version:'1'});
       try {
         await client.connect(new StreamableHTTPClientTransport(new URL(origin+path),{requestInit:owner?{headers:{Authorization:'Bearer '+'a'.repeat(43)}}:undefined}));
@@ -38,11 +38,12 @@ test('HTTP full/core profiles reconnect statelessly and keep private responses o
     }
     const protocol={jsonrpc:'2.0',id:1,method:'tools/list'};
     const headers={'Content-Type':'application/json',Accept:'application/json, text/event-stream'};
+    for(const path of ['/api/mcp','/api/mcp/core','/mcp/core']) assert.equal((await fetch(origin+path,{method:'POST',headers,body:JSON.stringify(protocol)})).status,404);
     const privateResponse=await fetch(origin+'/mcp',{method:'POST',headers:{...headers,Authorization:'Bearer '+'a'.repeat(43)},body:JSON.stringify(protocol)});
     assert.equal(privateResponse.status,200);assert.equal(privateResponse.headers.get('cache-control'),'no-store');assert.ok(privateResponse.headers.get('x-request-id'));
     const invalidKey=await fetch(origin+'/mcp',{method:'POST',headers:{...headers,Authorization:'Bearer short'},body:JSON.stringify(protocol)});
     assert.equal(invalidKey.status,401);assert.equal(invalidKey.headers.get('cache-control'),'no-store');assert.doesNotMatch(await invalidKey.text(),/short|[A-Z]:\\|node_modules/);
-    assert.equal((await fetch(origin+'/mcp/core')).status,405);
+    assert.equal((await fetch(origin+'/mcp')).status,405);
     const tooLarge=await fetch(origin+'/mcp',{method:'POST',headers,body:JSON.stringify({...protocol,data:'a'.repeat(4*1024*1024)})});assert.equal(tooLarge.status,413);assert.equal(tooLarge.headers.get('cache-control'),'no-store');assert.ok(tooLarge.headers.get('x-request-id'));
   } finally {await new Promise<void>((resolve,reject)=>listener.close(error=>error?reject(error):resolve()));}
 });
@@ -55,11 +56,11 @@ test('HTTP diagnostics retain sizes and boundary error classes without caller co
   const body=JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list',params:{source:secret}});
   try {
     const headers={'Content-Type':'application/json',Accept:'application/json, text/event-stream',Authorization:'Bearer '+'b'.repeat(43)};
-    const response=await fetch(origin+'/mcp/core',{method:'POST',headers,body});await response.text();
+    const response=await fetch(origin+'/mcp',{method:'POST',headers,body});await response.text();
     const requestId=response.headers.get('x-request-id');
     const successful=messages.map(message=>JSON.parse(message)).find(entry=>entry.requestId===requestId);
     assert.equal(successful.requestBytes,Buffer.byteLength(body));assert.equal(successful.operation,'tools/list');assert.equal(successful.errorClass,'none');assert.ok(successful.durationMs>=0);
-    const invalid=await fetch(origin+'/mcp/core',{method:'POST',headers,body:'{'});await invalid.text();
+    const invalid=await fetch(origin+'/mcp',{method:'POST',headers,body:'{'});await invalid.text();
     const failed=messages.map(message=>JSON.parse(message)).find(entry=>entry.requestId===invalid.headers.get('x-request-id'));
     assert.equal(failed.errorClass,'request');assert.equal(failed.status,400);assert.equal(failed.requestBytes,1);
     assert.doesNotMatch(messages.join(''),new RegExp(secret+'|'+ 'b'.repeat(43)+'|source|Authorization|node_modules'));
@@ -73,18 +74,18 @@ test('process concurrency is bounded before reading bodies and released after ca
   try {
     for(let index=0;index<16;index++) {
       const incoming=once(listener,'request');
-      const client=request(origin+'/mcp/core',{method:'POST',headers:{'Content-Type':'application/json','Content-Length':'1000'}});client.on('error',()=>{});client.write('{');
+      const client=request(origin+'/mcp',{method:'POST',headers:{'Content-Type':'application/json','Content-Length':'1000'}});client.on('error',()=>{});client.write('{');
       const[,response]=await incoming;held.push({client,response});
     }
     const busy=await fetch(origin+'/api/v1/brand-extract/from-url?url=https://example.com');assert.equal(busy.status,429);assert.equal(busy.headers.get('retry-after'),'2');assert.equal(busy.headers.get('cache-control'),'no-store');
     assert.match(await busy.text(),/nothing was changed/);
-    const bursts=await Promise.all(Array.from({length:32},()=>fetch(origin+'/mcp/core',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})));
+    const bursts=await Promise.all(Array.from({length:32},()=>fetch(origin+'/mcp',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})));
     for(const response of bursts) {
       assert.equal(response.status,429);assert.equal(response.headers.get('retry-after'),'2');
       assert.equal(response.headers.get('connection'),'close');assert.match(await response.text(),/nothing was changed/);
     }
     assert.equal((await fetch(origin+'/health')).status,200);
     const released=held.map(({response})=>once(response,'close'));for(const entry of held)entry.client.destroy();await Promise.all(released);
-    const available=await fetch(origin+'/mcp/core',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})});assert.equal(available.status,200);await available.text();
+    const available=await fetch(origin+'/mcp',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})});assert.equal(available.status,200);await available.text();
   } finally {for(const entry of held)entry.client.destroy();await new Promise<void>((resolve,reject)=>listener.close(error=>error?reject(error):resolve()));}
 });

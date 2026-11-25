@@ -34,7 +34,7 @@ function dtcgEntries(source: string): Entry[] {
     if (path.length > 64) throw new Error('DTCG groups are nested too deeply.');
     const type = typeof group.$type === 'string' ? group.$type : inheritedType;
     const ext = object(group.$extensions) ? (group.$extensions as Record<string, unknown>) : undefined;
-    const isDark = ext?.['io.eidova.mode'] === 'dark' || ext?.['com.better-design.mode'] === 'dark';
+    const isDark = ext?.['io.eidova.mode'] === 'dark';
     const scope = isDark ? 'dark' : inheritedScope;
     for (const [key, node] of Object.entries(group)) {
       if (key.startsWith('$') || !object(node)) continue;

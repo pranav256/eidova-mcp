@@ -13,7 +13,7 @@ const output = path.resolve(process.argv[2] || '.work/showcase/review');
 await mkdir(output, { recursive: true });
 const save = (name, data) => writeFile(path.join(output, name + '.json'), JSON.stringify(data, null, 2));
 const client = new Client({ name: 'eidova-showcase-review', version: '1' });
-await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'http://127.0.0.1:3411/mcp')));
+await client.connect(new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || 'http://127.0.0.1:3411/mcp/full')));
 const calls = [];
 async function call(name, args) {
   const result = await client.callTool({ name, arguments: args });
@@ -28,7 +28,9 @@ const states = [], panels = [], errors = [], contrast = [];
 try {
   const capabilities = JSON.parse((await call('get-capabilities', {})).content[0].text);
   assert.equal(capabilities.library.total, data.library.total);
-  assert.equal((await client.listTools()).tools.length, data.publicTools);
+  const tools=(await client.listTools()).tools;
+  assert.equal(tools.length, data.publicTools);
+  assert.deepEqual(data.tools.map(({name,description})=>({name,description})),tools.map(({name,description})=>({name,description})), 'Tool directory must match current discovery.');
   await call('get-review-rules', { category: 'all' });
   const files = await Promise.all(['Showcase.tsx','showcase.css','styles.css','clean.css','App.tsx','main.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','components/CopyButton.tsx'].map(async file => ({ path: file, content: await readFile(path.join(website, 'src', file), 'utf8') })));
   const source = await call('review-ui-code', { files });
@@ -217,7 +219,7 @@ try {
   const spacingFindings = spacing.flatMap(result => result.structuredContent.findings);
   const blockers = spacingFindings.filter(finding => ['critical','serious'].includes(finding.severity));
   await save('calls', calls); await save('states', states); await save('comprehension', comprehension); await save('spacing', spacing); await save('contrast', contrast);
-  const summary = { date: '2026-11-13', origin, widths: [390,1440,1728], appearances: ['light','dark'], states: states.length, panels: panels.length, sourceExceptions: exceptions, comprehension: comprehension.map(result => result.structuredContent), spacingSummary: spacing.map(result => result.structuredContent.summary), spacingBlockers: blockers, pageErrors: errors, contrastFailures: contrast.flatMap(item => item.failures), sourceSha256: Object.fromEntries(files.map(file => [file.path, createHash('sha256').update(file.content).digest('hex')])) };
+  const summary = { date: '2026-11-25', origin, widths: [390,1440,1728], appearances: ['light','dark'], states: states.length, panels: panels.length, sourceExceptions: exceptions, comprehension: comprehension.map(result => result.structuredContent), spacingSummary: spacing.map(result => result.structuredContent.summary), spacingBlockers: blockers, pageErrors: errors, contrastFailures: contrast.flatMap(item => item.failures), sourceSha256: Object.fromEntries(files.map(file => [file.path, createHash('sha256').update(file.content).digest('hex')])) };
   await save('summary', summary);
   console.log(JSON.stringify({ states: states.length, panels: panels.length, copyFindings: summary.comprehension.filter(result => result.verdict !== 'pass'), spacingBlockers: blockers, contrastFailures: summary.contrastFailures, pageErrors: errors }));
   assert.deepEqual(errors, []); assert.deepEqual(summary.contrastFailures, []); assert.deepEqual(blockers, []); assert.ok(summary.comprehension.every(result => result.verdict === 'pass'));

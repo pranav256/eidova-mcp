@@ -7,8 +7,8 @@ const client = new Client({name:'eidova-verification',version:'0.1.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(endpoint)));
 await mkdir('.work/verification',{recursive:true});
 const list=await client.listTools();
-const core = new URL(endpoint).pathname.endsWith('/core');
-assert.equal(list.tools.length, core ? 13 : 42, 'Unexpected public profile tool count');
+const core = !new URL(endpoint).pathname.endsWith('/full');
+assert.equal(list.tools.length, core ? 13 : 41, 'Unexpected public profile tool count');
 await writeFile('.work/verification/tools.json',JSON.stringify(list,null,2));
 console.log(JSON.stringify({endpoint,tools:list.tools.map(t=>t.name)}));
 const calls=[
@@ -25,7 +25,7 @@ const calls=[
 if (!core) calls.push(
   ['check-first-visit',{step:'brief',task:'Find a theme',url:'https://eidova.vercel.app'}],
   ['find-icons',{libraryId:'lucide',query:'home'}],
-  ['install-icons',{libraryId:'lucide',names:['house'],format:'svg'}],
+  ['get-icon-files',{libraryId:'lucide',names:['house'],format:'svg'}],
 );
 try {
 for (const [name,args] of calls) {

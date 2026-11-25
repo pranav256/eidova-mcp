@@ -47,7 +47,7 @@ export const GUIDANCE_PROVENANCE = {
   limitations: "General engineering guidance; validate decisions with real users and rendered evidence. Automated checks do not certify accessibility.",
 } as const;
 
-const library = await loadContentLibrary((process.env.EIDOVA_CONTENT_LIBRARY ?? process.env.OPEN_DESIGN_CONTENT_LIBRARY) ?? resourcePath('content/library.json'));
+const library = await loadContentLibrary(process.env.EIDOVA_CONTENT_LIBRARY ?? resourcePath('content/library.json'));
 const corpus: Principle[] = library.principles;
 const reviewCorpus: ReviewRule[] = library.reviewRules;
 

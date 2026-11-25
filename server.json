@@ -13,7 +13,7 @@
       "version": "0.2.0",
       "runtimeHint": "npx",
       "transport": { "type": "stdio" },
-      "packageArguments": [{ "type": "named", "name": "--profile", "value": "full" }]
+      "packageArguments": [{ "type": "named", "name": "--profile", "value": "core" }]
     }
   ],
   "remotes": [{ "type": "streamable-http", "url": "https://eidova-mcp.vercel.app/mcp" }]

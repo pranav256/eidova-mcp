@@ -1,19 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { z } from 'zod';
+import { designConfigSchema, type DesignConfig } from './schema.js';
 import { registryItem, sourceItem, tokensCss, baseUrl } from './catalog.js';
 import type { JsonStore } from './store.js';
 import { cssRules, tokenScopes, inlineRegistryCss, type TokenScopes } from './registry-css.js';
 import { extractFromSources, formatExtraction } from '../vendor/upstream/runtime.mjs';
 
-const color = z.string().max(100).regex(/^(?:#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|(?:oklch|oklab|rgb|rgba|hsl|hsla)\([\d\s.%+,/\-]+\)|[a-zA-Z]+)$/);
-export const configSchema = z.object({
-  colors: z.partialRecord(z.enum(['primary','primaryForeground','secondary','secondaryForeground','accent','accentForeground','muted','mutedForeground','destructive','destructiveForeground','background','foreground','card','cardForeground','popover','popoverForeground','border','input','ring']), color).optional(),
-  radius: z.string().max(30).regex(/^\d+(?:\.\d+)?(?:px|rem|em)$/).optional(),
-  font: z.object({sans: z.string().regex(/^[A-Za-z0-9 _,-]{1,100}$/).optional(), mono: z.string().regex(/^[A-Za-z0-9 _,-]{1,100}$/).optional()}).optional(),
-  icons: z.object({libraryId: z.literal('lucide').optional(), variant: z.enum(['outline']).nullable().optional()}).optional(),
-  density: z.enum(['compact','comfortable','spacious']).optional(),
-}).strict();
-export type DesignConfig = z.infer<typeof configSchema>;
 export type ThemeProject = {id: string; owner: string; name: string; baseDesignSystemId: string; brandCss?: string; config: DesignConfig; createdAt: string};
 
 function declarations(selector: string, values: Record<string, string>): string {
@@ -63,7 +54,7 @@ export class Projects {
   }
   async setConfig(id: string, config: unknown) {
     if (!this.identity) throw new Error('A workspace key is required for editing.');
-    const parsed = configSchema.parse(config);
+    const parsed = designConfigSchema.parse(config);
     return this.store.update<ThemeProject>(`projects/${id}`, project => {
       if (!project || project.owner !== this.identity) throw new Error('Project not found in this workspace.');
       return {...project, config:{...project.config,...parsed, colors:{...project.config.colors,...parsed.colors}, font:{...project.config.font,...parsed.font}, icons:{...project.config.icons,...parsed.icons}}};

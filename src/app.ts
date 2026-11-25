@@ -17,7 +17,7 @@ import { bundledFile, bundledKinds, bundledManifest, bundledPreviewFile, findBun
 
 export const app = express();
 app.disable('x-powered-by');
-const mcpPaths=['/mcp','/api/mcp','/mcp/core','/api/mcp/core'];
+const mcpPaths=['/mcp','/mcp/full'];
 const operations=new Set(['initialize','tools/list','tools/call','resources/list','resources/read','resources/templates/list','prompts/list','prompts/get','notifications/initialized']);
 let inFlight=0;
 app.use((req,res,next)=> {
@@ -124,7 +124,7 @@ app.all(mcpPaths,async (req,res)=> {
   if (req.method !== 'POST') {res.status(405).json({jsonrpc:'2.0',error:{code:-32000,message:'Use MCP Streamable HTTP POST requests.'},id:null});return;}
   let owner:string|undefined;
   try {owner=identity(req);} catch {res.status(401).json({error:'Invalid workspace key format'});return;}
-  const server=createServer(store,owner,undefined,req.path.endsWith('/core')?'core':'full');
+  const server=createServer(store,owner,undefined,req.path.endsWith('/full')?'full':'core');
   const transport=new StreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true});
   const close=()=> {void transport.close();void server.close();};
   res.on('close',close);
@@ -145,7 +145,7 @@ app.get('/design-systems/:id',async (req,res)=> {
   if (!system) {res.status(404).json({error:'Design system not found'});return;}
   res.json(system);
 });
-app.get(['/projects/:id','/preview/:id'],async (req,res)=> {
+app.get('/projects/:id',async (req,res)=> {
   const projects=new Projects(store);
   const project=await projects.get(String(req.params.id));
   if (!project) {res.status(404).json({error:'Project not found'});return;}

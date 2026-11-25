@@ -1,10 +1,10 @@
 # Eidova MCP
 
-Design-system selection, real React components, and practical UI review for coding agents. Eight curated families retain all 31 registry IDs. Core exposes 13 typed read-only tools; full keeps 42 public tools and 43 owner tools.
+Design-system selection, real React components, and practical UI review for coding agents. Eight curated families retain all 31 registry IDs. Core exposes 13 typed read-only tools; full keeps 41 public tools and 42 owner tools.
 
-The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 packages: 152 design systems, 115 design templates, 343 plugins, 169 skills, three framework/live-artifact templates and two catalogs. Identical assets share storage; 137 legacy links remain readable. Use `search-resources`, then `read-resource` for files, previews and licenses. The website offers direct previews, downloads and an agent prompt. Unslop supports focused interface polish. Eidova's 31 installable React kits remain available separately.
+The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 packages: 152 design systems, 115 design templates, 343 plugins, 169 skills, three framework/live-artifact templates and two catalogs. Identical assets share storage; redundant wrappers are removed. Use `search-resources`, then `read-resource` for files, previews and licenses. The website offers direct previews, downloads and an agent prompt. Interface-polish guidance is included. Eidova's 31 installable React kits remain available separately.
 
-**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [branded full HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and optional `/mcp/core` are deployed and verified. The existing API hostname remains available for compatibility. See [rollout requirements](docs/DEPLOYMENT.md#eidova-hosted-rename). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and remaining client acceptance.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [default HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and explicit `/mcp/full` profile are configured in this source; deployment of this revision remains separate. See [rollout requirements](docs/DEPLOYMENT.md#hosting-and-endpoints). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and remaining client acceptance.
 
 ## Run locally
 
@@ -17,21 +17,21 @@ npm start
 codex mcp add eidova --url http://localhost:3000/mcp
 ```
 
-The default `/mcp` profile exposes all 42 tools. Use `/mcp/core` for 13 essentials; reconnect the client after changing the URL. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
+The default `/mcp` profile exposes 13 essentials. Use `/mcp/full` for all 41 public tools; reconnect the client after changing the URL. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
 
-For stdio, you can run directly with `npx` or use an absolute path to a local build:
+For stdio, use an absolute path to a local build. The `npx` examples become available after npm publication:
 
 ```sh
 # Run directly with npx
-npx -y eidova-mcp --profile full
+npx -y eidova-mcp --profile core
 npx -y eidova-mcp doctor
 
 # Or from a local clone
-node /absolute/path/eidova-mcp/dist/stdio.js --profile full
+node /absolute/path/eidova-mcp/dist/stdio.js --profile core
 node /absolute/path/eidova-mcp/dist/stdio.js doctor
 ```
 
-Stdio defaults to full. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. In consumer environments, the installed executable is `eidova-mcp`.
+Stdio defaults to core and starts a registry on a random loopback port for the lifetime of the MCP session, so installation links work without a separate HTTP process. Set `EIDOVA_BASE_URL` only to use an existing HTTP service sharing the same assets and state. Use `--profile full` for specialist tools and owner features. `--help` and `--version` print CLI information; `doctor` checks bundled assets without credentials or network requests. In consumer environments, the installed executable is `eidova-mcp`.
 
 ## First useful tasks
 
@@ -53,7 +53,7 @@ The [family recipes](docs/DESIGN-FAMILIES.md) explain material, typography, geom
 
 ## Context cost
 
-The 21 November local benchmark measures full public discovery at **54,065 UTF-8 bytes**, compared with the **125,752-byte** baseline; core discovery is **21,800 bytes**. All six fixed full-profile workflows meet the 50% reduction gate. These are compact JSON protocol bytes; model token counts and actual client context traces were not measured. See [benchmark scope](docs/BENCHMARK.md).
+The 25 November local benchmark measures full public discovery at **51,530 UTF-8 bytes**, compared with the **125,752-byte** baseline; core discovery is **21,632 bytes**. All six fixed full-profile workflows meet the 50% reduction gate. These are compact JSON protocol bytes; model token counts and actual client context traces were not measured. See [benchmark scope](docs/BENCHMARK.md).
 
 Detailed guidance is at `design://workflow/v1`, with principle/review resources and three optional prompts. Ordinary tools work without these resources/prompts. Choose full for private mutation and specialist guidance; core cannot call tools absent from its discovery.
 
@@ -84,6 +84,6 @@ npm run audit:themes
 
 `npm run verify:consumers` uses the local registry and actual shadcn CLI in six disposable Vite/Next consumers. Website checks are in [deployment](docs/DEPLOYMENT.md). Edit `content/library.json` or use the [content importer](docs/CONTENT-LIBRARY.md); restart to load changes.
 
-Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Configuration uses `EIDOVA_*` environment variables. Local state defaults to `.eidova/state` or `EIDOVA_STATE_DIR`. Branded GitHub and Vercel URLs are live.
+Read the [API](docs/API.md), [release verification](docs/RELEASE-VERIFICATION.md) and [security policy](SECURITY.md). Configuration uses `EIDOVA_*` environment variables. Local state defaults to `.eidova/state` or `EIDOVA_STATE_DIR`. Production URLs require a coordinated deployment of this revision.
 
 This independent open-source project is licensed under the MIT License. Copyright, Tabler's embedded SVG license and Lucide's ISC notice are retained in [NOTICE](NOTICE) and bundled licenses. Supplemental icons use local Lucide; some specialist registry components retain their original Iconify dependencies.
