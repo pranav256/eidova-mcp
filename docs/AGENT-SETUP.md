@@ -4,7 +4,7 @@ Connect the client, then give its agent project guidance. These are separate ste
 `AGENTS.md` is a project instruction convention, not an MCP transport or a connection file.
 The supported MCP interface already includes initialization instructions, tool discovery,
 resources, resource templates and prompts. `server.json` describes the server for Registry
-publication; publication is still deferred.
+publication.
 
 ## Project instructions
 
@@ -28,8 +28,7 @@ configuration and merge its `eidova` entry with existing servers:
 
 Examples use public HTTP without credentials. Claude Desktop's local configuration
 uses stdio instead; see [CLIENTS.md](CLIENTS.md). No npm installation is required for
-public HTTP, and the unpublished npm package must not be presented as an available
-`npx` installation.
+public HTTP. The npm package provides local stdio through `npx eidova-mcp`.
 
 Reconnect and check discovery: full has 41 public tools, core has 13. A core connection
 cannot call full-only tools. Review results are limited to supplied evidence; the

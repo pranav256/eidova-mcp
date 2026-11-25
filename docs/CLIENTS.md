@@ -16,7 +16,7 @@ Default core endpoint: `https://eidova-mcp.vercel.app/mcp`. Full endpoint: appen
 
 Claude remote connectors require reachable HTTPS; your machine's `localhost` is not reachable from the remote connector service. Local-only Claude Desktop uses stdio, not an HTTP URL inserted into its stdio configuration.
 
-The `npx` examples below require npm publication. Until then, use a built checkout with the absolute-path configuration below. Stdio starts its own loopback registry; set `EIDOVA_BASE_URL` only when using a separately running service with matching assets and state.
+Stdio starts its own loopback registry; set `EIDOVA_BASE_URL` only when using a separately running service with matching assets and state.
 
 ## Cursor HTTP
 

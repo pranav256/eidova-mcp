@@ -4,7 +4,7 @@ Design-system selection, real React components, and practical UI review for codi
 
 The curated [Eidova resource library](docs/BUNDLED-RESOURCES.md) includes 784 packages: 152 design systems, 115 design templates, 343 plugins, 169 skills, three framework/live-artifact templates and two catalogs. Identical assets share storage; redundant wrappers are removed. Use `search-resources`, then `read-resource` for files, previews and licenses. The website offers direct previews, downloads and an agent prompt. Interface-polish guidance is included. Eidova's 31 installable React kits remain available separately.
 
-**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [default HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and explicit `/mcp/full` profile are configured in this source; deployment of this revision remains separate. See [rollout requirements](docs/DEPLOYMENT.md#hosting-and-endpoints). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and remaining client acceptance.
+**0.2.0 provides public HTTP and local stdio transports.** The [website](https://eidova.vercel.app), [default HTTP endpoint](https://eidova-mcp.vercel.app/mcp) and explicit `/mcp/full` profile are the canonical public endpoints. See [rollout requirements](docs/DEPLOYMENT.md#hosting-and-endpoints). [Release verification](docs/RELEASE-VERIFICATION.md) records package checks, exact hosted evidence and remaining client acceptance.
 
 ## Run locally
 
@@ -19,7 +19,7 @@ codex mcp add eidova --url http://localhost:3000/mcp
 
 The default `/mcp` profile exposes 13 essentials. Use `/mcp/full` for all 41 public tools; reconnect the client after changing the URL. Public catalog, extraction, guidance and reviews need no account or key. [Client setup](docs/CLIENTS.md) covers Codex, Claude Code/Desktop, Cursor and VS Code, with verification scope stated explicitly.
 
-For stdio, use an absolute path to a local build. The `npx` examples become available after npm publication:
+For stdio, run the npm package or use an absolute path to a local build:
 
 ```sh
 # Run directly with npx

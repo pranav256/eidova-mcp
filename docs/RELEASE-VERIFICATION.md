@@ -1,6 +1,6 @@
 # Eidova verification
 
-## Current local checks - 25 November 2026
+## Pre-release local checks - 25 November 2026
 
 The current service uses EIDOVA_* settings, design://eidova resource URIs,
 the component input for scoped kits and explicit first-visit steps. Only /mcp
@@ -37,7 +37,7 @@ theme audits pass. Both complete dependency audits report zero known advisories.
 
 These checks cover local protocol behavior, isolation, validation, resource
 integrity and website behavior. Docker and hosted/client-app acceptance were not
-rerun for this revision. No deployment or publication was performed.
+rerun for this revision. Deployment and publication were outside these local checks.
 
 ## Release boundary
 

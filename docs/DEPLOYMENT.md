@@ -1,6 +1,6 @@
 # Self-host and release
 
-This revision is local and has not been deployed or published. The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. This revision defaults to core `/mcp`, with full at `/mcp/full`; verify these contracts when deploying.
+The API and website are independent repositories/Vercel projects. A Git push can trigger their deployment integrations; verify the exact deployed commits and versions. Promote the API before a website that depends on its changes. This revision defaults to core `/mcp`, with full at `/mcp/full`; verify these contracts when deploying.
 
 ## Local service and website
 
@@ -58,7 +58,7 @@ Before production rollout, set API `EIDOVA_BASE_URL=https://eidova-mcp.vercel.ap
 
 ## Release sequence
 
-This revision has not been published to npm or the MCP Registry. Verify package and namespace ownership, and confirm publishing authentication with `npm whoami` before release. Use an authenticated npm account with the required 2FA, or a configured trusted publisher; never store publishing tokens in source. Build a fresh tarball from the reviewed commit instead of reusing scratch artifacts. Publish Registry metadata only after the npm package is available. Complete the client acceptance in [CLIENTS.md](CLIENTS.md); unmeasured host timings and context traces remain unmeasured.
+Before publishing a version to npm or the MCP Registry, verify package and namespace ownership, and confirm publishing authentication with `npm whoami` before release. Use an authenticated npm account with the required 2FA, or a configured trusted publisher; never store publishing tokens in source. Build a fresh tarball from the reviewed commit instead of reusing scratch artifacts. Publish Registry metadata only after the npm package is available. Complete the client acceptance in [CLIENTS.md](CLIENTS.md); unmeasured host timings and context traces remain unmeasured.
 
 1. Finish remote CI and named-client walkthroughs; record client versions, profile, first-task time and context traces. Resolve naming/package/namespace ownership before publishing metadata.
 2. Build the exact MCP commit; run tests, stdio/package smoke, benchmark and theme audit. Stage it with separate disposable state/Blob records.
