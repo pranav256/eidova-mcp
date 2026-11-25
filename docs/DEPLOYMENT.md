@@ -86,6 +86,8 @@ npm run verify:consumers
 
 The browser scripts use Edge on Windows or installed Playwright Chromium elsewhere. `PLAYWRIGHT_CHANNEL` can select another installed channel. On Linux, install Chromium with `npx playwright install --with-deps chromium`; the CI browser job pins Ubuntu 24.04 for the locked Playwright 1.56.1 version. Clean consumers use actual shadcn 4.23.0, React 19.2, Tailwind 4.3.5, Vite 7.3.7 and Next 16.4.6, and run only against a local registry.
 
+`npx tsx scripts/sync-website-tools.ts` synchronizes the sibling website tool directory from actual Core/Full discovery, including descriptions, input schemas and profile labels. Run it after changing exposed tool contracts.
+
 `npm run sync:previews` copies exact public source and required licensed fonts/notices into the sibling website. `node scripts/sync-website-themes.mjs ../eidova-website` regenerates catalog tokens and appearance metadata without rewriting the source registry. The website keeps its reference design by default; the landing navbar applies selected themes while component specimens stay isolated. Restart the MCP after registry/content edits because source is cached per process.
 
 ## Rollback
