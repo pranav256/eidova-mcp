@@ -24,6 +24,7 @@ import {
   restyleFindings,
 } from "./class-contract-rules";
 import { buildProjectContext, type ProjectContext, type ProjectInputs } from "./project-context";
+import { explicitContrastFindings } from "./contrast-rules";
 
 const NATIVE_HTML_TAGS = new Set([
   "a", "abbr", "address", "area", "article", "aside", "audio",
@@ -157,17 +158,6 @@ function getStringAttrValue(attr: ts.JsxAttribute | null): string | null {
   return null;
 }
 
-function hasAriaLabel(node: ts.JsxOpeningLikeElement): boolean {
-  const isPresent = (name: "aria-label" | "aria-labelledby") => {
-    const attr = getAttribute(node, name);
-    if (!attr) return false;
-    const value = getStringAttrValue(attr);
-    if (value === null) return true;
-    return value.trim().length > 0;
-  };
-  return isPresent("aria-label") || isPresent("aria-labelledby");
-}
-
 function elementHasOnlyIconChild(element: ts.JsxElement): boolean {
   const children = element.children.filter((c) => {
     if (ts.isJsxText(c)) return c.text.trim().length > 0;
@@ -181,6 +171,18 @@ function elementHasOnlyIconChild(element: ts.JsxElement): boolean {
   const tagName = ts.isJsxElement(tag) ? getJsxTagName(tag.openingElement) : getJsxTagName(tag);
   if (!tagName) return false;
   return /icon$/i.test(tagName) || /^icon/i.test(tagName) || /^(Lucide|Phosphor|Tabler|Solar)/.test(tagName);
+}
+
+function hasRenderedJsxText(nodes: readonly ts.JsxChild[]): boolean {
+  return nodes.some(child => {
+    if (ts.isJsxText(child)) return child.text.trim().length > 0;
+    if (ts.isJsxExpression(child)) return Boolean(child.expression && (ts.isStringLiteralLike(child.expression) ? child.expression.text.trim() : child.expression.kind === ts.SyntaxKind.NullKeyword || child.expression.kind === ts.SyntaxKind.FalseKeyword ? false : true));
+    const opening = ts.isJsxElement(child) ? child.openingElement : ts.isJsxSelfClosingElement(child) ? child : null;
+    if (!opening || getStringAttrValue(getAttribute(opening, "aria-hidden")) === "true") return false;
+    if (/^[A-Z]/.test(getJsxTagName(opening) ?? "")) return true;
+    if (getJsxTagName(opening) === "img") return Boolean(getStringAttrValue(getAttribute(opening, "alt"))?.trim());
+    return ts.isJsxElement(child) && hasRenderedJsxText(child.children);
+  });
 }
 
 /**
@@ -241,17 +243,24 @@ export function lintFile(input: LintInput, baseConfig: LintConfig, context: Proj
   return reviewable(input, () => lintReviewableFile(input, baseConfig, context));
 }
 
-function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: ProjectContext | null): Finding[] {
+function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: ProjectContext | null, accessibilityOnly = false): Finding[] {
   const config = withElementExemptions(input.path, baseConfig);
-  if (/\.css$/i.test(input.path)) return lintStylesheet(input, config);
+  if (/\.css$/i.test(input.path)) return [...lintStylesheet(input, config), ...(config.rules.wcag?.enabled === false ? [] : explicitContrastFindings(input))];
   // An icon file is measured once over the whole review, in lintFiles.
   if (/\.svg$/i.test(input.path)) return [];
-  if (/\.(html|vue|svelte|mdx)$/i.test(input.path)) {
+  if (/\.(html?|vue|svelte|mdx)$/i.test(input.path)) {
     // The tag checks are linear and cannot run out of budget. The copy check
     // and the code rules each fail on their own, so a crafted tail of unclosed
     // tags cannot hide the tag findings.
     const findings = [
       ...lintTemplateMarkup(input, config),
+      ...(config.rules.wcag?.enabled === false ? [] : lintReviewableFile({
+        path: input.path + ".jsx",
+        content: input.content
+          .replace(/<!--[\s\S]*?-->|<!doctype[^>]*>|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, value => value.replace(/[^\r\n]/g, " "))
+          .replace(/<(input|img|br|hr|meta|link|area|base|embed|source|track|wbr)\b([^>]*?)(\/?)>/gi, (all, tag, attrs, slash) => slash ? all : "<" + tag + attrs + "/>")
+          .replace(/\b(for|onclick|onkeydown|onkeyup|onkeypress|tabindex)\s*=/gi, (_, name) => ({for:"htmlFor",onclick:"onClick",onkeydown:"onKeyDown",onkeyup:"onKeyUp",onkeypress:"onKeyPress",tabindex:"tabIndex"}[name.toLowerCase()] + "=")),
+      }, config, context, true).map(finding => ({ ...finding, file: input.path }))),
       ...reviewable(input, () => lintTemplateCopy(input, config)),
       ...reviewable(input, () => lintCodeRules(input)),
       ...(config.rules.slop?.enabled === false ? [] : reviewable(input, () => copyOverProductFindings(input))),
@@ -280,32 +289,125 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
 
   const lines = input.content.split(/\r?\n/);
 
+  function hasAssociatedLabel(node: ts.JsxOpeningLikeElement): boolean {
+    if (hasSourceName(node)) return true;
+    const id = getStringAttrValue(getAttribute(node, "id"));
+    if (getAttribute(node, "id") && id === null) return true;
+    if (id) {
+      let associated = false;
+      const findLabel = (candidate: ts.Node) => {
+        if (associated) return;
+        if (ts.isJsxElement(candidate) && getJsxTagName(candidate.openingElement) === "label"
+          && getStringAttrValue(getAttribute(candidate.openingElement, "htmlFor")) === id
+          && hasRenderedJsxText(candidate.children)) associated = true;
+        ts.forEachChild(candidate, findLabel);
+      };
+      findLabel(sourceFile);
+      if (associated) return true;
+    }
+    let parent = node.parent;
+    while (parent) {
+      if (ts.isJsxElement(parent) && getJsxTagName(parent.openingElement) === "label" && hasRenderedJsxText(parent.children)) return true;
+      parent = parent.parent;
+    }
+    return false;
+  }
+
+  function hasSourceName(node: ts.JsxOpeningLikeElement): boolean {
+    if (node.attributes.properties.some(ts.isJsxSpreadAttribute)) return true;
+    for (const name of ["aria-label", "title"] as const) {
+      const attr = getAttribute(node, name);
+      if (!attr) continue;
+      const value = getStringAttrValue(attr);
+      if (value === null || value.trim()) return true;
+    }
+    const labelledBy = getAttribute(node, "aria-labelledby");
+    if (!labelledBy) return false;
+    const ids = getStringAttrValue(labelledBy)?.trim().split(/\s+/).filter(Boolean);
+    if (!ids) return true;
+    if (!ids.length) return false;
+    const names = new Map<string, boolean>();
+    const visitLabels = (candidate: ts.Node) => {
+      if (ts.isJsxOpeningElement(candidate) || ts.isJsxSelfClosingElement(candidate)) {
+        const id = getStringAttrValue(getAttribute(candidate, "id"));
+        if (id && ids.includes(id)) {
+          const label = getStringAttrValue(getAttribute(candidate, "aria-label"));
+          const text = ts.isJsxOpeningElement(candidate) && ts.isJsxElement(candidate.parent) ? hasRenderedJsxText(candidate.parent.children) : false;
+          names.set(id, Boolean(label?.trim() || text));
+        }
+      }
+      ts.forEachChild(candidate, visitLabels);
+    };
+    visitLabels(sourceFile);
+    return ids.every(id => names.get(id));
+  }
+
+  function checkSourceAccessibility(node: ts.JsxOpeningLikeElement) {
+    const tag = getJsxTagName(node);
+    if (!tag) return;
+    if (!NATIVE_HTML_TAGS.has(tag)) return;
+    const p = pos(sourceFile, node);
+    const style = getAttribute(node, "style");
+    const literalStyle = getStringAttrValue(style);
+    const expression = style?.initializer && ts.isJsxExpression(style.initializer) ? style.initializer.expression : undefined;
+    const declarations = expression && ts.isObjectLiteralExpression(expression) && expression.properties.every(ts.isPropertyAssignment) ? expression.properties.flatMap(property => {
+      if (!ts.isPropertyAssignment(property)) return [];
+      const name = ts.isIdentifier(property.name) || ts.isStringLiteral(property.name) ? property.name.text.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`) : "";
+      const value = ts.isStringLiteralLike(property.initializer) ? property.initializer.text : name === "font-size" && ts.isNumericLiteral(property.initializer) ? `${property.initializer.text}px` : property.initializer.getText(sourceFile);
+      return [`${name}:${value}`];
+    }).join(";") : literalStyle;
+    if (declarations) {
+      const styleLine = pos(sourceFile, style!).line;
+      findings.push(...explicitContrastFindings({ path: input.path, content: "\n".repeat(styleLine - 1) + `.inline{${declarations}}` }).map(finding => ({ ...finding, snippet: snippetForLine(lines, finding.line) })));
+    }
+    const role = getStringAttrValue(getAttribute(node, "role"))?.toLowerCase();
+    const hasHandler = (name: string) => Boolean(getAttribute(node, name));
+    const inputType = getStringAttrValue(getAttribute(node, "type"))?.toLowerCase();
+    const buttonInput = tag === "input" && ["submit", "reset", "button", "image", "hidden"].includes(inputType ?? "");
+    if (tag === "input" && ["button", "image"].includes(inputType ?? "") && !hasSourceName(node) && !getStringAttrValue(getAttribute(node, inputType === "image" ? "alt" : "value"))?.trim()) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: "This input button has no source-visible accessible name.", fix: "Provide descriptive value text for a button input, alt for an image input, or a non-empty aria-label." });
+    }
+    if (["input", "select", "textarea"].includes(tag) && !buttonInput && !hasAssociatedLabel(node)) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-label", wcag: "3.3.2 (A)", snippet: snippetForLine(lines, p.line), message: "This input has no source-visible accessible label.", fix: "Wrap it in a <label>, associate a visible <label htmlFor=...>, or provide a non-empty aria-label." });
+    }
+    const tabIndex = getAttribute(node, "tabIndex");
+    const staticTab = getStringAttrValue(tabIndex) ?? (tabIndex?.initializer && ts.isJsxExpression(tabIndex.initializer) ? tabIndex.initializer.expression?.getText(sourceFile) : undefined);
+    const nativeKeyboard = ["button", "input", "select", "textarea", "summary"].includes(tag) || tag === "a" && getAttribute(node, "href");
+    if (!nativeKeyboard && hasHandler("onClick") && !node.attributes.properties.some(ts.isJsxSpreadAttribute)
+      && !(role === "button" && staticTab !== undefined && Number(staticTab) >= 0 && ["onKeyDown", "onKeyUp"].some(hasHandler))) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/keyboard-target", wcag: "2.1.1 (A)", snippet: snippetForLine(lines, p.line), message: `Clickable <${tag}> is not a native keyboard control and has no complete button role, tab stop and keyboard handler in source.`, fix: "Use a <button> for an action or an <a href=...> for navigation. Otherwise provide role=\"button\", tabIndex={0}, and Enter/Space keyboard handling." });
+    }
+  }
+
   function visit(node: ts.Node) {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
-      checkElementRules(node);
-      checkTokenRules(node);
-      if (slopEnabled || semanticTokensEnabled) checkClassRules(node);
-      if (semanticTokensEnabled) checkStyleLengths(node);
-      checkClassContract(node);
-      if (wcagEnabled) checkWcagOnOpening(node);
-      if (behaviourEnabled) {
+      if (!accessibilityOnly) {
+        checkElementRules(node);
+        checkTokenRules(node);
+        if (slopEnabled || semanticTokensEnabled) checkClassRules(node);
+        if (semanticTokensEnabled) checkStyleLengths(node);
+        checkClassContract(node);
+        if (wcagEnabled) checkWcagOnOpening(node);
+      }
+      if (wcagEnabled) checkSourceAccessibility(node);
+      if (behaviourEnabled && !accessibilityOnly) {
         const empty = emptyHandlerFinding(node);
         if (empty) pushBehaviour(node, empty);
       }
     }
     if (ts.isJsxElement(node)) {
       if (wcagEnabled) checkWcagOnElement(node);
-      if (slopEnabled) checkLabelAboveTitle(node);
-      if (behaviourEnabled) checkBehaviourOnElement(node);
-      checkSidebarImitation(node);
+      if (slopEnabled && !accessibilityOnly) checkLabelAboveTitle(node);
+      if (behaviourEnabled && !accessibilityOnly) checkBehaviourOnElement(node);
+      if (!accessibilityOnly) checkSidebarImitation(node);
     }
-    if (behaviourEnabled && ts.isJsxExpression(node) && node.expression) {
+    if (behaviourEnabled && !accessibilityOnly && ts.isJsxExpression(node) && node.expression) {
       checkOverlayMount(node.expression);
     }
-    if (copyEnabled && ts.isJsxText(node)) {
+    if (copyEnabled && !accessibilityOnly && ts.isJsxText(node)) {
       checkCopyText(node, node.text);
     }
-    if (ts.isCallExpression(node)) {
+    if (!accessibilityOnly && ts.isCallExpression(node)) {
       checkTableImitation(node);
       if (behaviourEnabled) {
         const toast = toastCallHoldsInputFinding(node);
@@ -316,6 +418,7 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
     // is still user-facing text and reads identically on screen.
     if (
       copyEnabled
+      && !accessibilityOnly
       && ts.isJsxExpression(node)
       && node.expression
       && (ts.isStringLiteral(node.expression) || ts.isNoSubstitutionTemplateLiteral(node.expression))
@@ -764,8 +867,13 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
 
   function checkWcagOnElement(element: ts.JsxElement) {
     const tag = getJsxTagName(element.openingElement);
-    if (tag === "button" || tag === "a") {
-      if (elementHasOnlyIconChild(element) && !hasAriaLabel(element.openingElement)) {
+    if (tag === "button" || tag === "a" && (getAttribute(element.openingElement, "href") || getAttribute(element.openingElement, "onClick")) || NATIVE_HTML_TAGS.has(tag ?? "") && getStringAttrValue(getAttribute(element.openingElement, "role")) === "button") {
+      const hasName = hasSourceName(element.openingElement) || hasRenderedJsxText(element.children);
+      if (!hasName && !elementHasOnlyIconChild(element)) {
+        const p = pos(sourceFile, element.openingElement);
+        findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: `<${tag}> has no source-visible accessible name.`, fix: `Add descriptive text or a non-empty aria-label to the <${tag}>.` });
+      }
+      if (elementHasOnlyIconChild(element) && !hasSourceName(element.openingElement)) {
         const p = pos(sourceFile, element.openingElement);
         if (severityFromFlag(wcagSeverityFlag, "serious")) {
           findings.push({
@@ -785,9 +893,20 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
     }
   }
 
+  if (wcagEnabled) {
+    const checkEmptySelfClosing = (node: ts.Node) => {
+      if (ts.isJsxSelfClosingElement(node) && (getJsxTagName(node) === "button" || getJsxTagName(node) === "a" && (getAttribute(node, "href") || getAttribute(node, "onClick"))) && !hasSourceName(node)) {
+        const p = pos(sourceFile, node);
+        findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: `<${getJsxTagName(node)}> has no source-visible accessible name.`, fix: "Add descriptive text or a non-empty aria-label." });
+      }
+      ts.forEachChild(node, checkEmptySelfClosing);
+    };
+    checkEmptySelfClosing(sourceFile);
+  }
+
   visit(sourceFile);
-  if (slopEnabled && /\.(tsx|jsx)$/i.test(input.path)) findings.push(...copyOverProductFindings(input));
-  return [...findings, ...lintCodeRules(input)].map((finding) => ({
+  if (slopEnabled && !accessibilityOnly && /\.(tsx|jsx)$/i.test(input.path)) findings.push(...copyOverProductFindings(input));
+  return [...findings, ...(accessibilityOnly ? [] : lintCodeRules(input))].map((finding) => ({
     ...finding,
     kind: finding.kind ?? "measured-source",
   }));

@@ -2,6 +2,16 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {inspectSpacing} from '../vendor/upstream/runtime.mjs';
 
+test('a heading and description may wrap differently while peer text cells remain checked',()=>{
+  const row=(tag:string)=>({name:'Reference row',viewport:{width:1440,height:1000},elements:[
+    {id:'row',rect:{x:20,y:20,width:800,height:60}},
+    {id:'title',parentId:'row',tag,lineCount:1,rect:{x:20,y:20,width:320,height:24}},
+    {id:'description',parentId:'row',tag:'p',lineCount:2,rect:{x:380,y:20,width:320,height:48}},
+  ]});
+  assert.ok(!inspectSpacing({states:[row('h3')]}).findings.some(finding=>finding.ruleId==='spacing/ragged-text-row'));
+  assert.ok(inspectSpacing({states:[row('p')]}).findings.some(finding=>finding.ruleId==='spacing/ragged-text-row'));
+});
+
 test('independent inset corners do not need to follow the outer radius',()=>{
   const snapshot=(inset:number,childRadius:number)=>{
     const outer={horizontal:12,vertical:12},inner={horizontal:childRadius,vertical:childRadius};

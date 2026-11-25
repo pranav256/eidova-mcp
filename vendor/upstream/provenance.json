@@ -871,17 +871,17 @@
   ],
   "retentionNote": "Original files records describe the complete source-map recovery. Only the 146 modules reached by the build entry or retained tests remain in the active checkout; unused modules are preserved in Git history and the original source map.",
   "localModifications": {
-    "date": "2026-11-12",
-    "description": "Eidova fixes to heading/link copy extraction, reference density, ordinary uppercase words, DOM overflow/text/auto-margin evidence and supplied CSS review. Original files[].sha256 values retain the recovered upstream hashes.",
+    "date": "2026-11-25",
+    "description": "Eidova source accessibility/opaque contrast detection, evidence-scoped reports, coverage-aware spacing and consistent HTML hover states. Original files[].sha256 retain recovered upstream hashes.",
     "hashEncoding": "UTF-8 with LF line endings",
     "files": [
       {
         "path": "vendor/upstream/src/inspection/capture-script.ts",
-        "sha256": "e94faf3eb145d47dfe5f4da0aaddc8c4255dd6c68cb9129d673bf93cf4c37731"
+        "sha256": "b7e1a18c1a095aa1e0d3f38601ee22632cd3c9fc09612caf33be0dcbaf00df8c"
       },
       {
         "path": "vendor/upstream/src/inspection/spacing.ts",
-        "sha256": "238eb9a3902f76127a3d747ffcb5cdcf2b13921cbfa260cbb5966e676ba34b68"
+        "sha256": "0ed3e89dfa7fb61c55e9283dfe0014451b06da0a27b40f22a522df680726a4a2"
       },
       {
         "path": "vendor/upstream/src/lint/class-contract-rules.ts",
@@ -889,7 +889,7 @@
       },
       {
         "path": "vendor/upstream/src/lint/engine.ts",
-        "sha256": "b7104370c2f9451733def9840df639f08b99306836ecb25106ac6c150f7401d7"
+        "sha256": "17e9d258c85a2785c2b3c64dd9a7cac1e7dd1cf5fb1812f95d9634f4a8e026e4"
       },
       {
         "path": "vendor/upstream/src/lint/project-context.ts",
@@ -925,7 +925,23 @@
       },
       {
         "path": "vendor/upstream/src/mcp/tools/inspection-tools.ts",
-        "sha256": "2fbabfd27f88be69b922b64e44b7b082ace7f671109263cbc63826ca51a560de"
+        "sha256": "d7edf39c0a3556c2f83b07691d11e0d74567f31dbd7320ad8c0705e3857a55dd"
+      },
+      {
+        "path": "vendor/upstream/src/lint/report.ts",
+        "sha256": "5c1bb474bc697dcb9242238094519ac8f5dbe5523c09c794598b66b83ffd1589"
+      },
+      {
+        "path": "vendor/upstream/src/lint/contrast-rules.ts",
+        "sha256": "ab0f0259f41d83ee323bf7615caf610c403e9f25bb876f0396d283793beb5dcb"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/review-tool.ts",
+        "sha256": "c4dfc8ee3e2416fd5d8e14934a8f6dbe6136c901174049a62a8ca65592e7a67b"
+      },
+      {
+        "path": "vendor/upstream/src/mcp/html-kit.ts",
+        "sha256": "582e26f7e37d2b75f65b9e4e62b7122fb5127eb4e3228e6ce432293f11d0cebb"
       }
     ]
   }

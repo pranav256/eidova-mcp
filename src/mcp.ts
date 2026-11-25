@@ -58,11 +58,12 @@ export function createServer(store:JsonStore,identity?:string,privateArchive?:Pr
       case 'get-design-system-kit': {
         const componentName=z.string().regex(/^(?:_shared|[a-z0-9][a-z0-9_-]{0,80})$/);
         const component=z.union([componentName,z.array(componentName).min(1).max(24)]).optional();
+        inputSchema=inputSchema.extend({detail:z.enum(['summary','full']).optional().describe('HTML target only. Defaults to a concise handoff; use full to include complete prose instructions.')});
         inputSchema=inputSchema.extend({component});
-        outputSchema=outputSchema!.extend({componentFiles:z.array(z.object({path:z.string(),content:z.string()})).optional(),dtcgReport:z.object({formatVersion:z.literal('2025.10'),typedTokens:z.number().int().nonnegative(),aliases:z.number().int().nonnegative(),unsupportedTokens:z.number().int().nonnegative()}).optional(),designContext:z.object({uri:z.string(),url:z.string().url()}).optional()});
+        outputSchema=outputSchema!.extend({componentFiles:z.array(z.object({path:z.string(),content:z.string()})).optional(),dtcgReport:z.object({formatVersion:z.literal('2025.10'),typedTokens:z.number().int().nonnegative(),aliases:z.number().int().nonnegative(),unsupportedTokens:z.number().int().nonnegative()}).optional(),designContext:z.object({uri:z.string(),url:z.string().url()}).optional(),requiredTools:z.array(z.string()).optional(),optionalTools:z.array(z.object({name:z.string(),profile:z.string(),fallback:z.string()})).optional()});
         if(privateArchive) {
           description='Return catalog kits or saved private platform files. Captures retain their provenance; uncaptured kits and automatic installation are unavailable.';
-          inputSchema=z.object({target:z.enum(['react','html','dtcg','store-screenshots','react-native','swiftui','shopify']),designSystemId:z.string().min(1).optional(),projectId:z.string().min(1).optional(),component,library:z.enum(['radix','base-ui']).optional(),screen:z.string().trim().min(1).max(80).optional(),install:z.boolean().optional(),context:z.string().max(280).optional()});
+          inputSchema=z.object({target:z.enum(['react','html','dtcg','store-screenshots','react-native','swiftui','shopify']),designSystemId:z.string().min(1).optional(),projectId:z.string().min(1).optional(),component,library:z.enum(['radix','base-ui']).optional(),screen:z.string().trim().min(1).max(80).optional(),install:z.boolean().optional(),detail:z.enum(['summary','full']).optional(),context:z.string().max(280).optional()});
           outputSchema=outputSchema.extend({archive:z.object({capture:z.string(),timestamp:z.string().datetime(),responseSha256:z.string().regex(/^[a-f0-9]{64}$/),designSystemId:z.string(),target:z.string(),fileCount:z.number().int(),installation:z.literal('not performed'),validation:z.literal('captured source only')}).optional()});
         }
         break;
@@ -142,12 +143,28 @@ export function createServer(store:JsonStore,identity?:string,privateArchive?:Pr
         const result=await execute(args,extra);
         if(!result?.structuredContent||result.isError||result.structuredContent.status==='error')return result;
         const structured={...result.structuredContent};delete structured.shotUrl;
+        if(name==='get-design-system-kit') {
+          structured.requiredTools=['find-design-system','get-design-system-kit','get-ui-principle','get-ux-principle','get-review-rules','review-ui-code','check-comprehension','inspect-spacing'];
+          structured.optionalTools=['find-icons','get-icon-files'].map(name=>({name,profile:'full',fallback:'Preserve icons already embedded in the kit, use text labels and omit extra decorative icons.'}));
+          structured.iconInstructions='Preserve the kit’s embedded icons. Optional extra icon search: find-icons and get-icon-files are available in Full at /mcp/full; reconnect after switching. Core can use text labels and omit extra decorative icons.';
+        }
         if(name==='get-design-system-kit'&&args.target==='dtcg'&&typeof structured.tokensJson==='string') {
           const {document,report}=normalizeDtcg(structured.tokensJson);
           structured.tokensJson=JSON.stringify(document,null,2);structured.dtcgReport=report;
           structured.buildInstructions='DTCG 2025.10 typed subset. Simple CSS variable aliases become token references. Unsupported values are retained under $extensions["org.eidova.export"].unsupported and in tokensCss; consumers may ignore them. No universal importer compatibility is claimed.';
         }
-        if(name==='get-design-system-kit'&&args.target==='react'&&'buildInstructions'in structured)structured.buildInstructions=workflowNote+' Use Tailwind 4, the @/* alias and components.json; initialize shadcn if missing. Dependencies resolve through the registry command. Preserve embedded component icons; additional icon search uses Lucide.';
+        if(name==='get-design-system-kit'&&args.target==='react'&&'buildInstructions'in structured)structured.buildInstructions=workflowNote+' Required: use Tailwind 4, the @/* alias and components.json; preserve embedded component icons. Optional icons: `find-icons` is in the Full profile at /mcp/full (reconnect after switching). In Core, keep embedded icons, use text labels and omit extra decorative icons.';
+        if(name==='get-design-system-kit'&&args.target==='html'&&typeof structured.buildInstructions==='string'&&args.detail!=='full')structured.buildInstructions=[
+          'Required: paste tokensCss and componentCss verbatim.',
+          '1. Read designContext; merge it into DESIGN.md before building.',
+          '2. Keep class="ds" on the root and ds-* classes on controls; start from componentExampleHtml.',
+          '3. Replace APP_ROOT in hostIsolationCssTemplate and append it after host CSS. Custom CSS is layout-only.',
+          '4. Apply hierarchyPolicy, compositionPolicy, hoverPolicy and textColorPolicy. Verify computed text contrast at 4.5:1.',
+          '5. Review source, copy and rendered geometry; fix critical/serious findings, then inspect screenshots and test keyboard/task behavior. Unverified checks remain open.',
+          '',
+          'Optional: find-icons and get-icon-files are in Full at /mcp/full (reconnect after switching). Core preserves embedded icons, uses text labels and omits decorative icons.',
+          'Full prose: detail:"full". CSS, examples and policies remain in structuredContent.',
+        ].join('\n');
         if(name==='get-design-system-kit'&&args.target==='react'&&typeof structured.installCommand==='string')structured.installCommand=structured.installCommand.replace(/^\[ -f components\.json \][\s\S]*?\n\n/,'').replace(/ -o\b/g,'');
         if(name==='get-design-system-kit'&&args.target==='react'&&args.designSystemId&&args.component) {
           const info=(await catalog()).find(item=>item.id===args.designSystemId)!;
@@ -167,7 +184,8 @@ export function createServer(store:JsonStore,identity?:string,privateArchive?:Pr
             structured.viewLabel=info.variant?'View tokens':'View components';
           }
         }
-        return {...result,structuredContent:structured,content:[{type:'text',text:JSON.stringify(structured)},...(result.content??[]).filter((block:{type:string})=>block.type!=='text')]};
+        const htmlHandoff=name==='get-design-system-kit'&&args.target==='html'&&args.detail!=='full';
+        return {...result,structuredContent:structured,content:[{type:'text',text:htmlHandoff?String(structured.buildInstructions):JSON.stringify(structured)},...(result.content??[]).filter((block:{type:string})=>block.type!=='text')]};
       };
     }
     const execute=callback;
@@ -193,7 +211,7 @@ export function createServer(store:JsonStore,identity?:string,privateArchive?:Pr
   server.registerTool('read-resource',{description:'Read an Eidova resource manifest or file using a URI from search-resources. Text is paginated by Unicode characters; follow nextOffset to finish. Binary assets return typed download links. File reads never execute content.',inputSchema:{uri:z.string().min(1).max(2000),offset:z.number().int().min(0).max(10000000).default(0),limit:z.number().int().min(1).max(24000).default(12000)}},async({uri,offset,limit})=>text(JSON.stringify(await readBundledResource(uri,offset,limit))));
   server.registerTool('get-capabilities',{inputSchema:{}},async()=>{
     const entries=await bundledEntries();
-    return text(JSON.stringify({version:'0.2.0',profile,systems:(await catalog()).length,families:designFamilies.length,library:{total:entries.length,kinds:Object.fromEntries(bundledKinds.map(kind=>[kind,entries.filter(entry=>entry.kind===kind).length])),readTool:'read-resource',searchTool:'search-resources'},tools:[...toolNames],generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',execution:'source, evidence and commands only; no hosted installation/rendering',dashboardCapture:'unavailable',keyRecovery:'unavailable',fullEndpoint:`${baseUrl()}/mcp/full`,coreEndpoint:`${baseUrl()}/mcp`,omitted:[...unavailable].filter(name=>name!=='get-inspiration'||!privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})}));
+    return text(JSON.stringify({version:'0.2.0',profile,systems:(await catalog()).length,families:designFamilies.length,library:{total:entries.length,kinds:Object.fromEntries(bundledKinds.map(kind=>[kind,entries.filter(entry=>entry.kind===kind).length])),readTool:'read-resource',searchTool:'search-resources'},tools:[...toolNames],iconSearch:{tool:'find-icons',profile:'full',fallback:'Preserve icons embedded in the kit, use text labels and omit extra decorative icons.'},generation:'deterministic base reuse and supplied token overrides',retrieval:'lexical',execution:'source, evidence and commands only; no hosted installation/rendering',dashboardCapture:'Local browser capture: eidova-mcp review-browser <loopback-url>; hosted browser capture unavailable.',keyRecovery:'unavailable',fullEndpoint:`${baseUrl()}/mcp/full`,coreEndpoint:`${baseUrl()}/mcp`,omitted:[...unavailable].filter(name=>name!=='get-inspiration'||!privateArchive),privateWorkspace:Boolean(identity),...(privateArchive?{archive:privateArchive.summary()}:{})}));
   });
   const workflow=awaitWorkflow;
   server.registerResource('eidova-license','design://eidova/license',{mimeType:'text/plain',description:'Apache-2.0 license for the bundled Eidova content; package overrides are linked in each manifest.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/plain',text:await readFile(resourcePath('content/eidova/LICENSE'),'utf8')}]}));
@@ -201,13 +219,13 @@ export function createServer(store:JsonStore,identity?:string,privateArchive?:Pr
     list:async()=>({resources:(await bundledEntries()).map(entry=>({uri:entryUri(entry),name:`Eidova: ${entry.name} (${entry.kind})`,mimeType:'application/json',description:entry.description}))}),
   }),{mimeType:'application/json',description:resourceNote},async(uri,{kind,id})=>{
     const entry=await findBundledEntry(String(kind),String(id));
-    if(!entry)throw new Error('Bundled resource not found.');
+    if(!entry)throw new Error('Bundled resource not found. Call search-resources for a valid kind, ID and URI.');
     return {contents:[{uri:uri.href,mimeType:'application/json',text:JSON.stringify(await bundledManifest(entry))}]};
   });
   server.registerResource('eidova-file',new ResourceTemplate('design://eidova/{kind}/{id}/files/{+file}',{list:undefined}),
     {description:'Verbatim bundled file. Read its package manifest for provenance, hashes and licenses; no code is executed.'},async(uri,{kind,id,file})=>{
       const result=await bundledFile(String(kind),String(id),String(file));
-      if(!result)throw new Error('Bundled file not found.');
+      if(!result)throw new Error('Bundled file not found. Read the manifest and copy a listed file URI.');
       return {contents:[{uri:uri.href,...(result.metadata.binary?{mimeType:result.metadata.mimeType??'application/octet-stream',blob:result.bytes.toString('base64')}:{mimeType:result.metadata.mimeType??'text/plain',text:result.bytes.toString('utf8')})}]};
     });
   server.registerResource('design-workflow','design://workflow/v1',{mimeType:'text/markdown',description:'Complete design/build/review workflow, version 1.'},async uri=>({contents:[{uri:uri.href,mimeType:'text/markdown',text:await workflow}]}));

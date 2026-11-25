@@ -154,10 +154,10 @@ get-review-rules gives you the judgment rules to apply yourself. This tool is th
 - Undefined font variables that leave the rendered app on an unintended fallback family.
 - Hardcoded colors and Tailwind arbitrary color values that bypass semantic tokens, raw palette classes (bg-white, text-gray-500), and dark: forks.
 - Generated-UI tells: letter-spaced capital labels, a left-edge stripe on a callout, selected row or active nav item, gradient text, eyebrow labels above titles, em dashes in copy, a page title laid over a full-bleed product photo or video.
-- WCAG basics: images without alt, icon-only buttons without an accessible name, removed focus outlines.
+- Source-visible accessibility faults: empty button/link names, unlabeled inputs, clickable non-native targets without button semantics and keyboard handlers, explicit same-rule hex color pairs below 4.5:1, images without alt, and removed focus outlines.
 - SwiftUI: literal colours outside the theme, text that ignores Dynamic Type, icon-only buttons with no accessibility label, tap gestures used as buttons, and a chart axis inside a small card.
 
-This source reviewer cannot judge rendered hierarchy or semantic color roles. After it passes, inspect the rendered dashboard and confirm title → metrics → records → interpretation, distinct action and status colors, and that a stepper begins only after a task starts.
+This reports source findings only; a clean result means no deterministic issues were found in the supplied source. It cannot verify computed or inherited colors, dynamic label/name values, actual keyboard behavior, rendered hierarchy, or interactive states. Those checks remain unverified until a browser or person checks them.
 
 Send each file's path and leave out content to have the tool read the whole file from disk. Fix every critical and serious finding, then call it again on the fixed source. Findings feed the same loop as a human code review: read, fix, re-check.`,
       inputSchema: z.object({
@@ -180,8 +180,8 @@ Send each file's path and leave out content to have the tool read the whole file
     async ({ files, context }) => {
       const start = Date.now();
       const loaded = await loadReviewFiles(files.filter((f) => isReviewableSourcePath(f.path)));
-      const skipped = loaded.flatMap((f) => ("skipped" in f ? [f.skipped] : []));
-      const reviewable: LintInput[] = loaded.flatMap((f) => ("input" in f ? [asReviewInput(f.input)] : []));
+      const skipped = [...files.filter(f => !isReviewableSourcePath(f.path)).map(f => `${f.path}: unsupported source type; send HTML/JSX/TSX, CSS, SVG or SwiftUI source`), ...loaded.flatMap((f) => ("skipped" in f ? [f.skipped] : []))];
+      const reviewable: LintInput[] = loaded.flatMap((f) => ("input" in f ? /\.html?$/i.test(f.input.path) ? [f.input, asReviewInput(f.input)] : [f.input] : []));
       // SwiftUI files have their own rules; the web engine parses the rest.
       const swift = reviewable.filter((input) => /\.swift$/i.test(input.path));
       const web = reviewable.filter((input) => !/\.swift$/i.test(input.path));
@@ -196,7 +196,8 @@ Send each file's path and leave out content to have the tool read the whole file
         ...swift.flatMap(swiftFindings),
       ].map((f) => (/\.html?\.css$/i.test(f.file) ? { ...f, file: f.file.slice(0, -4) } : f));
       const report = reviewable.length ? formatFindingsReport(findings) : NOTHING_TO_REVIEW;
-      const text = skipped.length ? `${report}\n\nNot reviewed:\n${skipped.map((line) => `- ${line}`).join("\n")}` : report;
+      const scope = "Unverified: rendered/computed colors and contrast, dynamic names or label associations, actual keyboard behavior, interaction states, and visual hierarchy. Use a rendered browser review and manual keyboard checks for those.";
+      const text = `${report}\n\n${scope}${skipped.length ? `\n\nNot reviewed:\n${skipped.map((line) => `- ${line}`).join("\n")}` : ""}`;
 
       // Usage telemetry carries rule identifiers and counts only. The report
       // itself quotes the caller's source line for each finding, and that is
@@ -233,7 +234,14 @@ Send each file's path and leave out content to have the tool read the whole file
         },
       );
 
-      return { content: [{ type: "text" as const, text }] };
+      return { content: [{ type: "text" as const, text }], structuredContent: {
+        status: skipped.length || !reviewable.length ? "partial" : counts.total ? "findings" : "no-deterministic-findings",
+        evidence: "supplied-source",
+        findings,
+        summary: counts,
+        unverified: ["Computed, inherited, variable, transparent and unsupported color formats/contrast", "Dynamic accessible names and label references; custom component semantics", "Keyboard and task behavior", "Interactive states", "Visual hierarchy"],
+        skipped,
+      } };
     },
   );
 }

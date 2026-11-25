@@ -26,7 +26,9 @@ test('MCP advertises working tools and refuses server filesystem reads',async()=
     const refusal=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'src/app.ts'}]}});
     assert.equal(refusal.isError,true);
     const review=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'sample.tsx',content:'export const Screen = () => <button><svg /></button>;'}]}});
-    assert.match(JSON.stringify(review),/1 finding.*1 serious/);
+    const findings=(review.structuredContent as {findings:Array<{ruleId:string}>}).findings;
+    assert.ok(findings.some(finding=>finding.ruleId==='wcag/control-name'));
+    assert.ok(findings.some(finding=>finding.ruleId==='element/button'));
     const primitive=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'site/src/components/ui/input.tsx',content:'export const Input = (props: any) => <input {...props} />;'}]}});
     assert.doesNotMatch(JSON.stringify(primitive),/element\/input/);
     const misplaced=await client.callTool({name:'review-ui-code',arguments:{files:[{path:'screens/input.tsx',content:'export const Input = (props: any) => <input {...props} />;'}]}});

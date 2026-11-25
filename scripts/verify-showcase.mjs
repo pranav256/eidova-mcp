@@ -32,7 +32,7 @@ try {
   assert.equal(tools.length, data.publicTools);
   assert.deepEqual(data.tools.map(({name,description})=>({name,description})),tools.map(({name,description})=>({name,description})), 'Tool directory must match current discovery.');
   await call('get-review-rules', { category: 'all' });
-  const files = await Promise.all(['Showcase.tsx','showcase.css','styles.css','clean.css','App.tsx','main.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','components/CopyButton.tsx'].map(async file => ({ path: file, content: await readFile(path.join(website, 'src', file), 'utf8') })));
+  const files = await Promise.all(['Docs.tsx','docs.css','Showcase.tsx','showcase.css','styles.css','clean.css','App.tsx','main.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','components/CopyButton.tsx'].map(async file => ({ path: file, content: await readFile(path.join(website, 'src', file), 'utf8') })));
   const source = await call('review-ui-code', { files });
   const inventory = await readdir(path.join(website, 'src/components/ui'));
   const findings = source.content.filter(block => block.type === 'text').map(block => block.text).join('\n').split('\n').filter(line => /^- \*\*(critical|serious)\*\*/.test(line));
@@ -213,9 +213,28 @@ try {
   await context.close();
 
   const comprehension = [];
-  for (const panel of panels) comprehension.push(await call('check-comprehension', { ...panel, knownTerms: ['Eidova','MCP','CSS','SVG','Lucide','React','React Native','SwiftUI','Shopify','Three.js','token','tokens','design system','palette','specimen'] }));
+  for(const width of [390,1440,1728]) for(const mode of ['light','dark']) {
+    const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
+    try {
+      const page=await context.newPage();
+      page.on('pageerror',error=>errors.push(error.message));
+      await page.goto(origin+'/docs?mode='+mode,{waitUntil:'networkidle'});
+      await page.evaluate(()=>document.fonts.ready);
+      for(const [name,selector] of [['default',null],['kit-open','#review-evidence details summary'],['capture-open','.docs-local-examples > summary']]) {
+        if(selector)await page.locator(selector).click();
+        const state=await page.evaluate(capture);state.name=`${width} ${mode} docs ${name}`;states.push(state);
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+        contrast.push({width,mode,state:'docs '+name,failures:(await page.evaluate(measureTextContrast)).filter(item=>item.ratio<item.minimum)});
+        await page.locator(selector?'details[open]':'#review-evidence').last().screenshot({path:path.join(output,`${width}-${mode}-docs-${name}.png`)});
+      }
+      if(width===390&&mode==='light')for(const selector of ['#review-evidence li','#review-evidence > details','.docs-local'])for(const node of await page.locator(selector).all())panels.push(await node.evaluate(node=>({screen:'Review documentation',surface:'reference',headline:node.querySelector('h2,h3,summary')?.textContent,body:[...node.querySelectorAll('p')].map(paragraph=>paragraph.textContent),actions:[]})));
+    } finally {await context.close();}
+  }
+  for (const panel of panels) comprehension.push(await call('check-comprehension', { ...panel, knownTerms: ['Eidova','MCP','CSS','HTML','SVG','DOM','JSON','CI','Lucide','React','React Native','SwiftUI','Shopify','Three.js','token','tokens','design system','palette','specimen'] }));
   const spacing = [];
-  for (let index = 0; index < states.length; index += 2) spacing.push(await call('inspect-spacing', { states: states.slice(index, index + 2), detail: 'full' }));
+  const names=[...new Set(states.map(state=>state.name.replace(/^\d+ /,'')))];
+  for (const name of names) spacing.push(await call('inspect-spacing', { states: states.filter(state=>state.name.replace(/^\d+ /,'')===name).map(state=>({...state,name})), requiredStates:[name], detail: 'full' }));
+  assert.ok(spacing.every(result=>result.structuredContent.status==='completed'&&result.structuredContent.coverage.complete),'Website geometry review must cover every declared state at all widths.');
   const spacingFindings = spacing.flatMap(result => result.structuredContent.findings);
   const blockers = spacingFindings.filter(finding => ['critical','serious'].includes(finding.severity));
   await save('calls', calls); await save('states', states); await save('comprehension', comprehension); await save('spacing', spacing); await save('contrast', contrast);

@@ -57,6 +57,29 @@ screen that loads asynchronously. The command exits with status 1 when a view
 fails. It loads same-origin assets, so serve externally hosted assets locally
 if they are needed for a representative capture.
 
+It captures the default page and keyboard focus. To cover relevant task states,
+save a plan as `review-states.json` and pass `--states review-states.json`:
+
+```json
+[
+  {"name":"default","steps":[]},
+  {"name":"menu-open","steps":[{"action":"click","selector":"#menu-trigger"}]},
+  {"name":"keyboard-focus","steps":[{"action":"focus","selector":"#email"}]}
+]
+```
+
+Use selectors from your page. Supported actions are `click`, `hover`, `focus`, and
+`press` (with `selector` and `key`, e.g. `Enter`). Up to eight distinct state plans
+run from fresh pages in both appearances at every width. This is an external local
+browser capture, not a hosted dashboard worker. Use a test page and test data.
+
+The output names `report.json`, screenshots and `spacing-input.json`. Submit the
+last JSON object unchanged as `inspect-spacing` arguments. Check `coverage`, findings
+and unverified human checks; incomplete captures withhold the score. A geometry
+score measures finding penalties, not overall UI quality. See [Review quality](REVIEW-QUALITY.md).
+From this checkout use `node dist/stdio.js` in place of `eidova-mcp` after building;
+this path does not depend on npm package publication.
+
 The project inventory for `preview-install` is JSON with `files`, `paths.ui`,
 `paths.lib`, `paths.css`, `paths.utils`, and optional dependency and registry maps.
 Use project-relative paths as resolved by your coding host from `components.json`

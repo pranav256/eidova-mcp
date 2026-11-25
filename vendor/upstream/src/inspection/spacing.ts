@@ -609,6 +609,8 @@ function inspectRaggedTextRows(
     if (group.length < 2) continue;
     for (const row of rowClusters(group, tolerance)) {
       if (row.length < 2) continue;
+      // A heading and its description are different roles, not peer text cells.
+      if (row.some(element => /^h[1-6]$/i.test(element.tag ?? "")) && row.some(element => element.tag?.toLowerCase() === "p")) continue;
       const counts = row.map((element) => element.lineCount ?? 0);
       // Both conditions, never either. Differing heights alone catch a price
       // sitting beside a padded badge, which is not ragged. Differing counts

@@ -96,7 +96,6 @@ export const DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
    colour skips .ds-btn. Resetting it with color:inherit outranked every button
    variant and put the page's dark text on the dark primary fill. */
 .ds a:not(.ds-btn){color:var(--primary,oklch(0.45 0.15 264));text-decoration:none}
-.ds a.ds-btn:hover{text-decoration:none}
 .ds p{margin:0 0 1em}
 .ds-muted{color:var(--muted-foreground,oklch(0.55 0 0))}
 
@@ -108,7 +107,7 @@ export const DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 .ds-btn-secondary{background:var(--secondary,oklch(0.96 0 0));color:var(--secondary-foreground,oklch(0.25 0 0));box-shadow:var(--shadow-xs,none)}
 .ds-btn-outline{background:transparent;color:var(--foreground,oklch(0.2 0 0));border-color:var(--border,oklch(0.85 0 0))}
 .ds-btn-ghost{background:transparent;color:var(--foreground,oklch(0.2 0 0))}
-.ds .ds-btn[aria-pressed="true"],.ds .ds-btn[aria-pressed="true"]:hover{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264));opacity:1}
+.ds .ds-btn[aria-pressed="true"]{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264));opacity:1}
 .ds-btn-sm{padding:.4rem .7rem;font-size:.8125rem}
 .ds-btn-lg{padding:.75rem 1.4rem;font-size:1rem}
 
@@ -175,7 +174,7 @@ export const DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 /* Chip / keyboard key */
 .ds-chip{display:inline-flex;align-items:center;gap:.35rem;font:inherit;font-size:.8125rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--border,oklch(0.88 0 0));background:var(--background,oklch(1 0 0));color:var(--foreground,oklch(0.2 0 0));cursor:pointer;touch-action:manipulation;transition:background-color ${KIT_TIMING},border-color ${KIT_TIMING},color ${KIT_TIMING}}
 .ds-chip:focus-visible{outline:2px solid var(--ring,var(--primary,oklch(0.45 0.15 264)));outline-offset:2px}
-.ds .ds-chip[aria-pressed="true"],.ds .ds-chip[aria-pressed="true"]:hover{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264))}
+.ds .ds-chip[aria-pressed="true"]{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264))}
 .ds-kbd{font-family:var(--font-mono,ui-monospace,monospace);font-size:.75rem;padding:.1rem .4rem;border-radius:var(--radius-sm,4px);border:1px solid var(--border,oklch(0.85 0 0));background:var(--muted,oklch(0.97 0 0));color:var(--foreground,oklch(0.2 0 0))}
 
 /* Touch canvases need finger-sized hit areas and inputs that do not trigger mobile zoom. */
@@ -191,7 +190,8 @@ export const DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 /* Hover is a neutral fine-pointer cue, never a second selection color. */
 @media (hover:hover) and (pointer:fine){
 .ds a:hover{text-decoration:underline}
-.ds-btn:hover:not(:disabled):not([aria-pressed="true"]){opacity:.9}
+.ds a.ds-btn:hover{text-decoration:none}
+.ds-btn:hover:not(:disabled):not([aria-pressed="true"]){outline:1px solid var(--border);outline-offset:1px}
 .ds-btn-ghost:hover:not(:disabled):not([aria-pressed="true"]){background:var(--accent,oklch(0.96 0 0));opacity:1}
 .ds-input:hover:not(:disabled),.ds-textarea:hover:not(:disabled),.ds-select:hover:not(:disabled){border-color:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 20%,transparent)}
 .ds .ds-chip:hover:not([aria-pressed="true"]){background:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 4%,var(--background,oklch(1 0 0)));color:var(--foreground,oklch(0.2 0 0));border-color:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 28%,var(--border,oklch(0.88 0 0)))}

@@ -57,6 +57,8 @@
     "stdio:private": "node scripts/start-private.mjs",
     "build": "tsup src/index.ts src/main.ts src/stdio.ts --format esm --platform node --target node22 --dts --clean",
     "test": "tsx --test tests/*.test.ts",
+    "quality:gate": "tsx --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=review-quality.tap tests/mcp-review-regressions.test.ts tests/review-corpus.test.ts",
+    "verify:browser-review": "tsx scripts/verify-browser-review.ts",
     "check": "tsc --noEmit",
     "benchmark": "tsx scripts/benchmark.ts",
     "audit:themes": "tsx scripts/audit-themes.ts",

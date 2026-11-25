@@ -130,6 +130,7 @@ export const spacingStateSchema = z.object({
     devicePixelRatio: finiteNumber.positive().max(10).optional(),
   }),
   elements: z.array(elementSchema).max(1500).describe("Every element, in page order."),
+  captureCoverage: z.object({ totalEligibleElements: z.number().int().nonnegative(), capturedElements: z.number().int().nonnegative(), truncated: z.boolean() }).optional(),
   density: z.object({
     mode: z.string().max(20).optional(),
     source: z.string().max(20).optional(),
@@ -279,7 +280,7 @@ export function registerInspectionTools({ server, provider, tracked, userId }: R
       title: "Inspect Rendered Spacing",
       description: `Measure spacing in a rendered interface. Returns an inline report with a clear problem and correction, plus a short text summary. Full measurements remain available in the report and structuredContent. Use after UI changes when a browser or DOM evaluator is available. A Shopify theme preview or a React Native web export counts: run the script in that page. A native app on an iOS simulator (SwiftUI, or React Native) is measured from its accessibility tree instead: run \`axe describe-ui --udid <simulator id>\` (AXe: \`brew install cameroncooke/axe/axe\`; point \`DEVELOPER_DIR\` at Xcode if it asks) on each screen and pass the printed JSON as nativeStates. That needs no capture script and no widths.
 
-This is the runtime counterpart to get-review-rules. It automatically loads the live visual-design rubric, but it does not guess pixel values from a screenshot. Exact claims come from DOM geometry.
+This is the runtime counterpart to get-review-rules. It automatically loads the live visual-design rubric, but it does not guess pixel values from a screenshot. Exact claims come from DOM geometry. For a local page, \`eidova-mcp review-browser <loopback-url>\` captures screenshots, computed DOM geometry and automated accessibility results at 390, 1440 and 1728px in light and dark mode and writes one report; no capture JSON editing is needed. The hosted service cannot launch a browser, so remote callers must run the returned capture script in their own browser and submit its states.
 
 It measures geometry only. A score of 100 is not visual approval: it cannot judge hierarchy or whether the design works, so look at a screenshot before you call a screen done.
 
@@ -291,10 +292,12 @@ Workflow:
 
 The capture reads visible layout geometry, computed spacing, corner radii, surface styles, the number of line boxes each text block rendered, short accessible labels for interactive controls, the text of headings, the alt text of images, and the page title. It does not collect source code, cookies, form values, or network data. Add data-bd-inspect-label, data-bd-symmetry, data-bd-group, data-bd-compare-size, data-bd-align-group, and data-bd-align-edge attributes when the intended relationship cannot be inferred safely.`,
       inputSchema: z.object({
-        states: z.array(spacingStateSchema).min(1).max(6).optional()
+        states: z.array(spacingStateSchema).min(1).max(48).optional()
           .describe("Rendered layout states from the capture script. Omit on the first call to receive the script."),
         nativeStates: z.array(nativeStateSchema).min(1).max(6).optional()
           .describe("Native screens: a name for each, and the JSON `axe describe-ui` printed for it. Frames are in points and are measured as pixels."),
+        requiredStates: z.array(z.string().min(1).max(100)).min(1).max(16).optional()
+          .describe("Exact snapshot names required at every recommended width, such as default, focus, menu-open or error. Missing state/width pairs make the result partial."),
         spacingScale: z.array(finiteNumber.positive()).min(2).max(32).optional()
           .describe("Project spacing tokens in CSS pixels. Defaults to 4, 8, 12, 16, 24, 32, 48, 64, 96, 128."),
         tolerance: finiteNumber.min(0).max(4).optional()
@@ -306,8 +309,9 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         context: CONTEXT_ARG,
       }),
       outputSchema: z.object({
-        status: z.enum(["needs-capture", "completed"]),
-        score: z.number().optional(),
+        status: z.enum(["needs-capture", "partial", "completed"]),
+        score: z.number().optional().describe("Geometry finding-penalty score only: 100 minus 20 per critical, 10 per serious and 5 per moderate finding. Not an overall quality rating; withheld until all required web widths are captured."),
+        scoreMeaning: z.string().optional(),
         summary: z.object({
           critical: z.number(),
           serious: z.number(),
@@ -318,6 +322,14 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         findings: z.array(findingSchema).optional(),
         capturedWidths: z.array(z.number()).optional(),
         missingWidths: z.array(z.number()).optional(),
+        coverage: z.object({
+          complete: z.boolean(), scope: z.string(), requiredWidths: z.array(z.number()),
+          capturedWidths: z.array(z.number()), missingWidths: z.array(z.number()), capturedStates: z.number(),
+          requiredStates: z.array(z.string()), missingStates: z.array(z.object({ name: z.string(), width: z.number() })),
+          emptyStates: z.array(z.string()),
+          truncatedStates: z.array(z.string()),
+        }).optional(),
+        unverified: z.array(z.string()).optional(),
         states: z.array(overlayStateSchema).optional(),
         rubric: z.array(z.object({ id: z.string(), title: z.string() })).optional(),
         rubricStatus: z.enum(["loaded", "unavailable"]).optional(),
@@ -334,7 +346,7 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         "openai/toolInvocation/invoked": "Spacing inspection ready",
       },
     },
-    async ({ states: webStates, nativeStates, spacingScale, tolerance, density, detail, context }) => tracked(
+    async ({ states: webStates, nativeStates, requiredStates, spacingScale, tolerance, density, detail, context }) => tracked(
       "inspect-spacing",
       { context, density, stateCount: (webStates?.length ?? 0) + (nativeStates?.length ?? 0), native: Boolean(nativeStates?.length), hasScreenshots: webStates?.some((state) => Boolean(state.screenshotDataUrl)) ?? false },
       async () => {
@@ -353,6 +365,8 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
             structuredContent: {
               status: "needs-capture" as const,
               captureScript: SPACING_CAPTURE_SCRIPT,
+              coverage: { complete: false, scope: "No rendered measurements supplied", requiredWidths: [390, 1440, 1728], capturedWidths: [], missingWidths: [390, 1440, 1728], capturedStates: 0, requiredStates: requiredStates ?? [], missingStates: (requiredStates ?? []).flatMap(name => [390, 1440, 1728].map(width => ({ name, width }))), emptyStates: [], truncatedStates: [] },
+              unverified: ["All rendered geometry", "Visual hierarchy and appearance", "Keyboard and task behavior"],
             },
           };
         }
@@ -384,16 +398,31 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         const captured = [...new Set(states.map((state) => state.viewport.width))].sort((a, b) => a - b);
         // A native screen has one width, the device's, so the web widths do not apply.
         const missing = native ? [] : missingRecommendedWidths(states);
-        const coverageLine = missing.length
-          ? `Add ${formatWidths(missing)} to cover every recommended width.`
+        const requiredWidths = native ? [] : [...RECOMMENDED_VIEWPORT_WIDTHS];
+        const missingStates = (requiredStates ?? []).flatMap(name => requiredWidths
+          .filter(width => !states.some(state => state.name === name && Math.abs(state.viewport.width - width) <= WIDTH_TOLERANCE))
+          .map(width => ({ name, width })));
+        const emptyStates = states.filter(state => !state.elements.length).map(state => state.name);
+        const truncatedStates = (webStates ?? []).filter(state => state.captureCoverage && (state.captureCoverage.truncated || state.captureCoverage.totalEligibleElements > state.elements.length || state.captureCoverage.capturedElements !== state.elements.length)).map(state => state.name);
+        const coverage = {
+          complete: !missing.length && !missingStates.length && !emptyStates.length && !truncatedStates.length && !result.summary.truncated && rubricStatus === "loaded",
+          scope: "Recommended widths and explicitly declared states only; interaction completeness and visual quality are unverified.",
+          requiredWidths, capturedWidths: captured, missingWidths: missing, capturedStates: states.length,
+          requiredStates: requiredStates ?? [], missingStates, emptyStates, truncatedStates,
+        };
+        const status = coverage.complete ? "completed" as const : "partial" as const;
+        const { score: measuredScore, ...measurements } = result;
+        const score = coverage.complete ? measuredScore : undefined;
+        const coverageLine = !coverage.complete
+          ? `Partial coverage: captured ${states.length} state(s). Missing widths: ${missing.length ? formatWidths(missing) : "none"}; missing state/width pairs: ${missingStates.length}; empty captures: ${emptyStates.length}; truncated captures: ${truncatedStates.length}. No geometry score is reported for incomplete evidence.`
           : "";
         const findingsText = formatFindings(result.findings, result.states, detail === "full");
         // Clients that read an output schema pass only structuredContent to the
         // model, so the step goes in both places.
         const nextStep = reviewDesignSystemStep(await sessionLookup);
         const text = [
-          `${resultTitle(result.summary.total, detail === "full")}. Checked at ${formatWidths(captured)}.`,
-          detail === "full" ? `Spacing score: ${result.score}/100.` : "",
+          `${status === "partial" ? "Partial geometry report" : "Complete geometry coverage"}. ${resultTitle(result.summary.total, detail === "full")}. Checked at ${formatWidths(captured)}.`,
+          score !== undefined ? `Geometry finding-penalty score: ${score}/100 (100 minus 20 per critical, 10 per serious and 5 per moderate finding; not an overall quality rating).` : "",
           coverageLine,
           densityLine(result.density),
           findingsText,
@@ -406,10 +435,14 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         return {
           content: [{ type: "text" as const, text }],
           structuredContent: {
-            status: "completed" as const,
-            ...result,
+            status,
+            ...measurements,
+            ...(score === undefined ? {} : { score }),
+            scoreMeaning: "100 minus 20 per critical, 10 per serious and 5 per moderate geometry finding; not an overall quality rating.",
             capturedWidths: captured,
             missingWidths: missing,
+            coverage,
+            unverified: ["Visual hierarchy and appearance require human screenshot review.", "Keyboard behavior and successful task completion need interaction testing.", "State coverage is limited to the names declared by the caller."],
             rubric,
             rubricStatus,
             ...(nextStep && { nextStep }),

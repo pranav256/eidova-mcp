@@ -1,0 +1,4 @@
+.readable {
+  color: var(--readable);
+  background-color: var(--surface);
+}

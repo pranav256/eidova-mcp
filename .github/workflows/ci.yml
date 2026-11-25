@@ -20,6 +20,12 @@ jobs:
       - run: git diff --exit-code vendor/upstream/runtime.mjs
       - run: npm run check
       - run: npm test
+      - run: npm run quality:gate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: review-quality-${{ matrix.os }}-node${{ matrix.node }}
+          path: review-quality.tap
       - run: npm run build
       - run: npm run smoke:stdio
       - run: npm run smoke:package
@@ -51,6 +57,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run verify:browser-review > browser-quality.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-review-quality
+          path: browser-quality.log
       - run: npm run build
       - name: Install and review clean Vite and Next consumers
         shell: bash

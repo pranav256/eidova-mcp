@@ -27,10 +27,12 @@ export async function runLocalCommand(command: string, args: string[]) {
     const { positionals, values } = parseArgs({ args, allowPositionals: true, options: {
       output: { type: 'string', default: '.work/eidova-review' },
       'ready-selector': { type: 'string' },
+      states: { type:'string' },
     } });
-    if (positionals.length !== 1) throw new Error('Usage: eidova-mcp review-browser <loopback-url> [--output <directory>] [--ready-selector <selector>]');
-    const { reviewBrowser } = await import('./browser-review.js');
-    const result = await reviewBrowser(positionals[0], values.output!, values['ready-selector']);
+    if (positionals.length !== 1) throw new Error('Usage: eidova-mcp review-browser <loopback-url> [--output <directory>] [--ready-selector <selector>] [--states <states.json>]');
+    const { reviewBrowser, browserStatesSchema } = await import('./browser-review.js');
+    const states = values.states ? browserStatesSchema.parse(JSON.parse(await readInput(values.states))) : undefined;
+    const result = await reviewBrowser(positionals[0], values.output!, values['ready-selector'], states);
     if (!result.passed) process.exitCode = 1;
     return result;
   }

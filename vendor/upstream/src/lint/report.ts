@@ -38,7 +38,7 @@ export function sortFindings(findings: Finding[]): Finding[] {
 export function formatFindingsReport(findings: Finding[], title = "UI review"): string {
   const counts = summarise(findings);
   if (counts.total === 0) {
-    return `# ${title}\n\nNo findings. The checked files pass every deterministic rule.`;
+    return `# ${title}\n\nNo deterministic issues found in the supplied source.`;
   }
 
   const parts: string[] = [

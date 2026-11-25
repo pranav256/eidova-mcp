@@ -8270,7 +8270,6 @@ var DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
    colour skips .ds-btn. Resetting it with color:inherit outranked every button
    variant and put the page's dark text on the dark primary fill. */
 .ds a:not(.ds-btn){color:var(--primary,oklch(0.45 0.15 264));text-decoration:none}
-.ds a.ds-btn:hover{text-decoration:none}
 .ds p{margin:0 0 1em}
 .ds-muted{color:var(--muted-foreground,oklch(0.55 0 0))}
 
@@ -8282,7 +8281,7 @@ var DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 .ds-btn-secondary{background:var(--secondary,oklch(0.96 0 0));color:var(--secondary-foreground,oklch(0.25 0 0));box-shadow:var(--shadow-xs,none)}
 .ds-btn-outline{background:transparent;color:var(--foreground,oklch(0.2 0 0));border-color:var(--border,oklch(0.85 0 0))}
 .ds-btn-ghost{background:transparent;color:var(--foreground,oklch(0.2 0 0))}
-.ds .ds-btn[aria-pressed="true"],.ds .ds-btn[aria-pressed="true"]:hover{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264));opacity:1}
+.ds .ds-btn[aria-pressed="true"]{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264));opacity:1}
 .ds-btn-sm{padding:.4rem .7rem;font-size:.8125rem}
 .ds-btn-lg{padding:.75rem 1.4rem;font-size:1rem}
 
@@ -8349,7 +8348,7 @@ var DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 /* Chip / keyboard key */
 .ds-chip{display:inline-flex;align-items:center;gap:.35rem;font:inherit;font-size:.8125rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--border,oklch(0.88 0 0));background:var(--background,oklch(1 0 0));color:var(--foreground,oklch(0.2 0 0));cursor:pointer;touch-action:manipulation;transition:background-color ${KIT_TIMING},border-color ${KIT_TIMING},color ${KIT_TIMING}}
 .ds-chip:focus-visible{outline:2px solid var(--ring,var(--primary,oklch(0.45 0.15 264)));outline-offset:2px}
-.ds .ds-chip[aria-pressed="true"],.ds .ds-chip[aria-pressed="true"]:hover{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264))}
+.ds .ds-chip[aria-pressed="true"]{background:var(--primary,oklch(0.45 0.15 264));color:var(--primary-foreground,oklch(1 0 0));border-color:var(--primary,oklch(0.45 0.15 264))}
 .ds-kbd{font-family:var(--font-mono,ui-monospace,monospace);font-size:.75rem;padding:.1rem .4rem;border-radius:var(--radius-sm,4px);border:1px solid var(--border,oklch(0.85 0 0));background:var(--muted,oklch(0.97 0 0));color:var(--foreground,oklch(0.2 0 0))}
 
 /* Touch canvases need finger-sized hit areas and inputs that do not trigger mobile zoom. */
@@ -8365,7 +8364,8 @@ var DS_KIT_CSS = `*,*::before,*::after{box-sizing:border-box}
 /* Hover is a neutral fine-pointer cue, never a second selection color. */
 @media (hover:hover) and (pointer:fine){
 .ds a:hover{text-decoration:underline}
-.ds-btn:hover:not(:disabled):not([aria-pressed="true"]){opacity:.9}
+.ds a.ds-btn:hover{text-decoration:none}
+.ds-btn:hover:not(:disabled):not([aria-pressed="true"]){outline:1px solid var(--border);outline-offset:1px}
 .ds-btn-ghost:hover:not(:disabled):not([aria-pressed="true"]){background:var(--accent,oklch(0.96 0 0));opacity:1}
 .ds-input:hover:not(:disabled),.ds-textarea:hover:not(:disabled),.ds-select:hover:not(:disabled){border-color:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 20%,transparent)}
 .ds .ds-chip:hover:not([aria-pressed="true"]){background:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 4%,var(--background,oklch(1 0 0)));color:var(--foreground,oklch(0.2 0 0));border-color:color-mix(in oklab,var(--foreground,oklch(0.2 0 0)) 28%,var(--border,oklch(0.88 0 0)))}
@@ -19114,8 +19114,8 @@ function tokensToVars(content) {
       } else if (Array.isArray(value) && value.every((x) => isString(x))) {
         out[name] = value.join(", ");
       } else if (isObjectLike(value)) {
-        const rgb = figmaColorToRgbString(value);
-        if (rgb) out[name] = rgb;
+        const rgb2 = figmaColorToRgbString(value);
+        if (rgb2) out[name] = rgb2;
       }
       return;
     }
@@ -20387,6 +20387,7 @@ function inspectRaggedTextRows(state, tolerance, findings) {
     if (group.length < 2) continue;
     for (const row of rowClusters(group, tolerance)) {
       if (row.length < 2) continue;
+      if (row.some((element) => /^h[1-6]$/i.test(element.tag ?? "")) && row.some((element) => element.tag?.toLowerCase() === "p")) continue;
       const counts = row.map((element) => element.lineCount ?? 0);
       if (new Set(counts).size <= 1) continue;
       const tallest = Math.max(...counts);
@@ -20688,7 +20689,7 @@ function captureSpacingSnapshot() {
     }
     return false;
   };
-  const visible = candidates.filter((element) => {
+  const eligible = candidates.filter((element) => {
     const style = getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
     if (hiddenByAncestor(element)) return false;
@@ -20696,7 +20697,8 @@ function captureSpacingSnapshot() {
     if (element.parentElement?.closest("[inert]")) return false;
     const rect = element.getBoundingClientRect();
     return rect.width > 0 || rect.height > 0;
-  }).slice(0, maxElements);
+  });
+  const visible = eligible.slice(0, maxElements);
   const ids = /* @__PURE__ */ new Map();
   const selectorFor = (element, index) => {
     const explicit = element.getAttribute("data-bd-inspect-id");
@@ -20895,7 +20897,8 @@ function captureSpacingSnapshot() {
       height: window.innerHeight,
       devicePixelRatio: window.devicePixelRatio
     },
-    elements
+    elements,
+    captureCoverage: { totalEligibleElements: eligible.length, capturedElements: elements.length, truncated: eligible.length > maxElements }
   };
 }
 function pageScript(fn) {
@@ -21529,6 +21532,7 @@ var spacingStateSchema = z23.object({
     devicePixelRatio: finiteNumber.positive().max(10).optional()
   }),
   elements: z23.array(elementSchema).max(1500).describe("Every element, in page order."),
+  captureCoverage: z23.object({ totalEligibleElements: z23.number().int().nonnegative(), capturedElements: z23.number().int().nonnegative(), truncated: z23.boolean() }).optional(),
   density: z23.object({
     mode: z23.string().max(20).optional(),
     source: z23.string().max(20).optional(),
@@ -21642,7 +21646,7 @@ function registerInspectionTools({ server, provider, tracked, userId }) {
       title: "Inspect Rendered Spacing",
       description: `Measure spacing in a rendered interface. Returns an inline report with a clear problem and correction, plus a short text summary. Full measurements remain available in the report and structuredContent. Use after UI changes when a browser or DOM evaluator is available. A Shopify theme preview or a React Native web export counts: run the script in that page. A native app on an iOS simulator (SwiftUI, or React Native) is measured from its accessibility tree instead: run \`axe describe-ui --udid <simulator id>\` (AXe: \`brew install cameroncooke/axe/axe\`; point \`DEVELOPER_DIR\` at Xcode if it asks) on each screen and pass the printed JSON as nativeStates. That needs no capture script and no widths.
 
-This is the runtime counterpart to get-review-rules. It automatically loads the live visual-design rubric, but it does not guess pixel values from a screenshot. Exact claims come from DOM geometry.
+This is the runtime counterpart to get-review-rules. It automatically loads the live visual-design rubric, but it does not guess pixel values from a screenshot. Exact claims come from DOM geometry. For a local page, \`eidova-mcp review-browser <loopback-url>\` captures screenshots, computed DOM geometry and automated accessibility results at 390, 1440 and 1728px in light and dark mode and writes one report; no capture JSON editing is needed. The hosted service cannot launch a browser, so remote callers must run the returned capture script in their own browser and submit its states.
 
 It measures geometry only. A score of 100 is not visual approval: it cannot judge hierarchy or whether the design works, so look at a screenshot before you call a screen done.
 
@@ -21654,8 +21658,9 @@ Workflow:
 
 The capture reads visible layout geometry, computed spacing, corner radii, surface styles, the number of line boxes each text block rendered, short accessible labels for interactive controls, the text of headings, the alt text of images, and the page title. It does not collect source code, cookies, form values, or network data. Add data-bd-inspect-label, data-bd-symmetry, data-bd-group, data-bd-compare-size, data-bd-align-group, and data-bd-align-edge attributes when the intended relationship cannot be inferred safely.`,
       inputSchema: z23.object({
-        states: z23.array(spacingStateSchema).min(1).max(6).optional().describe("Rendered layout states from the capture script. Omit on the first call to receive the script."),
+        states: z23.array(spacingStateSchema).min(1).max(48).optional().describe("Rendered layout states from the capture script. Omit on the first call to receive the script."),
         nativeStates: z23.array(nativeStateSchema).min(1).max(6).optional().describe("Native screens: a name for each, and the JSON `axe describe-ui` printed for it. Frames are in points and are measured as pixels."),
+        requiredStates: z23.array(z23.string().min(1).max(100)).min(1).max(16).optional().describe("Exact snapshot names required at every recommended width, such as default, focus, menu-open or error. Missing state/width pairs make the result partial."),
         spacingScale: z23.array(finiteNumber.positive()).min(2).max(32).optional().describe("Project spacing tokens in CSS pixels. Defaults to 4, 8, 12, 16, 24, 32, 48, 64, 96, 128."),
         tolerance: finiteNumber.min(0).max(4).optional().describe("Pixel tolerance for grouping measurements. Defaults to 1px."),
         density: z23.enum(DENSITY_MODES).optional().describe("The layout density to check against: compact, comfortable or spacious. Omit it to use the project's design config, then the design system's default, both read from the page's --layout-density variable, then the mode closest to the measured page."),
@@ -21663,8 +21668,9 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         context: CONTEXT_ARG
       }),
       outputSchema: z23.object({
-        status: z23.enum(["needs-capture", "completed"]),
-        score: z23.number().optional(),
+        status: z23.enum(["needs-capture", "partial", "completed"]),
+        score: z23.number().optional().describe("Geometry finding-penalty score only: 100 minus 20 per critical, 10 per serious and 5 per moderate finding. Not an overall quality rating; withheld until all required web widths are captured."),
+        scoreMeaning: z23.string().optional(),
         summary: z23.object({
           critical: z23.number(),
           serious: z23.number(),
@@ -21675,6 +21681,19 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         findings: z23.array(findingSchema).optional(),
         capturedWidths: z23.array(z23.number()).optional(),
         missingWidths: z23.array(z23.number()).optional(),
+        coverage: z23.object({
+          complete: z23.boolean(),
+          scope: z23.string(),
+          requiredWidths: z23.array(z23.number()),
+          capturedWidths: z23.array(z23.number()),
+          missingWidths: z23.array(z23.number()),
+          capturedStates: z23.number(),
+          requiredStates: z23.array(z23.string()),
+          missingStates: z23.array(z23.object({ name: z23.string(), width: z23.number() })),
+          emptyStates: z23.array(z23.string()),
+          truncatedStates: z23.array(z23.string())
+        }).optional(),
+        unverified: z23.array(z23.string()).optional(),
         states: z23.array(overlayStateSchema).optional(),
         rubric: z23.array(z23.object({ id: z23.string(), title: z23.string() })).optional(),
         rubricStatus: z23.enum(["loaded", "unavailable"]).optional(),
@@ -21691,7 +21710,7 @@ The capture reads visible layout geometry, computed spacing, corner radii, surfa
         "openai/toolInvocation/invoked": "Spacing inspection ready"
       }
     },
-    async ({ states: webStates, nativeStates, spacingScale, tolerance, density, detail, context }) => tracked(
+    async ({ states: webStates, nativeStates, requiredStates, spacingScale, tolerance, density, detail, context }) => tracked(
       "inspect-spacing",
       { context, density, stateCount: (webStates?.length ?? 0) + (nativeStates?.length ?? 0), native: Boolean(nativeStates?.length), hasScreenshots: webStates?.some((state) => Boolean(state.screenshotDataUrl)) ?? false },
       async () => {
@@ -21710,7 +21729,9 @@ ${SPACING_CAPTURE_SCRIPT}
             }],
             structuredContent: {
               status: "needs-capture",
-              captureScript: SPACING_CAPTURE_SCRIPT
+              captureScript: SPACING_CAPTURE_SCRIPT,
+              coverage: { complete: false, scope: "No rendered measurements supplied", requiredWidths: [390, 1440, 1728], capturedWidths: [], missingWidths: [390, 1440, 1728], capturedStates: 0, requiredStates: requiredStates ?? [], missingStates: (requiredStates ?? []).flatMap((name) => [390, 1440, 1728].map((width) => ({ name, width }))), emptyStates: [], truncatedStates: [] },
+              unverified: ["All rendered geometry", "Visual hierarchy and appearance", "Keyboard and task behavior"]
             }
           };
         }
@@ -21737,12 +21758,31 @@ ${SPACING_CAPTURE_SCRIPT}
         });
         const captured = [...new Set(states.map((state) => state.viewport.width))].sort((a, b) => a - b);
         const missing = native ? [] : missingRecommendedWidths(states);
-        const coverageLine = missing.length ? `Add ${formatWidths(missing)} to cover every recommended width.` : "";
+        const requiredWidths = native ? [] : [...RECOMMENDED_VIEWPORT_WIDTHS];
+        const missingStates = (requiredStates ?? []).flatMap((name) => requiredWidths.filter((width) => !states.some((state) => state.name === name && Math.abs(state.viewport.width - width) <= WIDTH_TOLERANCE)).map((width) => ({ name, width })));
+        const emptyStates = states.filter((state) => !state.elements.length).map((state) => state.name);
+        const truncatedStates = (webStates ?? []).filter((state) => state.captureCoverage && (state.captureCoverage.truncated || state.captureCoverage.totalEligibleElements > state.elements.length || state.captureCoverage.capturedElements !== state.elements.length)).map((state) => state.name);
+        const coverage = {
+          complete: !missing.length && !missingStates.length && !emptyStates.length && !truncatedStates.length && !result.summary.truncated && rubricStatus === "loaded",
+          scope: "Recommended widths and explicitly declared states only; interaction completeness and visual quality are unverified.",
+          requiredWidths,
+          capturedWidths: captured,
+          missingWidths: missing,
+          capturedStates: states.length,
+          requiredStates: requiredStates ?? [],
+          missingStates,
+          emptyStates,
+          truncatedStates
+        };
+        const status = coverage.complete ? "completed" : "partial";
+        const { score: measuredScore, ...measurements } = result;
+        const score = coverage.complete ? measuredScore : void 0;
+        const coverageLine = !coverage.complete ? `Partial coverage: captured ${states.length} state(s). Missing widths: ${missing.length ? formatWidths(missing) : "none"}; missing state/width pairs: ${missingStates.length}; empty captures: ${emptyStates.length}; truncated captures: ${truncatedStates.length}. No geometry score is reported for incomplete evidence.` : "";
         const findingsText = formatFindings(result.findings, result.states, detail === "full");
         const nextStep = "Fix critical and serious spacing findings, then recapture the affected rendered states.";
         const text4 = [
-          `${resultTitle(result.summary.total, detail === "full")}. Checked at ${formatWidths(captured)}.`,
-          detail === "full" ? `Spacing score: ${result.score}/100.` : "",
+          `${status === "partial" ? "Partial geometry report" : "Complete geometry coverage"}. ${resultTitle(result.summary.total, detail === "full")}. Checked at ${formatWidths(captured)}.`,
+          score !== void 0 ? `Geometry finding-penalty score: ${score}/100 (100 minus 20 per critical, 10 per serious and 5 per moderate finding; not an overall quality rating).` : "",
           coverageLine,
           densityLine2(result.density),
           findingsText,
@@ -21753,10 +21793,14 @@ ${SPACING_CAPTURE_SCRIPT}
         return {
           content: [{ type: "text", text: text4 }],
           structuredContent: {
-            status: "completed",
-            ...result,
+            status,
+            ...measurements,
+            ...score === void 0 ? {} : { score },
+            scoreMeaning: "100 minus 20 per critical, 10 per serious and 5 per moderate geometry finding; not an overall quality rating.",
             capturedWidths: captured,
             missingWidths: missing,
+            coverage,
+            unverified: ["Visual hierarchy and appearance require human screenshot review.", "Keyboard behavior and successful task completion need interaction testing.", "State coverage is limited to the names declared by the caller."],
             rubric,
             rubricStatus,
             ...nextStep && { nextStep }
@@ -22454,10 +22498,10 @@ function hasMeasuredLandmarks(state, action, needsTable) {
 function invalidCaptureWidths(input) {
   return (input.capture?.states ?? []).flatMap((state) => {
     const image = state.screenshotDataUrl ? pngEvidence(state.screenshotDataUrl) : void 0;
-    const ratio = state.viewport.devicePixelRatio ?? 1;
+    const ratio2 = state.viewport.devicePixelRatio ?? 1;
     const acceptedWidths = /* @__PURE__ */ new Set([
       Math.round(state.viewport.width),
-      Math.round(state.viewport.width * ratio)
+      Math.round(state.viewport.width * ratio2)
     ]);
     const imageScale = image ? image.width / state.viewport.width : 0;
     const validImage = image !== void 0 && acceptedWidths.has(image.width) && image.height >= Math.round(state.viewport.height * imageScale);
@@ -29282,6 +29326,64 @@ function dynamicClassFindings(expression, cssClasses = /* @__PURE__ */ new Set()
   }];
 }
 
+// vendor/upstream/src/lint/contrast-rules.ts
+function rgb(value) {
+  const color2 = value.trim();
+  const hex = color2.match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[1];
+  if (hex) {
+    const expanded = hex.length === 3 ? [...hex].map((char) => char + char).join("") : hex;
+    return [0, 2, 4].map((index) => Number.parseInt(expanded.slice(index, index + 2), 16));
+  }
+  const channels = color2.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*(1(?:\.0*)?))?\s*\)$/i);
+  if (!channels) return null;
+  const values = channels.slice(1, 4).map(Number);
+  return values.every((channel) => channel <= 255) ? values : null;
+}
+function luminance(color2) {
+  const channels = color2.map((value) => value / 255).map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+function ratio(first, second) {
+  const a = rgb(first), b = rgb(second);
+  if (!a || !b) return null;
+  const values = [luminance(a), luminance(b)].sort((left, right) => right - left);
+  return (values[0] + 0.05) / (values[1] + 0.05);
+}
+function explicitContrastFindings(input) {
+  const source = input.content.replace(/\/\*[\s\S]*?\*\//g, (value) => value.replace(/[^\r\n]/g, " "));
+  const findings = [];
+  for (const block of source.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const declarations4 = /* @__PURE__ */ new Map();
+    for (const declaration2 of block[2].matchAll(/(?:^|;)\s*(color|background(?:-color)?|font-size|font-weight)\s*:\s*([^;{}]+?)(?=;|$)/gi)) {
+      const name = declaration2[1].toLowerCase().replace(/^background$/, "background-color");
+      const important = /\s*!important\s*$/i.test(declaration2[2]);
+      if (declarations4.get(name)?.important && !important) continue;
+      declarations4.set(name, { value: declaration2[2].replace(/\s*!important\s*$/i, "").trim(), important, offset: (block.index ?? 0) + block[1].length + 1 + (declaration2.index ?? 0) + declaration2[0].indexOf(declaration2[1]) });
+    }
+    const foreground = declarations4.get("color"), background = declarations4.get("background-color") ?? declarations4.get("background");
+    if (!foreground || !background) continue;
+    const value = ratio(foreground.value, background.value);
+    const size = declarations4.get("font-size")?.value.match(/^(\d+(?:\.\d+)?)px$/)?.[1];
+    const weight = declarations4.get("font-weight")?.value;
+    const large = size && (Number(size) >= 24 || Number(size) >= 18.667 && (weight === "bold" || Number(weight) >= 700));
+    const minimum = large ? 3 : 4.5;
+    if (value === null || value >= minimum) continue;
+    const line = source.slice(0, foreground.offset).split("\n").length;
+    findings.push({
+      file: input.path,
+      line,
+      severity: "serious",
+      ruleId: "wcag/explicit-contrast",
+      wcag: "1.4.3 (AA)",
+      snippet: input.content.split(/\r?\n/)[line - 1]?.trim() ?? "",
+      message: `Explicit declarations specify ${foreground.value} on ${background.value}, a ${value.toFixed(2)}:1 contrast ratio, below ${minimum}:1 for ${large ? "explicit large" : "normal-size"} text. Rendered size, cascade and colors remain unverified.`,
+      fix: `Choose a foreground/background token pair with at least ${minimum}:1 contrast, then verify the rendered computed colors and text size.`,
+      kind: "measured-source"
+    });
+  }
+  return findings;
+}
+
 // vendor/upstream/src/lint/engine.ts
 var NATIVE_HTML_TAGS = /* @__PURE__ */ new Set([
   "a",
@@ -29482,16 +29584,6 @@ function getStringAttrValue(attr) {
   }
   return null;
 }
-function hasAriaLabel(node) {
-  const isPresent = (name) => {
-    const attr = getAttribute(node, name);
-    if (!attr) return false;
-    const value = getStringAttrValue(attr);
-    if (value === null) return true;
-    return value.trim().length > 0;
-  };
-  return isPresent("aria-label") || isPresent("aria-labelledby");
-}
 function elementHasOnlyIconChild(element) {
   const children = element.children.filter((c) => {
     if (ts11.isJsxText(c)) return c.text.trim().length > 0;
@@ -29504,6 +29596,17 @@ function elementHasOnlyIconChild(element) {
   const tagName4 = ts11.isJsxElement(tag) ? getJsxTagName(tag.openingElement) : getJsxTagName(tag);
   if (!tagName4) return false;
   return /icon$/i.test(tagName4) || /^icon/i.test(tagName4) || /^(Lucide|Phosphor|Tabler|Solar)/.test(tagName4);
+}
+function hasRenderedJsxText(nodes) {
+  return nodes.some((child) => {
+    if (ts11.isJsxText(child)) return child.text.trim().length > 0;
+    if (ts11.isJsxExpression(child)) return Boolean(child.expression && (ts11.isStringLiteralLike(child.expression) ? child.expression.text.trim() : child.expression.kind === ts11.SyntaxKind.NullKeyword || child.expression.kind === ts11.SyntaxKind.FalseKeyword ? false : true));
+    const opening = ts11.isJsxElement(child) ? child.openingElement : ts11.isJsxSelfClosingElement(child) ? child : null;
+    if (!opening || getStringAttrValue(getAttribute(opening, "aria-hidden")) === "true") return false;
+    if (/^[A-Z]/.test(getJsxTagName(opening) ?? "")) return true;
+    if (getJsxTagName(opening) === "img") return Boolean(getStringAttrValue(getAttribute(opening, "alt"))?.trim());
+    return ts11.isJsxElement(child) && hasRenderedJsxText(child.children);
+  });
 }
 var STATIC_TOKEN_RULE_IDS = /* @__PURE__ */ new Set([
   "token/arbitrary-value",
@@ -29540,13 +29643,17 @@ function reviewable(input, run) {
 function lintFile(input, baseConfig, context = null) {
   return reviewable(input, () => lintReviewableFile(input, baseConfig, context));
 }
-function lintReviewableFile(input, baseConfig, context) {
+function lintReviewableFile(input, baseConfig, context, accessibilityOnly = false) {
   const config = withElementExemptions(input.path, baseConfig);
-  if (/\.css$/i.test(input.path)) return lintStylesheet(input, config);
+  if (/\.css$/i.test(input.path)) return [...lintStylesheet(input, config), ...config.rules.wcag?.enabled === false ? [] : explicitContrastFindings(input)];
   if (/\.svg$/i.test(input.path)) return [];
-  if (/\.(html|vue|svelte|mdx)$/i.test(input.path)) {
+  if (/\.(html?|vue|svelte|mdx)$/i.test(input.path)) {
     const findings2 = [
       ...lintTemplateMarkup(input, config),
+      ...config.rules.wcag?.enabled === false ? [] : lintReviewableFile({
+        path: input.path + ".jsx",
+        content: input.content.replace(/<!--[\s\S]*?-->|<!doctype[^>]*>|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, (value) => value.replace(/[^\r\n]/g, " ")).replace(/<(input|img|br|hr|meta|link|area|base|embed|source|track|wbr)\b([^>]*?)(\/?)>/gi, (all, tag, attrs, slash) => slash ? all : "<" + tag + attrs + "/>").replace(/\b(for|onclick|onkeydown|onkeyup|onkeypress|tabindex)\s*=/gi, (_, name) => ({ for: "htmlFor", onclick: "onClick", onkeydown: "onKeyDown", onkeyup: "onKeyUp", onkeypress: "onKeyPress", tabindex: "tabIndex" })[name.toLowerCase()] + "=")
+      }, config, context, true).map((finding5) => ({ ...finding5, file: input.path })),
       ...reviewable(input, () => lintTemplateCopy(input, config)),
       ...reviewable(input, () => lintCodeRules(input)),
       ...config.rules.slop?.enabled === false ? [] : reviewable(input, () => copyOverProductFindings(input))
@@ -29570,39 +29677,126 @@ function lintReviewableFile(input, baseConfig, context) {
     /\.(tsx|jsx|js)$/i.test(input.path) ? ts11.ScriptKind.TSX : ts11.ScriptKind.TS
   );
   const lines = input.content.split(/\r?\n/);
+  function hasAssociatedLabel(node) {
+    if (hasSourceName(node)) return true;
+    const id = getStringAttrValue(getAttribute(node, "id"));
+    if (getAttribute(node, "id") && id === null) return true;
+    if (id) {
+      let associated = false;
+      const findLabel = (candidate) => {
+        if (associated) return;
+        if (ts11.isJsxElement(candidate) && getJsxTagName(candidate.openingElement) === "label" && getStringAttrValue(getAttribute(candidate.openingElement, "htmlFor")) === id && hasRenderedJsxText(candidate.children)) associated = true;
+        ts11.forEachChild(candidate, findLabel);
+      };
+      findLabel(sourceFile);
+      if (associated) return true;
+    }
+    let parent = node.parent;
+    while (parent) {
+      if (ts11.isJsxElement(parent) && getJsxTagName(parent.openingElement) === "label" && hasRenderedJsxText(parent.children)) return true;
+      parent = parent.parent;
+    }
+    return false;
+  }
+  function hasSourceName(node) {
+    if (node.attributes.properties.some(ts11.isJsxSpreadAttribute)) return true;
+    for (const name of ["aria-label", "title"]) {
+      const attr = getAttribute(node, name);
+      if (!attr) continue;
+      const value = getStringAttrValue(attr);
+      if (value === null || value.trim()) return true;
+    }
+    const labelledBy = getAttribute(node, "aria-labelledby");
+    if (!labelledBy) return false;
+    const ids = getStringAttrValue(labelledBy)?.trim().split(/\s+/).filter(Boolean);
+    if (!ids) return true;
+    if (!ids.length) return false;
+    const names = /* @__PURE__ */ new Map();
+    const visitLabels = (candidate) => {
+      if (ts11.isJsxOpeningElement(candidate) || ts11.isJsxSelfClosingElement(candidate)) {
+        const id = getStringAttrValue(getAttribute(candidate, "id"));
+        if (id && ids.includes(id)) {
+          const label = getStringAttrValue(getAttribute(candidate, "aria-label"));
+          const text4 = ts11.isJsxOpeningElement(candidate) && ts11.isJsxElement(candidate.parent) ? hasRenderedJsxText(candidate.parent.children) : false;
+          names.set(id, Boolean(label?.trim() || text4));
+        }
+      }
+      ts11.forEachChild(candidate, visitLabels);
+    };
+    visitLabels(sourceFile);
+    return ids.every((id) => names.get(id));
+  }
+  function checkSourceAccessibility(node) {
+    const tag = getJsxTagName(node);
+    if (!tag) return;
+    if (!NATIVE_HTML_TAGS.has(tag)) return;
+    const p = pos(sourceFile, node);
+    const style = getAttribute(node, "style");
+    const literalStyle = getStringAttrValue(style);
+    const expression = style?.initializer && ts11.isJsxExpression(style.initializer) ? style.initializer.expression : void 0;
+    const declarations4 = expression && ts11.isObjectLiteralExpression(expression) && expression.properties.every(ts11.isPropertyAssignment) ? expression.properties.flatMap((property) => {
+      if (!ts11.isPropertyAssignment(property)) return [];
+      const name = ts11.isIdentifier(property.name) || ts11.isStringLiteral(property.name) ? property.name.text.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`) : "";
+      const value = ts11.isStringLiteralLike(property.initializer) ? property.initializer.text : name === "font-size" && ts11.isNumericLiteral(property.initializer) ? `${property.initializer.text}px` : property.initializer.getText(sourceFile);
+      return [`${name}:${value}`];
+    }).join(";") : literalStyle;
+    if (declarations4) {
+      const styleLine = pos(sourceFile, style).line;
+      findings.push(...explicitContrastFindings({ path: input.path, content: "\n".repeat(styleLine - 1) + `.inline{${declarations4}}` }).map((finding5) => ({ ...finding5, snippet: snippetForLine(lines, finding5.line) })));
+    }
+    const role = getStringAttrValue(getAttribute(node, "role"))?.toLowerCase();
+    const hasHandler = (name) => Boolean(getAttribute(node, name));
+    const inputType = getStringAttrValue(getAttribute(node, "type"))?.toLowerCase();
+    const buttonInput = tag === "input" && ["submit", "reset", "button", "image", "hidden"].includes(inputType ?? "");
+    if (tag === "input" && ["button", "image"].includes(inputType ?? "") && !hasSourceName(node) && !getStringAttrValue(getAttribute(node, inputType === "image" ? "alt" : "value"))?.trim()) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: "This input button has no source-visible accessible name.", fix: "Provide descriptive value text for a button input, alt for an image input, or a non-empty aria-label." });
+    }
+    if (["input", "select", "textarea"].includes(tag) && !buttonInput && !hasAssociatedLabel(node)) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-label", wcag: "3.3.2 (A)", snippet: snippetForLine(lines, p.line), message: "This input has no source-visible accessible label.", fix: "Wrap it in a <label>, associate a visible <label htmlFor=...>, or provide a non-empty aria-label." });
+    }
+    const tabIndex = getAttribute(node, "tabIndex");
+    const staticTab = getStringAttrValue(tabIndex) ?? (tabIndex?.initializer && ts11.isJsxExpression(tabIndex.initializer) ? tabIndex.initializer.expression?.getText(sourceFile) : void 0);
+    const nativeKeyboard = ["button", "input", "select", "textarea", "summary"].includes(tag) || tag === "a" && getAttribute(node, "href");
+    if (!nativeKeyboard && hasHandler("onClick") && !node.attributes.properties.some(ts11.isJsxSpreadAttribute) && !(role === "button" && staticTab !== void 0 && Number(staticTab) >= 0 && ["onKeyDown", "onKeyUp"].some(hasHandler))) {
+      findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/keyboard-target", wcag: "2.1.1 (A)", snippet: snippetForLine(lines, p.line), message: `Clickable <${tag}> is not a native keyboard control and has no complete button role, tab stop and keyboard handler in source.`, fix: 'Use a <button> for an action or an <a href=...> for navigation. Otherwise provide role="button", tabIndex={0}, and Enter/Space keyboard handling.' });
+    }
+  }
   function visit(node) {
     if (ts11.isJsxOpeningElement(node) || ts11.isJsxSelfClosingElement(node)) {
-      checkElementRules(node);
-      checkTokenRules(node);
-      if (slopEnabled || semanticTokensEnabled) checkClassRules(node);
-      if (semanticTokensEnabled) checkStyleLengths(node);
-      checkClassContract(node);
-      if (wcagEnabled) checkWcagOnOpening(node);
-      if (behaviourEnabled) {
+      if (!accessibilityOnly) {
+        checkElementRules(node);
+        checkTokenRules(node);
+        if (slopEnabled || semanticTokensEnabled) checkClassRules(node);
+        if (semanticTokensEnabled) checkStyleLengths(node);
+        checkClassContract(node);
+        if (wcagEnabled) checkWcagOnOpening(node);
+      }
+      if (wcagEnabled) checkSourceAccessibility(node);
+      if (behaviourEnabled && !accessibilityOnly) {
         const empty = emptyHandlerFinding(node);
         if (empty) pushBehaviour(node, empty);
       }
     }
     if (ts11.isJsxElement(node)) {
       if (wcagEnabled) checkWcagOnElement(node);
-      if (slopEnabled) checkLabelAboveTitle(node);
-      if (behaviourEnabled) checkBehaviourOnElement(node);
-      checkSidebarImitation(node);
+      if (slopEnabled && !accessibilityOnly) checkLabelAboveTitle(node);
+      if (behaviourEnabled && !accessibilityOnly) checkBehaviourOnElement(node);
+      if (!accessibilityOnly) checkSidebarImitation(node);
     }
-    if (behaviourEnabled && ts11.isJsxExpression(node) && node.expression) {
+    if (behaviourEnabled && !accessibilityOnly && ts11.isJsxExpression(node) && node.expression) {
       checkOverlayMount(node.expression);
     }
-    if (copyEnabled && ts11.isJsxText(node)) {
+    if (copyEnabled && !accessibilityOnly && ts11.isJsxText(node)) {
       checkCopyText(node, node.text);
     }
-    if (ts11.isCallExpression(node)) {
+    if (!accessibilityOnly && ts11.isCallExpression(node)) {
       checkTableImitation(node);
       if (behaviourEnabled) {
         const toast = toastCallHoldsInputFinding(node);
         if (toast) pushBehaviour(node, toast);
       }
     }
-    if (copyEnabled && ts11.isJsxExpression(node) && node.expression && (ts11.isStringLiteral(node.expression) || ts11.isNoSubstitutionTemplateLiteral(node.expression))) {
+    if (copyEnabled && !accessibilityOnly && ts11.isJsxExpression(node) && node.expression && (ts11.isStringLiteral(node.expression) || ts11.isNoSubstitutionTemplateLiteral(node.expression))) {
       checkCopyText(node.expression, node.expression.text);
     }
     ts11.forEachChild(node, visit);
@@ -29985,8 +30179,13 @@ function lintReviewableFile(input, baseConfig, context) {
   }
   function checkWcagOnElement(element) {
     const tag = getJsxTagName(element.openingElement);
-    if (tag === "button" || tag === "a") {
-      if (elementHasOnlyIconChild(element) && !hasAriaLabel(element.openingElement)) {
+    if (tag === "button" || tag === "a" && (getAttribute(element.openingElement, "href") || getAttribute(element.openingElement, "onClick")) || NATIVE_HTML_TAGS.has(tag ?? "") && getStringAttrValue(getAttribute(element.openingElement, "role")) === "button") {
+      const hasName = hasSourceName(element.openingElement) || hasRenderedJsxText(element.children);
+      if (!hasName && !elementHasOnlyIconChild(element)) {
+        const p = pos(sourceFile, element.openingElement);
+        findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: `<${tag}> has no source-visible accessible name.`, fix: `Add descriptive text or a non-empty aria-label to the <${tag}>.` });
+      }
+      if (elementHasOnlyIconChild(element) && !hasSourceName(element.openingElement)) {
         const p = pos(sourceFile, element.openingElement);
         if (severityFromFlag(wcagSeverityFlag, "serious")) {
           findings.push({
@@ -30005,9 +30204,19 @@ function lintReviewableFile(input, baseConfig, context) {
       }
     }
   }
+  if (wcagEnabled) {
+    const checkEmptySelfClosing = (node) => {
+      if (ts11.isJsxSelfClosingElement(node) && (getJsxTagName(node) === "button" || getJsxTagName(node) === "a" && (getAttribute(node, "href") || getAttribute(node, "onClick"))) && !hasSourceName(node)) {
+        const p = pos(sourceFile, node);
+        findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: `<${getJsxTagName(node)}> has no source-visible accessible name.`, fix: "Add descriptive text or a non-empty aria-label." });
+      }
+      ts11.forEachChild(node, checkEmptySelfClosing);
+    };
+    checkEmptySelfClosing(sourceFile);
+  }
   visit(sourceFile);
-  if (slopEnabled && /\.(tsx|jsx)$/i.test(input.path)) findings.push(...copyOverProductFindings(input));
-  return [...findings, ...lintCodeRules(input)].map((finding5) => ({
+  if (slopEnabled && !accessibilityOnly && /\.(tsx|jsx)$/i.test(input.path)) findings.push(...copyOverProductFindings(input));
+  return [...findings, ...accessibilityOnly ? [] : lintCodeRules(input)].map((finding5) => ({
     ...finding5,
     kind: finding5.kind ?? "measured-source"
   }));
@@ -30695,7 +30904,7 @@ function formatFindingsReport(findings, title = "UI review") {
   if (counts.total === 0) {
     return `# ${title}
 
-No findings. The checked files pass every deterministic rule.`;
+No deterministic issues found in the supplied source.`;
   }
   const parts = [
     `# ${title} \u2014 ${counts.total} finding${counts.total === 1 ? "" : "s"} (${counts.critical} critical, ${counts.serious} serious, ${counts.moderate} moderate)`
@@ -30886,10 +31095,10 @@ get-review-rules gives you the judgment rules to apply yourself. This tool is th
 - Undefined font variables that leave the rendered app on an unintended fallback family.
 - Hardcoded colors and Tailwind arbitrary color values that bypass semantic tokens, raw palette classes (bg-white, text-gray-500), and dark: forks.
 - Generated-UI tells: letter-spaced capital labels, a left-edge stripe on a callout, selected row or active nav item, gradient text, eyebrow labels above titles, em dashes in copy, a page title laid over a full-bleed product photo or video.
-- WCAG basics: images without alt, icon-only buttons without an accessible name, removed focus outlines.
+- Source-visible accessibility faults: empty button/link names, unlabeled inputs, clickable non-native targets without button semantics and keyboard handlers, explicit same-rule hex color pairs below 4.5:1, images without alt, and removed focus outlines.
 - SwiftUI: literal colours outside the theme, text that ignores Dynamic Type, icon-only buttons with no accessibility label, tap gestures used as buttons, and a chart axis inside a small card.
 
-This source reviewer cannot judge rendered hierarchy or semantic color roles. After it passes, inspect the rendered dashboard and confirm title \u2192 metrics \u2192 records \u2192 interpretation, distinct action and status colors, and that a stepper begins only after a task starts.
+This reports source findings only; a clean result means no deterministic issues were found in the supplied source. It cannot verify computed or inherited colors, dynamic label/name values, actual keyboard behavior, rendered hierarchy, or interactive states. Those checks remain unverified until a browser or person checks them.
 
 Send each file's path and leave out content to have the tool read the whole file from disk. Fix every critical and serious finding, then call it again on the fixed source. Findings feed the same loop as a human code review: read, fix, re-check.`,
       inputSchema: z44.object({
@@ -30906,8 +31115,8 @@ Send each file's path and leave out content to have the tool read the whole file
     async ({ files, context }) => {
       const start = Date.now();
       const loaded = files.filter((f) => isReviewableSourcePath(f.path)).map((file) => file.content !== void 0 ? { input: { path: file.path, content: file.content } } : { skipped: `${file.path}: provide inline source content` });
-      const skipped = loaded.flatMap((f) => "skipped" in f ? [f.skipped] : []);
-      const reviewable2 = loaded.flatMap((f) => "input" in f ? [asReviewInput(f.input)] : []);
+      const skipped = [...files.filter((f) => !isReviewableSourcePath(f.path)).map((f) => `${f.path}: unsupported source type; send HTML/JSX/TSX, CSS, SVG or SwiftUI source`), ...loaded.flatMap((f) => "skipped" in f ? [f.skipped] : [])];
+      const reviewable2 = loaded.flatMap((f) => "input" in f ? /\.html?$/i.test(f.input.path) ? [f.input, asReviewInput(f.input)] : [f.input] : []);
       const swift = reviewable2.filter((input) => /\.swift$/i.test(input.path));
       const web = reviewable2.filter((input) => !/\.swift$/i.test(input.path));
       const findings = [
@@ -30919,10 +31128,13 @@ Send each file's path and leave out content to have the tool read the whole file
         ...swift.flatMap(swiftFindings)
       ].map((f) => /\.html?\.css$/i.test(f.file) ? { ...f, file: f.file.slice(0, -4) } : f);
       const report = reviewable2.length ? formatFindingsReport(findings) : NOTHING_TO_REVIEW;
-      const text4 = skipped.length ? `${report}
+      const scope = "Unverified: rendered/computed colors and contrast, dynamic names or label associations, actual keyboard behavior, interaction states, and visual hierarchy. Use a rendered browser review and manual keyboard checks for those.";
+      const text4 = `${report}
+
+${scope}${skipped.length ? `
 
 Not reviewed:
-${skipped.map((line) => `- ${line}`).join("\n")}` : report;
+${skipped.map((line) => `- ${line}`).join("\n")}` : ""}`;
       const counts = summarise(findings);
       const rulesFired = [
         ...new Set(
@@ -30945,7 +31157,14 @@ ${skipped.map((line) => `- ${line}`).join("\n")}` : report;
           outputPreview: `${counts.total} finding(s) across ${reviewable2.length} file(s)` + (rulesFired ? `; rules: ${rulesFired}` : "")
         }
       );
-      return { content: [{ type: "text", text: text4 }] };
+      return { content: [{ type: "text", text: text4 }], structuredContent: {
+        status: skipped.length || !reviewable2.length ? "partial" : counts.total ? "findings" : "no-deterministic-findings",
+        evidence: "supplied-source",
+        findings,
+        summary: counts,
+        unverified: ["Computed, inherited, variable, transparent and unsupported color formats/contrast", "Dynamic accessible names and label references; custom component semantics", "Keyboard and task behavior", "Interactive states", "Visual hierarchy"],
+        skipped
+      } };
     }
   );
 }

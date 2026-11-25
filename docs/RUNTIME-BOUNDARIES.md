@@ -9,6 +9,10 @@ Use the discovered schemas as the current input contract.
 - Catalog tools return component source, registry commands, tokens and design context.
 - Guidance tools return locally stored instructions and examples.
 - Source review accepts complete inline file contents; paths are labels.
+- Source results list unverified rendering/interaction checks. Spacing coverage is
+  partial when widths, declared states, or complete captures are missing; no geometry
+  score is returned. The score measures finding penalties, not overall quality.
+  See [Review quality](REVIEW-QUALITY.md) for the fixture gate and capture workflow.
 - Spacing review evaluates caller-supplied rendered geometry and styles.
 - First-visit review ranks supplied walk reports; it does not conduct user research.
 - Video and listing tools return guidance or source, without rendering or publication.

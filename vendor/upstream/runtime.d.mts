@@ -7,4 +7,4 @@ export function summarizeExtraction(result: unknown): Record<string, unknown>;
 export const VIDEO_COMPONENT_CATALOG: {name:string;type:string;description:string;dependencies:string[];registryDependencies:string[];externalRegistryDependencies:string[];files:{path:string;target:string;type:string}[]}[];
 export const VIDEO_COMPONENT_FILES: Record<string,string>;
 export const SPACING_CAPTURE_SCRIPT: string;
-export function inspectSpacing(input: {states:Record<string,unknown>[];spacingScale?:number[];tolerance?:number}): {findings:{id:string;ruleId:string;severity:'critical'|'serious'|'moderate';state:string;message:string;fix:string;elementIds:string[];evidence:{label:string;value:string|number;unit?:string}[]}[]};
+export function inspectSpacing(input: {states:Record<string,unknown>[];spacingScale?:number[];tolerance?:number}): {score:number;summary:{critical:number;serious:number;moderate:number;total:number;truncated?:number};findings:{id:string;ruleId:string;severity:'critical'|'serious'|'moderate';state:string;message:string;fix:string;elementIds:string[];evidence:{label:string;value:string|number;unit?:string}[]}[]};

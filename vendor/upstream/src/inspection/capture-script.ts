@@ -26,7 +26,7 @@ export function captureSpacingSnapshot(): LayoutStateSnapshot {
     return false;
   };
 
-  const visible = candidates.filter((element) => {
+  const eligible = candidates.filter((element) => {
     const style = getComputedStyle(element);
     if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) return false;
     if (hiddenByAncestor(element)) return false;
@@ -36,7 +36,8 @@ export function captureSpacingSnapshot(): LayoutStateSnapshot {
     if (element.parentElement?.closest("[inert]")) return false;
     const rect = element.getBoundingClientRect();
     return rect.width > 0 || rect.height > 0;
-  }).slice(0, maxElements);
+  });
+  const visible = eligible.slice(0, maxElements);
 
   const ids = new Map<Element, string>();
   const selectorFor = (element: Element, index: number) => {
@@ -295,6 +296,7 @@ export function captureSpacingSnapshot(): LayoutStateSnapshot {
       devicePixelRatio: window.devicePixelRatio,
     },
     elements,
+    captureCoverage: { totalEligibleElements: eligible.length, capturedElements: elements.length, truncated: eligible.length > maxElements },
   };
 }
 

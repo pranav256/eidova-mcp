@@ -19,7 +19,7 @@ if (['review-browser', 'preview-install', 'diff-tokens'].includes(command)) {
 } else {
 const {values,positionals}=parseArgs({args: argv, options:{profile:{type:'string',default:'core'},help:{type:'boolean'},version:{type:'boolean'}},allowPositionals:true});
 if(!['full','core'].includes(values.profile!)){process.stderr.write('Use --profile full or --profile core. Run --help for examples.\n');process.exit(1);}
-if(values.help){process.stdout.write('Eidova MCP\nUsage: eidova-mcp [--profile core|full]\n       eidova-mcp doctor | --version\n       eidova-mcp review-browser <loopback-url> [--output <directory>] [--ready-selector <selector>]\n       eidova-mcp preview-install <theme> <inventory.json> <component>...\n       eidova-mcp diff-tokens <before.css|json> <after.css|json>\nCore is the default. Use --profile full for specialist tools and owner features. Public catalog and reviews need no key.\n');process.exit(0);}
+if(values.help){process.stdout.write('Eidova MCP\nUsage: eidova-mcp [--profile core|full]\n       eidova-mcp doctor | --version\n       eidova-mcp review-browser <loopback-url> [--output <directory>] [--ready-selector <selector>] [--states <states.json>]\n       eidova-mcp preview-install <theme> <inventory.json> <component>...\n       eidova-mcp diff-tokens <before.css|json> <after.css|json>\nCore is the default. Use --profile full for specialist tools and owner features. Public catalog and reviews need no key.\n');process.exit(0);}
 if(values.version){process.stdout.write('0.2.0\n');process.exit(0);}
 if(positionals[0]==='doctor'&&positionals.length===1){
   try{

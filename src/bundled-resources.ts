@@ -57,14 +57,14 @@ export async function readBundledResource(uri:string, offset=0, limit=12000) {
     path='LICENSE';sha256=createHash('sha256').update(bytes).digest('hex');url=`${baseUrl()}/api/resources/license`;
   } else {
     const match=uri.match(/^design:\/\/eidova\/([a-z-]+)\/([a-z0-9-]+)(?:\/files\/(.+))?$/);
-    if(!match)throw new Error('Use a bundled resource URI returned by search-resources.');
+    if(!match)throw new Error('Invalid resource URI. Call search-resources and copy the returned manifest URI or entrypointUri.');
     const [,kind,id,encodedPath]=match;
     const entry=await findBundledEntry(kind,id);
-    if(!entry)throw new Error('Bundled resource not found.');
+    if(!entry)throw new Error('Bundled resource not found. Call search-resources for a valid kind, ID and URI.');
     if(!encodedPath)return {uri,...await bundledManifest(entry)};
-    try {path=decodeURIComponent(encodedPath);} catch {throw new Error('Invalid resource file path.');}
+    try {path=decodeURIComponent(encodedPath);} catch {throw new Error('Invalid resource file path. Read the manifest and use one of its exact file URIs.');}
     const file=await bundledFile(kind,id,path);
-    if(!file)throw new Error('Bundled file not found.');
+    if(!file)throw new Error('Bundled file not found. Read the manifest and copy a listed file URI.');
     ({bytes}=file);sha256=file.metadata.sha256;
     url=`${baseUrl()}/api/resources/${kind}/${id}/file?path=${encodeURIComponent(path)}`;
     if(file.metadata.binary)return {uri,path,sha256,bytes:bytes.length,url,binary:true,mimeType:file.metadata.mimeType??'application/octet-stream',note:'Download the original binary file from url; binary content is not expanded into tool context.'};
