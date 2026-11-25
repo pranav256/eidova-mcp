@@ -35,6 +35,7 @@ test('source accessibility handles native labels, dynamic components and inline 
 <label htmlFor="email">Email</label><input id="email"/>
 <label>Message<textarea/></label><span id="choice">Choice</span><select aria-labelledby="choice"/>
 <label htmlFor={label}>Dynamic association</label><input id={label}/><div onClick={open} {...props}>Open</div>
+<input type="button" value={label}/><input type="image" alt={label}/>
 <a id="anchor"/><a href="/save">Save</a><Button/><Input/>
 </>`);
       assert.deepEqual(clean.findings.filter((finding:any)=>finding.ruleId.startsWith('wcag/')),[]);

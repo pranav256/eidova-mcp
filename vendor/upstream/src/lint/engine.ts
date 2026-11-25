@@ -364,7 +364,9 @@ function lintReviewableFile(input: LintInput, baseConfig: LintConfig, context: P
     const hasHandler = (name: string) => Boolean(getAttribute(node, name));
     const inputType = getStringAttrValue(getAttribute(node, "type"))?.toLowerCase();
     const buttonInput = tag === "input" && ["submit", "reset", "button", "image", "hidden"].includes(inputType ?? "");
-    if (tag === "input" && ["button", "image"].includes(inputType ?? "") && !hasSourceName(node) && !getStringAttrValue(getAttribute(node, inputType === "image" ? "alt" : "value"))?.trim()) {
+    const inputName = getAttribute(node, inputType === "image" ? "alt" : "value");
+    const dynamicInputName = inputName && getStringAttrValue(inputName) === null;
+    if (tag === "input" && ["button", "image"].includes(inputType ?? "") && !hasSourceName(node) && !dynamicInputName && !getStringAttrValue(inputName)?.trim()) {
       findings.push({ file: input.path, line: p.line, column: p.column, severity: "serious", ruleId: "wcag/control-name", wcag: "4.1.2 (A)", snippet: snippetForLine(lines, p.line), message: "This input button has no source-visible accessible name.", fix: "Provide descriptive value text for a button input, alt for an image input, or a non-empty aria-label." });
     }
     if (["input", "select", "textarea"].includes(tag) && !buttonInput && !hasAssociatedLabel(node)) {
