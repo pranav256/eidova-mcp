@@ -1,4 +1,5 @@
 import { lookup } from 'node:dns/promises';
+import { addAbortListener } from 'node:events';
 import { request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { BlockList, isIP } from 'node:net';
@@ -24,10 +25,12 @@ export async function safeFetchPublic(input: string, redirects = 0, deadline: Ab
   if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || (url.port && !['80','443'].includes(url.port))) throw new Error('Use a public HTTP(S) URL without credentials or a custom port.');
   const hostname = url.hostname.replace(/^\[|\]$/g, '');
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let abortListener: ReturnType<typeof addAbortListener> | undefined;
   const addresses = isIP(hostname) ? [{address: hostname, family: isIP(hostname)}] : await Promise.race([
     lookup(hostname, {all: true}),
     new Promise<never>((_resolve,reject) => {timer=setTimeout(()=>reject(new Error('DNS lookup timed out.')),5000);}),
-  ]).finally(()=>clearTimeout(timer));
+    new Promise<never>((_resolve,reject) => {abortListener=addAbortListener(deadline,()=>reject(deadline.reason));}),
+  ]).finally(()=>{clearTimeout(timer);abortListener?.[Symbol.dispose]();});
   if (!addresses.length || addresses.some(a => !publicAddress(a.address))) throw new Error('Private, local and reserved network destinations are not allowed.');
   const selected = addresses[0];
   const response = await new Promise<{status: number; headers: Record<string,string>; body: Buffer}>((resolve, reject) => {
