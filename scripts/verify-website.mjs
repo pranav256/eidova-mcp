@@ -7,6 +7,8 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { measureTextContrast } from './browser-contrast.mjs';
+import { assertWebsiteSourceReview } from './website-source-review-gate.mjs';
+import { WEBSITE_REVIEW_WIDTHS, captureWebsiteSetupStates, websiteSpacingBatches } from './website-spacing-batches.mjs';
 
 const origin = process.env.WEBSITE_REVIEW_URL || 'https://eidova.vercel.app';
 const dir = path.resolve(process.argv[2] || '.work/verification/website');
@@ -30,15 +32,17 @@ await client.connect(process.env.MCP_PRIVATE_ARCHIVE
   ? new StdioClientTransport({command:process.execPath,args:[path.resolve('scripts/start-private.mjs'),path.resolve(process.env.MCP_PRIVATE_ARCHIVE)]})
   : new StreamableHTTPClientTransport(new URL(process.env.MCP_REVIEW_URL || coreEndpoint + '/full')));
 const browser = await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL || (process.platform==='win32'?'msedge':undefined),headless:true});
-const states = [], expandedStates = [], handoffStates = [], panels = [], contrasts = [], errors = [];
+const states = [], expandedStates = [], handoffStates = [], setupStates = [], panels = [], contrasts = [], errors = [];
 const knownTerms = ['MCP','UI','HTTP','JSON','MIT','React','Geist','mcpServers','registry','token','tokens','API','CSS','IBM','SF','FX','Sans','Mono','DM','workspace','session','VS'];
 const count = async page => { await page.waitForFunction(expected => document.querySelectorAll('.theme-card').length===expected,31); };
 async function inspectStates(name,captured) {
   const parts=[];const summary={critical:0,serious:0,moderate:0,total:0};
-  for(let index=0;index<captured.length;index+=2) {
-    const args={states:captured.slice(index,index+2),spacingScale:[4,8,12,16,20,24,32,40,48,56,64,72,80,88,96,104,128],tolerance:2,detail:'full'};
-    assert.ok(Buffer.byteLength(JSON.stringify(args))<4*1024*1024-1024,'Spacing evidence must fit the HTTP limit.');
-    const result=await client.callTool({name:'inspect-spacing',arguments:args});assert.ok(!result.isError);assert.equal(result.structuredContent?.status,'completed');parts.push(result);
+  for(const args of websiteSpacingBatches(captured)) {
+    const result=await client.callTool({name:'inspect-spacing',arguments:args});assert.ok(!result.isError);assert.equal(result.structuredContent?.status,'completed');
+    assert.equal(result.structuredContent.coverage?.complete,true);
+    assert.deepEqual(result.structuredContent.capturedWidths,[390,1440,1728]);
+    assert.deepEqual(result.structuredContent.coverage.capturedWidths,[390,1440,1728]);
+    assert.deepEqual(result.structuredContent.missingWidths,[]);parts.push(result);
     for(const key of Object.keys(summary))summary[key]+=result.structuredContent.summary[key];
   }
   const findings=parts.flatMap(part=>part.structuredContent.findings);
@@ -157,16 +161,14 @@ async function verifyBehavior(page) {
 try {
   const rules = await client.callTool({name:'get-review-rules',arguments:{category:'all',context:'Review Eidova website redesign using its own MCP'}});
   await save('rules',rules);
-  const paths = ['App.tsx','Docs.tsx','docs.css','main.tsx','theme.ts','theme.css','clean.css','styles.css','catalog-themes.json','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
+  const paths = ['App.tsx','Docs.tsx','docs.css','main.tsx','theme.ts','theme.css','clean.css','styles.css','components/CopyButton.tsx','components/ui/button.tsx','components/ui/input.tsx','components/ui/textarea.tsx','previews/Specimen.tsx','previews/specimen.css'];
   const files = await Promise.all(paths.map(async p => ({path:p,content:await readFile(path.join(website,'src',p),'utf8')})));
   const source = await client.callTool({name:'review-ui-code',arguments:{files}}); await save('source',source);
-  assert.ok(!source.isError);
-  const sourceText=source.content.filter(c=>c.type==='text').map(c=>c.text).join('\n');
-  assert.ok(/No findings|0 critical, 0 serious/.test(sourceText),sourceText);
+  assertWebsiteSourceReview(source);
   console.log('Source review passed.');
   const capture = await client.callTool({name:'inspect-spacing',arguments:{detail:'full'}});
   const script = capture.structuredContent?.captureScript; assert.ok(script);
-  for (const width of [390,1440,1728]) {
+  for (const width of WEBSITE_REVIEW_WIDTHS) {
     const context = await browser.newContext({viewport:{width,height:1000},colorScheme:'dark',permissions:['clipboard-read','clipboard-write']});
     const page = await context.newPage(); page.on('pageerror',e=>errors.push(e.message));
     assert.equal((await page.goto(origin,{waitUntil:'networkidle'})).status(),200);
@@ -213,6 +215,7 @@ try {
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
       const expanded=await page.evaluate(script);expanded.name=`${width}px ${mode} all themes`;expandedStates.push(expanded);
     }
+    setupStates.push(...await captureWebsiteSetupStates({ page, script, clients, save }));
     if(width===390) {
       const read = async (selector,heading) => page.locator(selector).evaluate((e,h)=>{
         const text = n => n.textContent.replace(/[↗↓↑→↳✓✳·]/g,'').replace(/\s+/g,' ').trim();
@@ -231,7 +234,6 @@ try {
         panels.push({screen:clients[i]+' setup',headline:clients[i],body:await page.locator('.client-panel p').allTextContents(),actions:await page.locator('.copy-action button').allTextContents()});
         const input = i===2||i===5 ? {value:await page.locator('#mcp-endpoint').inputValue()} : {code:await page.locator('.client-panel pre').textContent()};
         await save('setup-'+i,input);
-        const state=await page.evaluate(script);state.name='390px '+clients[i];await save('setup-state-'+i,state);
       }
       await verifyBehavior(page);
       for(const family of families) {
@@ -260,7 +262,6 @@ try {
   const handoffSpacing=await inspectStates('handoff-spacing',handoffStates);console.log('HANDOFF',JSON.stringify(handoffSpacing.summary));
   const expandedSpacing=await inspectStates('expanded-spacing',expandedStates);console.log('EXPANDED',JSON.stringify(expandedSpacing.summary));
   const spacing=await inspectStates('spacing',states);console.log('SPACING',JSON.stringify(spacing.summary));
-  const setupStates=await Promise.all(clients.map((_,i)=>readFile(path.join(dir,'setup-state-'+i+'.json'),'utf8').then(JSON.parse)));
   const setupSpacing=await inspectStates('setup-spacing',setupStates);console.log('SETUP SPACING',JSON.stringify(setupSpacing.summary));
   const reviews=[];
   for(const panel of panels){const result=await client.callTool({name:'check-comprehension',arguments:{...panel,knownTerms}});reviews.push({panel,result});}
